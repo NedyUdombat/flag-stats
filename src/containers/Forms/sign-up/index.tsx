@@ -85,9 +85,7 @@ export function SignUpForm({
 
   if (state.status === "success") {
     return (
-      <output
-        className="space-y-3 rounded-md bg-background p-6 text-center"
-      >
+      <output className="space-y-3 rounded-md bg-background p-6 text-center">
         <MailCheckIcon aria-hidden className="mx-auto size-8 text-brand-lime" />
         <p className="font-display text-xl uppercase tracking-wide">
           Check your inbox
@@ -272,7 +270,6 @@ export function SignUpForm({
           {isPending ? null : <ArrowRightIcon aria-hidden />}
         </Button>
       </form>
-
 
       <p className="text-center text-sm text-muted-foreground">
         Already on ZedyStats?{" "}

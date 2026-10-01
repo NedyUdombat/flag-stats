@@ -9,6 +9,8 @@
     "lint": "biome check",
     "test": "vitest run",
     "format": "biome format --write",
+    "biomecheck": "biome check --write .",
+    "typecheck": "tsc --noEmit",
     "db:typegen": "pnpm supabase gen types typescript --linked > src/types/database/types.ts"
   },
   "dependencies": {

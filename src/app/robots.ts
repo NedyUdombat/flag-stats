@@ -10,7 +10,16 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         // Admin, auth, and the Sanity Studio are never publicly indexable —
         // they require a session and carry no public/SEO value.
-        disallow: ["/admin", "/admin/", "/login", "/sign-up", "/forgot-password", "/reset-password", "/studio", "/unauthorized"],
+        disallow: [
+          "/admin",
+          "/admin/",
+          "/login",
+          "/sign-up",
+          "/forgot-password",
+          "/reset-password",
+          "/studio",
+          "/unauthorized",
+        ],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
