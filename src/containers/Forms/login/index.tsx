@@ -1,0 +1,102 @@
+"use client";
+
+import { ArrowRightIcon, LockIcon, MailIcon } from "lucide-react";
+import Link from "next/link";
+import { useActionState } from "react";
+
+import {
+  FormAlert,
+  FormField,
+  fieldInputClass,
+  InputWithIcon,
+  primaryButtonClass,
+} from "@/components/form-field";
+import { Button } from "@/components/primitives/button";
+import { Input } from "@/components/primitives/input";
+import { PasswordInput } from "@/components/primitives/password-input";
+import { type AuthActionState, loginAction } from "@/features/auth/actions";
+import { cn } from "@/utils/cn";
+
+const initialState: AuthActionState = { status: "idle" };
+
+interface LoginFormProps {
+  next?: string;
+}
+
+export function LoginForm({ next }: LoginFormProps) {
+  const [state, formAction, isPending] = useActionState(
+    loginAction,
+    initialState,
+  );
+
+  return (
+    <div className="space-y-6">
+      <form action={formAction} className="space-y-5">
+        {next ? <input type="hidden" name="next" value={next} /> : null}
+
+        <FormField id="email" label="Email address">
+          <InputWithIcon icon={MailIcon}>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="you@example.com"
+              className={cn(fieldInputClass, "pl-10")}
+            />
+          </InputWithIcon>
+        </FormField>
+
+        <FormField
+          id="password"
+          label="Password"
+          hint={
+            <Link
+              href="/forgot-password"
+              className="font-mono text-[0.7rem] text-brand-cyan underline-offset-4 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          }
+        >
+          <InputWithIcon icon={LockIcon}>
+            <PasswordInput
+              id="password"
+              name="password"
+              required
+              autoComplete="current-password"
+              className={cn(fieldInputClass, "pl-10")}
+            />
+          </InputWithIcon>
+        </FormField>
+
+        {state.status === "error" ? (
+          <FormAlert>{state.message}</FormAlert>
+        ) : null}
+
+        <Button
+          type="submit"
+          className={primaryButtonClass}
+          disabled={isPending}
+        >
+          {isPending ? "Signing in…" : "Sign in"}
+          {isPending ? null : <ArrowRightIcon aria-hidden />}
+        </Button>
+      </form>
+
+      {/* <OrDivider label="Or continue with" />
+      <SocialAuthButtons next={next} /> */}
+
+      <p className="text-center text-sm text-muted-foreground">
+        New to ZedyStats?{" "}
+        <Link
+          href="/sign-up"
+          className="font-medium text-brand-lime underline-offset-4 hover:underline"
+        >
+          Create an account
+        </Link>
+      </p>
+    </div>
+  );
+}

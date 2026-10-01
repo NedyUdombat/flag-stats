@@ -1,29 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   ),
   title: {
-    default: "ZediStats",
-    template: "%s | ZediStats",
+    default: "ZedyStats",
+    template: "%s | ZedyStats",
   },
   description:
     "The verified career record for African flag football athletes — stats, teams, leagues and history in one place.",
   openGraph: {
-    siteName: "ZediStats",
+    siteName: "ZedyStats",
     type: "website",
   },
   twitter: {
@@ -38,7 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className="h-full dark antialiased"
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

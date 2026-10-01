@@ -1,0 +1,16 @@
+@theme inline {
+  --color-zs-bg: #121620;
+  --color-zs-panel: #191e2a;
+  --color-zs-raised: #202635;
+  --color-zs-line: #2a3143;
+  --color-zs-ink: #eef1f6;
+  --color-zs-muted: #9aa3b6;
+  --color-zs-lime: #c8f31d;
+  --color-zs-lime-ink: #151a05;
+  --color-zs-cyan: #3ec5f5;
+  --color-zs-coral: #ff8f80;
+  --color-zs-amber: #ffb547;
+
+  --font-display: var(--font-zs-display), "Arial Narrow", sans-serif;
+  --font-data: var(--font-zs-data), ui-monospace, SFMono-Regular, monospace;
+}
