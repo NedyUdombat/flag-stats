@@ -116,8 +116,6 @@ export async function signUpAction(
     });
 
   if (!linkError && linkData?.properties?.email_otp) {
-    const otpCode = linkData.properties.email_otp;
-    console.log({ otpCode });
     const actionLink = linkData.properties.action_link;
 
     await sendEmail({
@@ -162,7 +160,6 @@ export async function forgotPasswordAction(
 
   if (!error && data?.properties?.action_link) {
     const actionLink = data.properties.action_link;
-    console.log({ actionLink });
 
     await sendEmail({
       to: parsed.data.email,
