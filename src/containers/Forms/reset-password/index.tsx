@@ -22,7 +22,11 @@ import { PASSWORD_REQUIREMENTS } from "@/features/auth/schema";
 
 const initialState: AuthActionState = { status: "idle" };
 
-export function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+  tokenHash: string;
+}
+
+export function ResetPasswordForm({ tokenHash }: ResetPasswordFormProps) {
   const [state, formAction, isPending] = useActionState(
     resetPasswordAction,
     initialState,
@@ -36,6 +40,7 @@ export function ResetPasswordForm() {
   return (
     <div className="space-y-6">
       <form action={formAction} className="space-y-5">
+        <input type="hidden" name="tokenHash" value={tokenHash} />
         <FormField id="password" label="New password">
           <PasswordInput
             id="password"

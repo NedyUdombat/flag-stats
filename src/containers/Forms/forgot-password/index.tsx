@@ -32,52 +32,48 @@ export function ForgotPasswordForm() {
     initialState,
   );
 
+  if (state.status === "success") {
+    return (
+      <div className="space-y-3 rounded-md bg-background p-6 text-center">
+        <MailCheckIcon aria-hidden className="mx-auto size-8 text-brand-lime" />
+        <p className="font-display text-xl uppercase tracking-wide">
+          Check your email
+        </p>
+        <p className="text-sm text-muted-foreground">{state.message}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {state.status === "success" ? (
-        <output
-          // role="status"
-          className="space-y-3 rounded-md bg-background p-6 text-center"
+      <form action={formAction} className="space-y-5">
+        <FormField id="email" label="Email address">
+          <InputWithIcon icon={MailIcon}>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="you@example.com"
+              className={cn(fieldInputClass, "pl-10")}
+            />
+          </InputWithIcon>
+        </FormField>
+
+        {state.status === "error" ? (
+          <FormAlert>{state.message}</FormAlert>
+        ) : null}
+
+        <Button
+          type="submit"
+          className={primaryButtonClass}
+          disabled={isPending}
         >
-          <MailCheckIcon
-            aria-hidden
-            className="mx-auto size-8 text-brand-lime"
-          />
-          <p className="font-display text-xl uppercase tracking-wide">
-            Check your email
-          </p>
-          <p className="text-sm text-muted-foreground">{state.message}</p>
-        </output>
-      ) : (
-        <form action={formAction} className="space-y-5">
-          <FormField id="email" label="Email address">
-            <InputWithIcon icon={MailIcon}>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="you@example.com"
-                className={cn(fieldInputClass, "pl-10")}
-              />
-            </InputWithIcon>
-          </FormField>
-
-          {state.status === "error" ? (
-            <FormAlert>{state.message}</FormAlert>
-          ) : null}
-
-          <Button
-            type="submit"
-            className={primaryButtonClass}
-            disabled={isPending}
-          >
-            {isPending ? "Sending…" : "Send reset link"}
-            {isPending ? null : <ArrowRightIcon aria-hidden />}
-          </Button>
-        </form>
-      )}
+          {isPending ? "Sending…" : "Send reset link"}
+          {isPending ? null : <ArrowRightIcon aria-hidden />}
+        </Button>
+      </form>
 
       <div className="flex gap-3 rounded-md bg-background/60 p-4">
         <LifeBuoyIcon

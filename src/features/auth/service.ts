@@ -1,7 +1,7 @@
 import "server-only";
-import { getRosterFormOptions } from "../athletes/service";
-import { getLeagueOptions } from "../leagues/service";
-import { getOrganizationOptions } from "../organizations/service";
+import { getRosterFormOptions } from "../athletes/athlete.service";
+import { getLeagueOptions } from "../leagues/league.service";
+import { getOrganizationOptions } from "../organizations/organization.service";
 
 export interface SignupScopeOptions {
   teams: { id: string; name: string }[];

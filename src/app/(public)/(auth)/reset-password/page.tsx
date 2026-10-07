@@ -3,7 +3,13 @@ import { ResetPasswordForm } from "@/containers/Forms/reset-password";
 
 export const metadata = { title: "Reset password" };
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token_hash?: string }>;
+}) {
+  const { token_hash } = await searchParams;
+  if (!token_hash) return <p>This reset link is invalid. Request a new one.</p>;
   return (
     <AuthShell
       headline="One more step back to the sideline."
@@ -18,7 +24,7 @@ export default function ResetPasswordPage() {
         </p>
       </div>
       <div className="mt-8">
-        <ResetPasswordForm />
+        <ResetPasswordForm  tokenHash={token_hash} />
       </div>
     </AuthShell>
   );

@@ -1,6 +1,5 @@
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-
 import { cn } from "@/utils/cn";
 import { AuthBrand } from "./auth-brand";
 import { AuthHeading } from "./auth-heading";
@@ -13,7 +12,7 @@ interface AuthShellProps {
   supporting?: React.ReactNode;
 }
 
-export function AuthShell({
+export async function AuthShell({
   children,
   backLink,
   size = "sm",

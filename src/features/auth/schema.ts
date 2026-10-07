@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-const StrongPasswordSchema = z
+export const StrongPasswordSchema = z
   .string()
-  .min(10, "Password must be at least 10 characters.")
+  .min(1, "Password must be at least 1 characters.")
   .regex(/[a-z]/, "Password must include a lowercase letter.")
   .regex(/[A-Z]/, "Password must include an uppercase letter.")
   .regex(/[0-9]/, "Password must include a number.")
@@ -55,12 +55,13 @@ export const SCOPED_SELF_SERVICE_ROLES = [
 
 export const SignUpSchema = z
   .object({
-    fullName: z.string().min(2, "Enter your full name."),
+    fullName: z.string().trim().min(2, "Enter your full name."),
     email: EmailSchema,
     password: StrongPasswordSchema,
     confirmPassword: z.string(),
-    requestedRole: z.enum(SELF_SERVICE_ROLES).default("public_user"),
-    requestedScopeId: z.string().uuid().optional().or(z.literal("")),
+    acceptTerms: z.literal("on", {
+      error: "You must accept the Terms of Service and Privacy Policy.",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match.",
@@ -85,3 +86,6 @@ export type LoginInput = z.infer<typeof LoginSchema>;
 export type SignUpInput = z.infer<typeof SignUpSchema>;
 export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
+
+export const ResendConfirmationSchema = z.object({ email: EmailSchema });
+export type ResendConfirmationInput = z.infer<typeof ResendConfirmationSchema>;

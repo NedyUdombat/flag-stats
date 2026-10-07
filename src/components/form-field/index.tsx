@@ -14,7 +14,7 @@ export const primaryButtonClass =
 
 interface FormFieldProps {
   id: string;
-  label: string;
+  label?: string;
   required?: boolean;
   hint?: React.ReactNode;
   className?: string;
@@ -32,12 +32,14 @@ export function FormField({
   return (
     <div className={cn("space-y-2", className)}>
       <div className="flex min-h-4 items-baseline justify-between gap-3">
-        <Label htmlFor={id} className={fieldLabelClass}>
-          {label}
-        </Label>
+        {label && (
+          <Label htmlFor={id} className={fieldLabelClass}>
+            {label}
+          </Label>
+        )}
         {hint ??
           (required ? (
-            <span aria-hidden className="text-sm leading-none text-brand-lime">
+            <span aria-hidden className="text-sm leading-none text-destructive">
               *
             </span>
           ) : null)}

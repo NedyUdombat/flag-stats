@@ -85,13 +85,13 @@ export function SignUpForm({
 
   if (state.status === "success") {
     return (
-      <output className="space-y-3 rounded-md bg-background p-6 text-center">
+      <div className="space-y-3 rounded-md bg-background p-6 text-center">
         <MailCheckIcon aria-hidden className="mx-auto size-8 text-brand-lime" />
         <p className="font-display text-xl uppercase tracking-wide">
           Check your inbox
         </p>
         <p className="text-sm text-muted-foreground">{state.message}</p>
-      </output>
+      </div>
     );
   }
 
@@ -108,7 +108,7 @@ export function SignUpForm({
   return (
     <div className="space-y-6">
       <form action={formAction} className="space-y-5">
-        <FormField id="requestedRole" label="I'm signing up as" required>
+        {/* <FormField id="requestedRole" label="I'm signing up as" required>
           <Select
             name="requestedRole"
             value={role}
@@ -131,9 +131,9 @@ export function SignUpForm({
               ))}
             </SelectContent>
           </Select>
-        </FormField>
+        </FormField> */}
 
-        {scopeLabel ? (
+        {/* {scopeLabel ? (
           <FormField
             id="requestedScopeId"
             label={scopeLabel}
@@ -171,7 +171,7 @@ export function SignUpForm({
               </>
             )}
           </FormField>
-        ) : null}
+        ) : null} */}
 
         <FormField id="fullName" label="Full name" required>
           <Input
@@ -179,7 +179,7 @@ export function SignUpForm({
             name="fullName"
             required
             autoComplete="name"
-            placeholder="e.g. Kwesi Mensah"
+            placeholder="e.g. Taiwo Ahmed"
             className={fieldInputClass}
           />
         </FormField>

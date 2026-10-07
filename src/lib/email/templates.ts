@@ -201,7 +201,7 @@ export function resetPasswordEmailHtml(resetUrl: string): string {
     <h1 style="margin:0 0 16px 0;font-size:22px;font-weight:700;line-height:1.3;color:#1d1229;">Reset your password</h1>
     
     <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">
-      We received a request to reset the password for your ZediStats account. Click the button below to choose a new password.
+      We received a request to reset the password for your ZedyStats account. Click the button below to choose a new password.
     </p>
 
     ${button(resetUrl, "Reset password")}
@@ -220,4 +220,93 @@ export function resetPasswordEmailHtml(resetUrl: string): string {
       If you didn't request a password reset, you can safely ignore this email — your password will remain unchanged.
     </p>
   `);
+}
+
+type InviteParams = {
+  heading: string;
+  introHtml: string;
+  ctaLabel: string;
+  url: string;
+  expiresInDays: number;
+};
+
+function inviteBody(p: InviteParams): string {
+  const safeUrl = escapeHtml(p.url);
+  return `
+    <h1 style="margin:0 0 16px 0;font-size:22px;font-weight:700;line-height:1.3;color:#1d1229;">${p.heading}</h1>
+    <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">${p.introHtml}</p>
+    ${button(safeUrl, p.ctaLabel)}
+    <p style="margin:0 0 8px 0;font-size:13px;line-height:1.5;color:#6b5d82;">Or paste this link into your browser:</p>
+    <p style="margin:0 0 24px 0;font-size:13px;line-height:1.5;word-break:break-all;">
+      <a href="${safeUrl}" style="color:#0066cc;text-decoration:underline;">${safeUrl}</a>
+    </p>
+    <hr style="border:none;border-top:1px solid #e8e2f0;margin:0 0 24px 0;" />
+    <p style="margin:0;font-size:13px;line-height:1.5;color:#8b7fa0;">
+      This link works once, only for this email address, and expires in ${p.expiresInDays} days.
+      If you weren't expecting it, you can safely ignore this email.
+    </p>`;
+}
+
+/** Someone created an athlete profile for this person. */
+export function athleteClaimEmailHtml(params: {
+  athleteName: string;
+  invitedBy: string;
+  claimUrl: string;
+  hasAccount: boolean;
+  expiresInDays: number;
+}): string {
+  return emailShell(
+    inviteBody({
+      heading: "Claim your ZedyStats profile",
+      introHtml: `${escapeHtml(params.invitedBy)} created an athlete profile for <strong>${escapeHtml(params.athleteName)}</strong> on ZedyStats, the verified career record for African flag football. ${
+        params.hasAccount
+          ? "Sign in to claim it and make it yours."
+          : "Create your account with this email address to claim it."
+      }`,
+      ctaLabel: params.hasAccount
+        ? "Sign in to claim"
+        : "Create account & claim",
+      url: params.claimUrl,
+      expiresInDays: params.expiresInDays,
+    }),
+  );
+}
+
+/** Existing user is invited to join a team's roster. */
+export function teamJoinInviteEmailHtml(params: {
+  athleteName: string;
+  teamName: string;
+  invitedBy: string;
+  acceptUrl: string;
+  expiresInDays: number;
+}): string {
+  return emailShell(
+    inviteBody({
+      heading: `Join ${escapeHtml(params.teamName)}`,
+      introHtml: `${escapeHtml(params.invitedBy)} invited <strong>${escapeHtml(params.athleteName)}</strong> to join <strong>${escapeHtml(params.teamName)}</strong> on ZedyStats. Accept to link your profile to the team.`,
+      ctaLabel: "View invitation",
+      url: params.acceptUrl,
+      expiresInDays: params.expiresInDays,
+    }),
+  );
+}
+
+/** ZedyStats (or an admin) created a team / league / federation to be claimed. */
+export function entityClaimEmailHtml(params: {
+  entityType: "team" | "league" | "federation";
+  entityName: string;
+  createdBy: string;
+  claimUrl: string;
+  expiresInDays: number;
+}): string {
+  const label = params.entityType;
+  return emailShell(
+    inviteBody({
+      heading: `Claim ${escapeHtml(params.entityName)}`,
+      introHtml: `${escapeHtml(params.createdBy)} set up <strong>${escapeHtml(params.entityName)}</strong> as a ${label} on ZedyStats. Sign in or create an account with this email address to become its admin and manage it.`,
+      ctaLabel: `Claim this ${label}`,
+      url: params.claimUrl,
+      expiresInDays: params.expiresInDays,
+    }),
+  );
 }

@@ -14,16 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/primitives/dropdown-menu";
 import { signOutAction } from "@/features/auth/actions";
-
-function initials(name: string | null, email: string | null): string {
-  if (name) {
-    const parts = name.trim().split(/\s+/);
-    return (parts[0]?.[0] ?? "")
-      .concat(parts.length > 1 ? parts[parts.length - 1][0] : "")
-      .toUpperCase();
-  }
-  return (email?.[0] ?? "?").toUpperCase();
-}
+import { initials } from "@/lib/display";
 
 interface UserMenuProps {
   fullName: string | null;

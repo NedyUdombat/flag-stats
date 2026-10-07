@@ -16,20 +16,23 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const [{ data: profile }, { data: roleRows }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, avatar_url")
+      .select("full_name, avatar_url, platform_role, deleted_at")
       .eq("id", user.id)
-      .single(),
+      .maybeSingle(),
     supabase
       .from("user_roles")
       .select("role, organization_id, league_id, team_id")
       .eq("user_id", user.id),
   ]);
 
+  if (profile?.deleted_at) return null;
+
   return {
     id: user.id,
     email: user.email ?? null,
     fullName: profile?.full_name ?? null,
     avatarUrl: profile?.avatar_url ?? null,
+    platformRole: profile?.platform_role ?? "user",
     roles: (roleRows ?? []).map((r) => ({
       role: r.role,
       organizationId: r.organization_id,
