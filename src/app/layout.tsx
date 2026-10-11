@@ -7,13 +7,13 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   ),
   title: {
-    default: "ZedyStats",
-    template: "%s | ZedyStats",
+    default: "FlagStats",
+    template: "%s | FlagStats",
   },
   description:
     "The verified career record for African flag football athletes — stats, teams, leagues and history in one place.",
   openGraph: {
-    siteName: "ZedyStats",
+    siteName: "FlagStats",
     type: "website",
   },
   twitter: {

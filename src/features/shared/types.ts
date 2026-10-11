@@ -11,6 +11,7 @@ export type SettingsActionState = {
 export interface MyAthleteProfile {
   athlete: Tables<"athletes">;
   contactPhone: string | null;
+  contactEmail: string | null;
   careerTotals: { gamesPlayed: number; touchdowns: number } | null;
 }
 export interface Affiliation {

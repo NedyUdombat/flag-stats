@@ -13,19 +13,21 @@ import { getClientIp, rateKey, rateLimit } from "@/lib/rate-limit";
 import { createServerClient } from "@/lib/supabase/server";
 import { createServerAdminClient } from "@/lib/supabase/server-admin";
 import { ADMIN_CONSOLE_ROLES } from "@/types/users/types";
-import { getCurrentUser } from "../users/service";
+import { getInviteSignupDetails } from "../invitations/invitation.service";
+import { isTokenFormat } from "../invitations/invitation.token";
+import { getCurrentUser } from "../users/user.service";
 import {
   ForgotPasswordSchema,
   LoginSchema,
   ResendConfirmationSchema,
   ResetPasswordSchema,
+  type SignUpInput,
   SignUpSchema,
 } from "./schema";
 
 export type AuthActionState = {
   status: "idle" | "error" | "success";
   message?: string;
-  /** Lets the login form show a "Resend confirmation email" button */
   code?: "email_not_confirmed";
 };
 
@@ -103,6 +105,7 @@ export async function signUpAction(
   _prevState: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
+  const next = safeNextPath(formData.get("next"));
   const parsed = SignUpSchema.safeParse({
     fullName: formData.get("fullName"),
     email: formData.get("email"),
@@ -129,32 +132,35 @@ export async function signUpAction(
     };
   }
 
+  return createAccount(parsed.data, next);
+}
+
+async function createAccount(
+  data: SignUpInput,
+  next: string | null,
+): Promise<AuthActionState> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const supabaseAdmin = await createServerAdminClient();
 
-  // One call: generateLink(type "signup") creates the (unconfirmed) user AND
-  // returns the confirm link. No separate createUser.
-  const { data, error } = await supabaseAdmin.auth.admin.generateLink({
+  const { data: link, error } = await supabaseAdmin.auth.admin.generateLink({
     type: "signup",
-    email: parsed.data.email,
-    password: parsed.data.password,
+    email: data.email,
+    password: data.password,
     options: {
-      data: { full_name: parsed.data.fullName },
-      redirectTo: `${siteUrl}/auth/callback`,
+      data: { full_name: data.fullName },
+      redirectTo: `${siteUrl}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ""}`,
     },
   });
 
   if (error) {
     logServerError("auth.signUp.generateLink", error);
-    // Don't reveal which emails are registered
     if (error.code === "email_exists") return SIGNUP_SUCCESS;
     return {
       status: "error",
       message: "Could not create your account. Please try again.",
     };
   }
-
-  const actionLink = data?.properties?.action_link;
+  const actionLink = link?.properties?.action_link;
   if (!actionLink) {
     logServerError(
       "auth.signUp.noLink",
@@ -165,11 +171,10 @@ export async function signUpAction(
       message: "Could not create your account. Please try again.",
     };
   }
-
   try {
     await sendEmail({
-      to: parsed.data.email,
-      subject: "Confirm your ZedyStats account",
+      to: data.email,
+      subject: "Confirm your FlagStats account",
       html: confirmEmailHtml(actionLink),
     });
   } catch (e) {
@@ -180,8 +185,46 @@ export async function signUpAction(
         "Your account was created but we couldn't send the confirmation email. Try signing in to request a new one.",
     };
   }
-
   return SIGNUP_SUCCESS;
+}
+
+export async function inviteSignUpAction(
+  _prev: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const token = String(formData.get("token") ?? "");
+  if (!isTokenFormat(token))
+    return { status: "error", message: "This invitation is no longer valid." };
+  if (!(await rateLimit(rateKey("signup-ip", await getClientIp()), 10, 3600))) {
+    return {
+      status: "error",
+      message: "Too many attempts. Please try again later.",
+    };
+  }
+
+  const details = await getInviteSignupDetails(token);
+  if (!details)
+    return { status: "error", message: "This invitation is no longer valid." };
+  if (details.hasAccount)
+    return {
+      status: "error",
+      message: "This email already has an account. Sign in instead.",
+    };
+
+  const parsed = SignUpSchema.safeParse({
+    fullName: formData.get("fullName"),
+    email: details.email, // from the invitation, never from the form
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+    acceptTerms: formData.get("acceptTerms"),
+  });
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message ?? "Invalid input.",
+    };
+  }
+  return createAccount(parsed.data, `/invite/${token}`);
 }
 
 export async function resendConfirmationAction(
@@ -227,7 +270,7 @@ export async function resendConfirmationAction(
     try {
       await sendEmail({
         to: parsed.data.email,
-        subject: "Confirm your ZedyStats account",
+        subject: "Confirm your FlagStats account",
         html: confirmEmailHtml(data.properties.action_link),
       });
     } catch (e) {
@@ -284,7 +327,7 @@ export async function forgotPasswordAction(
     try {
       await sendEmail({
         to: parsed.data.email,
-        subject: "Reset your ZedyStats password",
+        subject: "Reset your FlagStats password",
         html: resetPasswordEmailHtml(resetLink),
       });
     } catch (e) {
@@ -294,7 +337,6 @@ export async function forgotPasswordAction(
     logServerError("auth.forgotPassword", error);
   }
 
-  // Same response whether or not the account exists
   return {
     status: "success",
     message: "If an account exists for that email, a reset link has been sent.",

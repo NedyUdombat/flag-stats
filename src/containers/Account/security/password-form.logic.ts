@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { changePasswordAction } from "@/features/account/actions/security.actions";
 import { PASSWORD_REQUIREMENTS } from "@/features/auth/schema";
 import type { SettingsActionState } from "@/features/shared/types";
@@ -18,36 +18,42 @@ export const STRENGTH_COLOR = [
 export function passwordStrength(p: string): { score: number; label: string } {
   if (!p) return { score: 0, label: "" };
   const passed = PASSWORD_REQUIREMENTS.filter((r) => r.test(p)).length;
-  const score = Math.min(
-    4,
-    passed - (p.length < 12 ? 1 : 0) + (p.length >= 16 ? 1 : 0),
+  const score = Math.max(
+    0,
+    Math.min(4, passed - (p.length < 12 ? 1 : 0) + (p.length >= 16 ? 1 : 0)),
   );
-  const clamped = Math.max(0, score);
   return {
-    score: clamped,
-    label: ["Very weak", "Weak", "Fair", "Good", "Strong"][clamped],
+    score,
+    label: ["Very weak", "Weak", "Fair", "Good", "Strong"][score],
   };
 }
 
 export function usePasswordForm() {
   const [state, action, pending] = useActionState(changePasswordAction, idle);
+  const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
+
+  useEffect(() => {
+    if (state.status === "success") {
+      setCurrent("");
+      setNext("");
+      setConfirm("");
+    }
+  }, [state]);
 
   return {
     state,
     action,
     pending,
+    current,
+    setCurrent,
     next,
     setNext,
+    confirm,
     setConfirm,
     strength: passwordStrength(next),
     mismatch: confirm.length > 0 && confirm !== next,
     requirementsMet: PASSWORD_REQUIREMENTS.every((r) => r.test(next)),
-    // React resets the form after the action; mirror that in controlled state.
-    reset: () => {
-      setNext("");
-      setConfirm("");
-    },
   };
 }

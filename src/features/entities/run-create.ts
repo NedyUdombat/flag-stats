@@ -3,7 +3,7 @@ import "server-only";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { z } from "zod";
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 import { logServerError } from "@/lib/errors";
 import { rateKey, rateLimit } from "@/lib/rate-limit";
 import type { CreateResult } from "@/lib/slug/with-unique-slug";
@@ -46,5 +46,9 @@ export async function runCreate<T>(opts: {
   }
 
   revalidatePath("/account", "layout");
-  redirect("/account?tab=teams"); // TODO: /admin/<kind>/<id> once the admin console exists
+  redirect(
+    opts.kind === "team"
+      ? `/admin/teams/${result.data}?created=1`
+      : "/account?tab=teams",
+  );
 }

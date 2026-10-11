@@ -1,9 +1,14 @@
 import { z } from "zod";
-import { logoUrlField, nameField, optionalText } from "../entities/shared";
+import {
+  countryField,
+  logoUrlField,
+  nameField,
+  optionalText,
+} from "../entities/shared";
 
 export const CreateOrganizationSchema = z.object({
   name: nameField,
-  country: optionalText(60),
+  country: countryField,
   description: optionalText(500),
   logoUrl: logoUrlField,
 });

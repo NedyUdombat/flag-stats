@@ -4,6 +4,7 @@ import {
   getMyAthleteProfile,
   getRoleLabel,
 } from "@/features/account/account.service";
+import { getMyPendingInvitations } from "@/features/invitations/invitation.service";
 import type { CurrentUser } from "@/types/users/types";
 import { cn } from "@/utils/cn";
 import {
@@ -33,6 +34,8 @@ export async function AccountView({
       ? await getMyAthleteProfile(user.id)
       : null;
   const affiliations = tab === "teams" ? await getMyAffiliations(user) : [];
+  const invitations =
+    tab === "teams" || tab === "athlete" ? await getMyPendingInvitations() : [];
 
   return (
     <div className="space-y-6">
@@ -42,7 +45,7 @@ export async function AccountView({
         </h1>
         <p className="mt-2 text-zs-muted">
           Your account, your athlete profile, and the teams, leagues and
-          organisations you manage.
+          organizations you manage.
         </p>
       </header>
 
@@ -87,9 +90,16 @@ export async function AccountView({
           defaultName={user.fullName}
           mode={mode}
           basePath={basePath}
+          invitations={invitations}
         />
       )}
-      {tab === "teams" && <TeamsTab user={user} affiliations={affiliations} />}
+      {tab === "teams" && (
+        <TeamsTab
+          user={user}
+          affiliations={affiliations}
+          invitations={invitations}
+        />
+      )}
       {tab === "security" && <PasswordForm />}
       {tab === "delete" &&
         (user.email ? (

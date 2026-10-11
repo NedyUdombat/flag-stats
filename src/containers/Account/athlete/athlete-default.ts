@@ -8,7 +8,8 @@ export type AthleteFormInitial = {
   gender: string;
   nationality: string;
   homeCity: string;
-  positions: string[];
+  primaryPosition: string;
+  secondaryPositions: string[];
   heightCm: string;
   weightKg: string;
   dominantHand: string;
@@ -17,6 +18,8 @@ export type AthleteFormInitial = {
   bio: string;
   socials: Record<(typeof SOCIALS)[number], string>;
   contactPhone: string;
+  contactEmail: string;
+  contactVisibility: string;
   visibility: string;
   parentalConsent: boolean;
   photoUrl: string | null;
@@ -38,7 +41,8 @@ export function emptyInitial(fullName: string | null): AthleteFormInitial {
     gender: "",
     nationality: "",
     homeCity: "",
-    positions: [],
+    primaryPosition: "",
+    secondaryPositions: [],
     heightCm: "",
     weightKg: "",
     dominantHand: "",
@@ -47,6 +51,8 @@ export function emptyInitial(fullName: string | null): AthleteFormInitial {
     bio: "",
     socials: emptySocials,
     contactPhone: "",
+    contactEmail: "",
+    contactVisibility: "private",
     visibility: "public",
     parentalConsent: false,
     photoUrl: null,
@@ -55,7 +61,7 @@ export function emptyInitial(fullName: string | null): AthleteFormInitial {
 
 export function toFormInitial(
   a: Tables<"athletes">,
-  contactPhone: string | null,
+  contact: { phone: string | null; email: string | null },
 ): AthleteFormInitial {
   const s = (a.social_links ?? {}) as Record<string, string>;
   return {
@@ -65,7 +71,8 @@ export function toFormInitial(
     gender: a.gender ?? "",
     nationality: a.nationality ?? "",
     homeCity: a.home_city ?? "",
-    positions: a.positions,
+    primaryPosition: a.primary_position ?? "",
+    secondaryPositions: a.secondary_positions,
     heightCm: a.height_cm?.toString() ?? "",
     weightKg: a.weight_kg?.toString() ?? "",
     dominantHand: a.dominant_hand ?? "",
@@ -79,7 +86,9 @@ export function toFormInitial(
       twitter: s.twitter ?? "",
       facebook: s.facebook ?? "",
     },
-    contactPhone: contactPhone ?? "",
+    contactPhone: contact.phone ?? "",
+    contactEmail: contact.email ?? "",
+    contactVisibility: a.contact_visibility,
     visibility: a.visibility,
     parentalConsent: a.parental_consent,
     photoUrl: a.photo_url,

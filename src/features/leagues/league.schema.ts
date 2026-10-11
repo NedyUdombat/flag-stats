@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { nameField, optionalText } from "../entities/shared";
+import { countryField, nameField, optionalText } from "../entities/shared";
 
 export const CreateLeagueSchema = z.object({
   name: nameField,
   region: optionalText(60),
-  country: optionalText(60),
+  country: countryField,
 });
 export type CreateLeagueInput = z.infer<typeof CreateLeagueSchema>;
 

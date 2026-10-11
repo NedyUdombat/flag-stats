@@ -27,7 +27,11 @@ export function canEditOwnPendingSubmission(
 }
 
 /** Verifying is deliberately NOT satisfied by the submitting team admin. */
-export function canVerifyResult(user: CurrentUser | null, organizationId: string | null, leagueId: string): boolean {
+export function canVerifyResult(
+  user: CurrentUser | null,
+  organizationId: string | null,
+  leagueId: string,
+): boolean {
   return canManageLeague(user, organizationId, leagueId);
 }
 
@@ -38,7 +42,11 @@ export function canSubmitAthleteGameStats(
   organizationId: string | null,
   leagueId: string,
 ): boolean {
-  return isPlatformAdmin(user) || isTeamAdminOf(user, teamId) || canManageLeague(user, organizationId, leagueId);
+  return (
+    isPlatformAdmin(user) ||
+    isTeamAdminOf(user, teamId) ||
+    canManageLeague(user, organizationId, leagueId)
+  );
 }
 
 export const canVerifyAthleteGameStats = canVerifyResult;

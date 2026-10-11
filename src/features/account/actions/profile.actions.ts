@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 import { cleanupReplacedImage } from "@/lib/cloudinary/server";
 import { isOwnImageUrl } from "@/lib/cloudinary/url";
 import { logServerError } from "@/lib/errors";

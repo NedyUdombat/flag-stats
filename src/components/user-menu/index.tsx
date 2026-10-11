@@ -3,7 +3,11 @@
 import { LayoutDashboardIcon, LogOutIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Avatar, AvatarFallback } from "@/components/primitives/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/primitives/avatar";
 import { Button } from "@/components/primitives/button";
 import {
   DropdownMenu,
@@ -20,19 +24,31 @@ interface UserMenuProps {
   fullName: string | null;
   email: string | null;
   showAdminLink?: boolean;
+  showAccountLink?: boolean;
+  avatarUrl?: string | null;
 }
 
 export function UserMenu({
   fullName,
   email,
   showAdminLink = false,
+  showAccountLink = false,
+  avatarUrl,
 }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Avatar className="size-8">
-            <AvatarFallback className="text-xs">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full cursor-pointer focus:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 active:ring-0"
+        >
+          <Avatar className="size-9">
+            <AvatarImage
+              src={avatarUrl ?? ""}
+              alt={`${fullName ?? "User"}'s avatar`}
+            />
+            <AvatarFallback className="grid size-9 place-items-center bg-zs-raised font-data text-xs font-bold text-zs-lime">
               {initials(fullName, email)}
             </AvatarFallback>
           </Avatar>
@@ -48,12 +64,15 @@ export function UserMenu({
           ) : null}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/account">
-            <UserIcon />
-            My account
-          </Link>
-        </DropdownMenuItem>
+        {showAccountLink ? (
+          <DropdownMenuItem asChild>
+            <Link href="/account">
+              <UserIcon />
+              My account
+            </Link>
+          </DropdownMenuItem>
+        ) : null}
+
         {showAdminLink ? (
           <DropdownMenuItem asChild>
             <Link href="/admin">

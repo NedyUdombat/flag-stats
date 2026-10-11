@@ -1,56 +1,19 @@
 "use client";
 
-import { CheckIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { ImageUpload } from "@/components/primitives/image-upload";
-import {
-  DOMINANT_HANDS,
-  GENDERS,
-  POSITIONS,
-  SOCIALS,
-} from "@/features/athletes/athlete.constants";
+import { cn } from "@/utils/cn";
 import { Message } from "../shared/message";
 import { Panel } from "../shared/panel";
-import {
-  buttonPrimary,
-  buttonSecondary,
-  fieldHint,
-  fieldInput,
-  fieldLabel,
-} from "../styles";
+import { buttonPrimary, buttonSecondary } from "../styles";
 import type { AthleteFormInitial } from "./athlete-default";
-import { useAthleteForm } from "./athlete-form.logic";
-
-function Field({
-  id,
-  label,
-  error,
-  hint,
-  children,
-}: {
-  id: string;
-  label: string;
-  error?: string;
-  hint?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className={fieldLabel}>
-        {label}
-      </label>
-      {children}
-      {error ? (
-        <p className="mt-1.5 text-xs text-zs-coral">{error}</p>
-      ) : hint ? (
-        <p className={fieldHint}>{hint}</p>
-      ) : null}
-    </div>
-  );
-}
-
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+import { STEPS, useAthleteForm } from "./athlete-form.logic";
+import {
+  AboutStep,
+  BasicsStep,
+  ContactStep,
+  SportsStep,
+} from "./athlete-form-steps";
 
 export function AthleteForm({
   mode,
@@ -63,12 +26,7 @@ export function AthleteForm({
 }) {
   const f = useAthleteForm({ mode, initial, viewHref });
   const err = f.state.fieldErrors ?? {};
-  const positionOptions = [
-    ...POSITIONS,
-    ...initial.positions.filter(
-      (p) => !(POSITIONS as readonly string[]).includes(p),
-    ),
-  ];
+  const pane = (i: number) => (f.step === i ? "space-y-6" : "hidden");
 
   return (
     <Panel
@@ -83,282 +41,59 @@ export function AthleteForm({
         className="space-y-8"
         noValidate
       >
-        {/* Identity */}
-        <div className="grid gap-6 md:grid-cols-[12rem_1fr]">
-          <ImageUpload
-            name="photoUrl"
-            label="Headshot"
-            defaultValue={initial.photoUrl}
-            shape="square"
-          />
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field id="a-name" label="Full name" error={err.fullName}>
-              <input
-                id="a-name"
-                name="fullName"
-                required
-                maxLength={80}
-                defaultValue={initial.fullName}
-                className={fieldInput}
-              />
-            </Field>
-            {mode === "create" ? (
-              <Field
-                id="a-slug"
-                label="Profile ID (optional)"
-                error={err.slug}
-                hint="zedystats.com/athletes/… Leave blank to use your name. It can't be changed later."
-              >
-                <input
-                  id="a-slug"
-                  name="slug"
-                  maxLength={60}
-                  placeholder="chidi-okafor"
-                  className={fieldInput}
-                />
-              </Field>
-            ) : (
-              <Field
-                id="a-slug"
-                label="Profile ID"
-                hint="Fixed, so shared links keep working."
-              >
-                <p className="font-data text-sm text-zs-ink">
-                  /athletes/{initial.slug}
-                </p>
-              </Field>
-            )}
-            <Field
-              id="a-dob"
-              label="Date of birth"
-              error={err.dateOfBirth}
-              hint="Shown publicly as age only."
-            >
-              <input
-                id="a-dob"
-                name="dateOfBirth"
-                type="date"
-                required
-                defaultValue={initial.dateOfBirth}
-                onChange={(e) => f.setDob(e.target.value)}
-                className={fieldInput}
-              />
-            </Field>
-            <Field id="a-gender" label="Gender" error={err.gender}>
-              <select
-                id="a-gender"
-                name="gender"
-                required
-                defaultValue={initial.gender}
-                className={fieldInput}
-              >
-                <option value="">Choose…</option>
-                {GENDERS.map((g) => (
-                  <option key={g} value={g}>
-                    {cap(g)}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field id="a-nat" label="Nationality" error={err.nationality}>
-              <input
-                id="a-nat"
-                name="nationality"
-                defaultValue={initial.nationality}
-                className={fieldInput}
-              />
-            </Field>
-            <Field id="a-city" label="Home city" error={err.homeCity}>
-              <input
-                id="a-city"
-                name="homeCity"
-                defaultValue={initial.homeCity}
-                className={fieldInput}
-              />
-            </Field>
-          </div>
-        </div>
-
-        {f.minor && (
-          <div className="border border-zs-amber/40 bg-zs-amber/10 p-4">
-            <p className="text-sm text-zs-ink">
-              This athlete is under 18. A parent or guardian must consent to
-              this profile being on yStats.
-            </p>
-            <label className="mt-3 flex items-start gap-3 text-sm text-zs-ink">
-              <input
-                type="checkbox"
-                name="parentalConsent"
-                defaultChecked={initial.parentalConsent}
-                className="mt-0.5 size-4 accent-zs-lime"
-              />
-              I confirm a parent or guardian has given consent.
-            </label>
-            {err.parentalConsent && (
-              <p className="mt-1.5 text-xs text-zs-coral">
-                {err.parentalConsent}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Sports */}
-        <fieldset>
-          <legend className={fieldLabel}>
-            Positions (choose all you play)
-          </legend>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {positionOptions.map((p) => (
-              <label key={p} className="cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="positions"
-                  value={p}
-                  defaultChecked={initial.positions.includes(p)}
-                  className="peer sr-only"
-                />
-                <span className="inline-block border border-zs-line px-3 py-1.5 font-display text-sm font-bold tracking-wider text-zs-muted uppercase peer-checked:border-zs-lime peer-checked:bg-zs-lime/10 peer-checked:text-zs-lime peer-focus-visible:outline-2 peer-focus-visible:outline-zs-lime">
-                  {p}
-                </span>
-              </label>
-            ))}
-          </div>
-          {err.positions && (
-            <p className="mt-1.5 text-xs text-zs-coral">{err.positions}</p>
-          )}
-        </fieldset>
-
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <Field id="a-h" label="Height (cm)" error={err.heightCm}>
-            <input
-              id="a-h"
-              name="heightCm"
-              inputMode="numeric"
-              defaultValue={initial.heightCm}
-              className={fieldInput}
-            />
-          </Field>
-          <Field id="a-w" label="Weight (kg)" error={err.weightKg}>
-            <input
-              id="a-w"
-              name="weightKg"
-              inputMode="decimal"
-              defaultValue={initial.weightKg}
-              className={fieldInput}
-            />
-          </Field>
-          <Field id="a-hand" label="Dominant hand" error={err.dominantHand}>
-            <select
-              id="a-hand"
-              name="dominantHand"
-              defaultValue={initial.dominantHand}
-              className={fieldInput}
-            >
-              <option value="">Not set</option>
-              {DOMINANT_HANDS.map((h) => (
-                <option key={h} value={h}>
-                  {cap(h)}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field
-            id="a-year"
-            label="Year started playing"
-            error={err.startedPlayingYear}
-          >
-            <input
-              id="a-year"
-              name="startedPlayingYear"
-              inputMode="numeric"
-              placeholder="2022"
-              defaultValue={initial.startedPlayingYear}
-              className={fieldInput}
-            />
-          </Field>
-          <Field
-            id="a-jersey"
-            label="Preferred jersey #"
-            error={err.preferredJerseyNumber}
-          >
-            <input
-              id="a-jersey"
-              name="preferredJerseyNumber"
-              inputMode="numeric"
-              defaultValue={initial.preferredJerseyNumber}
-              className={fieldInput}
-            />
-          </Field>
-        </div>
-
-        {/* About */}
-        <Field
-          id="a-bio"
-          label="Bio"
-          error={err.bio}
-          hint="Public. Add contact email here if you want people to reach you. Max 1000 characters."
+        <ol
+          aria-label="Steps"
+          className="flex flex-wrap gap-2 border border-zs-line p-2"
         >
-          <textarea
-            id="a-bio"
-            name="bio"
-            rows={4}
-            maxLength={1000}
-            defaultValue={initial.bio}
-            className={fieldInput}
-          />
-        </Field>
-
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SOCIALS.map((s) => (
-            <Field
-              key={s}
-              id={`a-${s}`}
-              label={cap(s)}
-              error={err[s]}
-              hint="Username only, not a link."
-            >
-              <input
-                id={`a-${s}`}
-                name={s}
-                placeholder="@username"
-                defaultValue={initial.socials[s]}
-                className={fieldInput}
-              />
-            </Field>
+          {STEPS.map((s, i) => (
+            <li key={s.id}>
+              <button
+                type="button"
+                onClick={() => f.goTo(i)}
+                disabled={!f.canGo(i)}
+                aria-current={f.step === i ? "step" : undefined}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 font-display text-sm font-bold tracking-wider uppercase disabled:opacity-50",
+                  f.step === i
+                    ? "bg-zs-raised text-zs-lime"
+                    : "text-zs-muted hover:text-zs-ink",
+                )}
+              >
+                <span
+                  className={cn(
+                    "grid size-6 place-items-center rounded-full border text-xs",
+                    f.step === i ? "border-zs-lime" : "border-zs-line",
+                  )}
+                >
+                  {i < f.step ? (
+                    <CheckIcon className="size-3.5" aria-hidden />
+                  ) : (
+                    i + 1
+                  )}
+                </span>
+                {s.label}
+              </button>
+            </li>
           ))}
-        </div>
+        </ol>
 
-        {/* Privacy */}
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Field
-            id="a-phone"
-            label="Contact phone (private)"
-            error={err.contactPhone}
-            hint="Only you can see this. It is never shown publicly."
-          >
-            <input
-              id="a-phone"
-              name="contactPhone"
-              type="tel"
-              defaultValue={initial.contactPhone}
-              className={fieldInput}
-            />
-          </Field>
-          <Field
-            id="a-vis"
-            label="Profile visibility"
-            hint="Private hides your profile from public pages and search."
-          >
-            <select
-              id="a-vis"
-              name="visibility"
-              defaultValue={initial.visibility}
-              className={fieldInput}
-            >
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-            </select>
-          </Field>
+        {/* All steps stay mounted so every field is submitted; only the current one is visible. */}
+        <div data-step="0" className={pane(0)}>
+          <BasicsStep
+            initial={initial}
+            err={err}
+            mode={mode}
+            onDobChange={f.setDob}
+          />
+        </div>
+        <div data-step="1" className={pane(1)}>
+          <SportsStep initial={initial} err={err} />
+        </div>
+        <div data-step="2" className={pane(2)}>
+          <AboutStep initial={initial} err={err} />
+        </div>
+        <div data-step="3" className={pane(3)}>
+          <ContactStep initial={initial} err={err} minor={f.minor} />
         </div>
 
         {f.state.status === "duplicate" && (
@@ -382,18 +117,49 @@ export function AthleteForm({
         )}
         <Message state={f.state} />
 
-        <div className="flex flex-wrap gap-3">
-          <button type="submit" disabled={f.pending} className={buttonPrimary}>
-            <CheckIcon className="size-4" aria-hidden />
-            {f.pending
-              ? "Saving…"
-              : mode === "create"
-                ? "Create profile"
-                : "Save changes"}
-          </button>
-          <Link href={viewHref} className={buttonSecondary}>
-            Cancel
-          </Link>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            {!f.isFirst && (
+              <button
+                type="button"
+                onClick={f.back}
+                className={buttonSecondary}
+              >
+                <ArrowLeftIcon className="size-4" aria-hidden /> Back
+              </button>
+            )}
+            <Link href={viewHref} className={buttonSecondary}>
+              Cancel
+            </Link>
+            <span className="font-data text-xs text-zs-muted">
+              Step {f.step + 1} of {STEPS.length}
+            </span>
+          </div>
+          <div className="flex gap-3">
+            {!f.isLast && (
+              <button
+                type="button"
+                onClick={f.next}
+                className={mode === "edit" ? buttonSecondary : buttonPrimary}
+              >
+                Next <ArrowRightIcon className="size-4" aria-hidden />
+              </button>
+            )}
+            {(f.isLast || mode === "edit") && (
+              <button
+                type="submit"
+                disabled={f.pending}
+                className={buttonPrimary}
+              >
+                <CheckIcon className="size-4" aria-hidden />
+                {f.pending
+                  ? "Saving…"
+                  : mode === "create"
+                    ? "Create profile"
+                    : "Save changes"}
+              </button>
+            )}
+          </div>
         </div>
       </form>
     </Panel>

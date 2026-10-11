@@ -15,7 +15,6 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 
 import {
-  FieldHint,
   FormAlert,
   FormField,
   fieldInputClass,
@@ -28,13 +27,6 @@ import { Checkbox } from "@/components/primitives/checkbox";
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
 import { PasswordInput } from "@/components/primitives/password-input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/primitives/select";
 import { type AuthActionState, signUpAction } from "@/features/auth/actions";
 import type { SignupScopeOptions } from "@/features/auth/service";
 import { cn } from "@/utils/cn";
@@ -68,18 +60,20 @@ interface SignUpFormProps {
   scopeOptions: SignupScopeOptions;
   defaultEmail?: string;
   defaultRole?: RoleValue;
+  next?: string;
 }
 
 export function SignUpForm({
   scopeOptions,
   defaultEmail,
   defaultRole,
+  next,
 }: SignUpFormProps) {
   const [state, formAction, isPending] = useActionState(
     signUpAction,
     initialState,
   );
-  const [role, setRole] = useState<RoleValue>(defaultRole ?? "athlete");
+  const [role, _setRole] = useState<RoleValue>(defaultRole ?? "athlete");
   const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
 
@@ -95,8 +89,8 @@ export function SignUpForm({
     );
   }
 
-  const scopeLabel = SCOPE_LABEL[role];
-  const scopeList =
+  const _scopeLabel = SCOPE_LABEL[role];
+  const _scopeList =
     role === "team_coach"
       ? scopeOptions.teams
       : role === "league_admin"
@@ -141,7 +135,7 @@ export function SignUpForm({
           >
             {scopeList.length === 0 ? (
               <p className="rounded-sm border border-dashed p-3 text-sm text-muted-foreground">
-                None are on ZedyStats yet. Leave this blank and you can create
+                None are on FlagStats yet. Leave this blank and you can create
                 yours once you&apos;re signed in.
               </p>
             ) : (
@@ -173,6 +167,7 @@ export function SignUpForm({
           </FormField>
         ) : null} */}
 
+        {next ? <input type="hidden" name="next" value={next} /> : null}
         <FormField id="fullName" label="Full name" required>
           <Input
             id="fullName"
@@ -272,7 +267,7 @@ export function SignUpForm({
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
-        Already on ZedyStats?{" "}
+        Already on FlagStats?{" "}
         <Link
           href="/login"
           className="font-medium text-brand-lime underline-offset-4 hover:underline"

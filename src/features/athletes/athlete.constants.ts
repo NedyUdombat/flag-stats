@@ -1,11 +1,12 @@
 export const POSITIONS = [
   "QB",
+  "C",
   "WR",
   "RB",
-  "C",
+  "R",
+  "LB",
   "DB",
   "CB",
-  "Rusher",
   "S",
 ] as const;
 
@@ -28,3 +29,5 @@ export type AthleteActionState = {
   message?: string;
   fieldErrors?: Record<string, string>;
 };
+
+export const CONTACT_VISIBILITIES = ["private", "teams_and_scouts"] as const;

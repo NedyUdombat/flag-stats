@@ -8,7 +8,7 @@ import {
 import { createLeagueAction } from "@/features/leagues/actions/league.actions";
 import { createOrganizationAction } from "@/features/organizations/actions/organization.actions";
 import { createTeamAction } from "@/features/teams/actions/team.actions";
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 import {
   canCreateLeague,
   canCreateOrganization,

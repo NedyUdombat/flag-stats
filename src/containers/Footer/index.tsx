@@ -6,6 +6,7 @@ import {
   LinkedInIcon,
   XIcon,
 } from "@/components/icons/social-icons";
+import { BrandText } from "../../components/brand-text";
 
 const PLATFORM_LINKS = [
   { href: "/athletes", label: "Athletes" },
@@ -48,9 +49,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4 lg:col-span-2">
-            <Link href="/" className="font-display text-lg tracking-tight">
-              ZEDY<span className="text-brand-lime">Stats</span>
-            </Link>
+            <BrandText href="/" />
             <p className="max-w-sm text-sm text-white/60">
               The verified career record for African flag football — every stat,
               every league, one record.
@@ -108,7 +107,7 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
           <span>
-            © {new Date().getFullYear()} ZedyStats. All rights reserved.
+            © {new Date().getFullYear()} FlagStats. All rights reserved.
           </span>
         </div>
       </div>

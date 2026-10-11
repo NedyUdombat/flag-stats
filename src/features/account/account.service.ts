@@ -59,7 +59,7 @@ export async function getMyAthleteProfile(
   const [{ data: priv }, detail] = await Promise.all([
     supabase
       .from("athlete_private")
-      .select("contact_phone")
+      .select("contact_phone, contact_email")
       .eq("athlete_id", athlete.id)
       .maybeSingle(),
     getAthleteDetail(athlete.id).catch(() => null),
@@ -68,6 +68,7 @@ export async function getMyAthleteProfile(
   return {
     athlete,
     contactPhone: priv?.contact_phone ?? null,
+    contactEmail: priv?.contact_email ?? null,
     careerTotals: detail?.careerTotals
       ? {
           gamesPlayed: detail.careerTotals.gamesPlayed,

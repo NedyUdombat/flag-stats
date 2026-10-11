@@ -26,7 +26,7 @@ export function ProfileForm({
   return (
     <Panel
       title="Edit profile"
-      description="Your name and photo as they appear across ZedyStats."
+      description="Your name and photo as they appear across FlagStats."
     >
       <form action={action} className="space-y-5">
         <div className="grid gap-6 md:grid-cols-[12rem_1fr]">

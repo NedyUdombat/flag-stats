@@ -13,7 +13,7 @@ export function AuthBrand() {
         Z
       </span>
       <span className="font-display text-2xl leading-none uppercase tracking-wide">
-        Zedy<span className="text-brand-lime">Stats</span>
+        Flag<span className="text-brand-lime">Stats</span>
       </span>
     </Link>
   );

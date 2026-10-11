@@ -1,3 +1,4 @@
+import type { MyInvitation } from "@/features/invitations/invitation.types";
 import type { MyAthleteProfile } from "@/features/shared/types";
 import type { SettingsMode } from "../account-tabs";
 import { emptyInitial, toFormInitial } from "./athlete-default";
@@ -10,11 +11,13 @@ export function AthleteTab({
   defaultName,
   mode,
   basePath,
+  invitations,
 }: {
   profile: MyAthleteProfile | null;
   defaultName: string | null;
   mode: SettingsMode;
   basePath: string;
+  invitations: MyInvitation[];
 }) {
   const viewHref = `${basePath}?tab=athlete`;
 
@@ -26,7 +29,10 @@ export function AthleteTab({
         viewHref={viewHref}
       />
     ) : (
-      <AthleteEmpty createHref={`${viewHref}&mode=create`} />
+      <AthleteEmpty
+        createHref={`${viewHref}&mode=create`}
+        invitations={invitations.filter((i) => i.type === "athlete_claim")}
+      />
     );
   }
 
@@ -34,7 +40,10 @@ export function AthleteTab({
     return (
       <AthleteForm
         mode="edit"
-        initial={toFormInitial(profile.athlete, profile.contactPhone)}
+        initial={toFormInitial(profile.athlete, {
+          phone: profile.contactPhone,
+          email: profile.contactEmail,
+        })}
         viewHref={viewHref}
       />
     );
@@ -47,5 +56,4 @@ export function AthleteTab({
       viewHref={viewHref}
     />
   );
-  // return <AthleteView profile={profile} editHref={`${viewHref}&mode=edit`} />;
 }

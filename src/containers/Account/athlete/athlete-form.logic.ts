@@ -3,6 +3,7 @@
 import {
   type FormEvent,
   useActionState,
+  useEffect,
   useRef,
   useState,
   useTransition,
@@ -17,6 +18,51 @@ import { useRedirectOnSuccess } from "../shared/use-redirect-on-success";
 import type { AthleteFormInitial } from "./athlete-default";
 
 const idle: AthleteActionState = { status: "idle" };
+
+export const STEPS = [
+  {
+    id: "basics",
+    label: "Basics",
+    fields: [
+      "fullName",
+      "slug",
+      "dateOfBirth",
+      "gender",
+      "nationality",
+      "homeCity",
+      "photoUrl",
+    ],
+  },
+  {
+    id: "sports",
+    label: "Sports",
+    fields: [
+      "primaryPosition",
+      "secondaryPositions",
+      "heightCm",
+      "weightKg",
+      "dominantHand",
+      "startedPlayingYear",
+      "preferredJerseyNumber",
+    ],
+  },
+  {
+    id: "about",
+    label: "About",
+    fields: ["bio", "instagram", "tiktok", "youtube", "twitter", "facebook"],
+  },
+  {
+    id: "contact",
+    label: "Contact & privacy",
+    fields: [
+      "contactPhone",
+      "contactEmail",
+      "contactVisibility",
+      "visibility",
+      "parentalConsent",
+    ],
+  },
+] as const;
 
 export function useAthleteForm({
   mode,
@@ -35,13 +81,37 @@ export function useAthleteForm({
   );
   const formRef = useRef<HTMLFormElement>(null);
   const [dob, setDob] = useState(initial.dateOfBirth);
+  const [step, setStep] = useState(0);
   const [, startTransition] = useTransition();
-  const minor = isMinor(dob);
+  const last = STEPS.length - 1;
 
   useRedirectOnSuccess(state.status, viewHref, state.message);
 
-  // Submitted manually (not via <form action>) so React doesn't wipe the
-  // fields when the server returns a validation error.
+  // Server rejected a field: jump to the step that contains it.
+  useEffect(() => {
+    const keys = Object.keys(state.fieldErrors ?? {});
+    if (keys.length === 0) return;
+    const idx = STEPS.findIndex((s) => s.fields.some((f) => keys.includes(f)));
+    if (idx >= 0) setStep(idx);
+  }, [state]);
+
+  const stepValid = (i: number) => {
+    const root = formRef.current?.querySelector<HTMLElement>(
+      `[data-step="${i}"]`,
+    );
+    if (!root) return true;
+    for (const el of root.querySelectorAll<HTMLInputElement>(
+      "input, select, textarea",
+    )) {
+      if (!el.checkValidity()) {
+        el.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // Manual submit so React doesn't clear the fields when the server returns an error.
   const submit = (extra?: Record<string, string>) => {
     if (!formRef.current) return;
     const fd = new FormData(formRef.current);
@@ -49,19 +119,32 @@ export function useAthleteForm({
     startTransition(() => formAction(fd));
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    submit();
+  const next = () => {
+    if (stepValid(step)) setStep((s) => Math.min(s + 1, last));
   };
-  const submitIgnoringDuplicate = () => submit({ confirmNotDuplicate: "on" });
 
   return {
     state,
     pending,
     formRef,
+    step,
+    isFirst: step === 0,
+    isLast: step === last,
+    minor: isMinor(dob),
     setDob,
-    minor,
-    onSubmit,
-    submitIgnoringDuplicate,
+    next,
+    back: () => setStep((s) => Math.max(s - 1, 0)),
+    canGo: (i: number) => mode === "edit" || i <= step,
+    goTo: (i: number) => {
+      if (mode !== "edit" && i > step) return;
+      if (i > step && !stepValid(step)) return;
+      setStep(i);
+    },
+    onSubmit: (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (mode === "create" && step < last) return next(); // Enter advances
+      if (stepValid(step)) submit();
+    },
+    submitIgnoringDuplicate: () => submit({ confirmNotDuplicate: "on" }),
   };
 }

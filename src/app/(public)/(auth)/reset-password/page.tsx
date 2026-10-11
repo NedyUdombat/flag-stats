@@ -24,7 +24,7 @@ export default async function ResetPasswordPage({
         </p>
       </div>
       <div className="mt-8">
-        <ResetPasswordForm  tokenHash={token_hash} />
+        <ResetPasswordForm tokenHash={token_hash} />
       </div>
     </AuthShell>
   );

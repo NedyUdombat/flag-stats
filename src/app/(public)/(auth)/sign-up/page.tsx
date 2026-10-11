@@ -1,15 +1,16 @@
 import { AuthShell } from "@/containers/Auth/shell";
 import { SignUpForm } from "@/containers/Forms/sign-up";
 import { getSignupScopeOptions } from "@/features/auth/service";
+import { safeNext } from "@/utils/safe-next";
 
 export const metadata = { title: "Create account" };
 
 interface SignUpPageProps {
-  searchParams: Promise<{ email?: string; role?: string }>;
+  searchParams: Promise<{ email?: string; role?: string; next?: string }>;
 }
 
 export default async function SignUpPage({ searchParams }: SignUpPageProps) {
-  const { email, role } = await searchParams;
+  const { email, role, next } = await searchParams;
   const scopeOptions = await getSignupScopeOptions();
 
   return (
@@ -30,6 +31,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           scopeOptions={scopeOptions}
           defaultEmail={email}
           defaultRole={role === "athlete" ? "athlete" : undefined}
+          next={safeNext(next)}
         />
       </div>
     </AuthShell>

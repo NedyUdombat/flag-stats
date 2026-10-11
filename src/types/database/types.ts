@@ -154,16 +154,19 @@ export type Database = {
       athlete_private: {
         Row: {
           athlete_id: string
+          contact_email: string | null
           contact_phone: string | null
           updated_at: string
         }
         Insert: {
           athlete_id: string
+          contact_email?: string | null
           contact_phone?: string | null
           updated_at?: string
         }
         Update: {
           athlete_id?: string
+          contact_email?: string | null
           contact_phone?: string | null
           updated_at?: string
         }
@@ -289,6 +292,7 @@ export type Database = {
         Row: {
           bio: string | null
           claimed_at: string | null
+          contact_visibility: string
           created_at: string
           created_by: string | null
           date_of_birth: string | null
@@ -303,9 +307,10 @@ export type Database = {
           parental_consent: boolean
           parental_consent_at: string | null
           photo_url: string | null
-          positions: string[]
           preferred_jersey_number: number | null
+          primary_position: string | null
           profile_user_id: string | null
+          secondary_positions: string[]
           slug: string
           social_links: Json
           started_playing_year: number | null
@@ -317,6 +322,7 @@ export type Database = {
         Insert: {
           bio?: string | null
           claimed_at?: string | null
+          contact_visibility?: string
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
@@ -331,9 +337,10 @@ export type Database = {
           parental_consent?: boolean
           parental_consent_at?: string | null
           photo_url?: string | null
-          positions?: string[]
           preferred_jersey_number?: number | null
+          primary_position?: string | null
           profile_user_id?: string | null
+          secondary_positions?: string[]
           slug: string
           social_links?: Json
           started_playing_year?: number | null
@@ -345,6 +352,7 @@ export type Database = {
         Update: {
           bio?: string | null
           claimed_at?: string | null
+          contact_visibility?: string
           created_at?: string
           created_by?: string | null
           date_of_birth?: string | null
@@ -359,9 +367,10 @@ export type Database = {
           parental_consent?: boolean
           parental_consent_at?: string | null
           photo_url?: string | null
-          positions?: string[]
           preferred_jersey_number?: number | null
+          primary_position?: string | null
           profile_user_id?: string | null
+          secondary_positions?: string[]
           slug?: string
           social_links?: Json
           started_playing_year?: number | null
@@ -444,6 +453,92 @@ export type Database = {
             columns: ["season_id"]
             isOneToOne: false
             referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invitations: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          athlete_id: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string | null
+          league_id: string | null
+          organization_id: string | null
+          revoked_at: string | null
+          sent_at: string
+          status: Database["public"]["Enums"]["invitation_status"]
+          team_id: string | null
+          token_hash: string
+          type: Database["public"]["Enums"]["invitation_type"]
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          athlete_id?: string | null
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          invited_by?: string | null
+          league_id?: string | null
+          organization_id?: string | null
+          revoked_at?: string | null
+          sent_at?: string
+          status?: Database["public"]["Enums"]["invitation_status"]
+          team_id?: string | null
+          token_hash: string
+          type: Database["public"]["Enums"]["invitation_type"]
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          athlete_id?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          league_id?: string | null
+          organization_id?: string | null
+          revoked_at?: string | null
+          sent_at?: string
+          status?: Database["public"]["Enums"]["invitation_status"]
+          team_id?: string | null
+          token_hash?: string
+          type?: Database["public"]["Enums"]["invitation_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitations_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invitations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invitations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invitations_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
             referencedColumns: ["id"]
           },
         ]
@@ -729,6 +824,57 @@ export type Database = {
           },
         ]
       }
+      team_members: {
+        Row: {
+          added_by: string | null
+          athlete_id: string
+          created_at: string
+          id: string
+          joined_at: string
+          left_at: string | null
+          status: string
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          added_by?: string | null
+          athlete_id: string
+          created_at?: string
+          id?: string
+          joined_at?: string
+          left_at?: string | null
+          status?: string
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          added_by?: string | null
+          athlete_id?: string
+          created_at?: string
+          id?: string
+          joined_at?: string
+          left_at?: string | null
+          status?: string
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_athlete_id_fkey"
+            columns: ["athlete_id"]
+            isOneToOne: false
+            referencedRelation: "athletes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_season_registrations: {
         Row: {
           created_at: string
@@ -778,8 +924,12 @@ export type Database = {
       teams: {
         Row: {
           accent_color: string | null
+          bio: string | null
+          claimed_at: string | null
           country: string | null
           created_at: string
+          created_by: string | null
+          deleted_at: string | null
           founded_year: number | null
           head_coach_name: string | null
           home_city: string | null
@@ -790,13 +940,19 @@ export type Database = {
           primary_color: string | null
           roster_capacity: number | null
           short_name: string | null
+          slogan: string | null
           slug: string
+          social_links: Json
           updated_at: string
         }
         Insert: {
           accent_color?: string | null
+          bio?: string | null
+          claimed_at?: string | null
           country?: string | null
           created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
           founded_year?: number | null
           head_coach_name?: string | null
           home_city?: string | null
@@ -807,13 +963,19 @@ export type Database = {
           primary_color?: string | null
           roster_capacity?: number | null
           short_name?: string | null
+          slogan?: string | null
           slug: string
+          social_links?: Json
           updated_at?: string
         }
         Update: {
           accent_color?: string | null
+          bio?: string | null
+          claimed_at?: string | null
           country?: string | null
           created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
           founded_year?: number | null
           head_coach_name?: string | null
           home_city?: string | null
@@ -824,7 +986,9 @@ export type Database = {
           primary_color?: string | null
           roster_capacity?: number | null
           short_name?: string | null
+          slogan?: string | null
           slug?: string
+          social_links?: Json
           updated_at?: string
         }
         Relationships: []
@@ -902,9 +1066,82 @@ export type Database = {
       }
     }
     Functions: {
+      _accept_invitation: { Args: { p_id: string }; Returns: Json }
+      _invite_email_conflict: {
+        Args: { p_athlete_id: string; p_email: string }
+        Returns: string
+      }
+      _is_any_admin: { Args: never; Returns: boolean }
+      accept_invitation: { Args: { p_invitation_id: string }; Returns: Json }
+      accept_invitation_by_token: {
+        Args: { p_token_hash: string }
+        Returns: Json
+      }
+      add_team_member: {
+        Args: { p_athlete_id: string; p_team_id: string }
+        Returns: undefined
+      }
+      admin_athlete_stats: { Args: never; Returns: Json }
+      admin_list_athletes: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_position?: string
+          p_q?: string
+          p_status?: string
+        }
+        Returns: {
+          can_manage: boolean
+          claimed: boolean
+          full_name: string
+          home_city: string
+          id: string
+          invite_email: string
+          invite_expires_at: string
+          invite_status: string
+          jersey_number: number
+          photo_url: string
+          primary_position: string
+          secondary_positions: string[]
+          slug: string
+          team_name: string
+          total_count: number
+          verified: boolean
+        }[]
+      }
+      admin_list_teams: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_q?: string
+          p_status?: string
+        }
+        Returns: {
+          admin_count: number
+          can_manage: boolean
+          claimed: boolean
+          country: string
+          deleted: boolean
+          home_city: string
+          id: string
+          logo_url: string
+          name: string
+          orphaned: boolean
+          slug: string
+          total_count: number
+        }[]
+      }
       assert_valid_slug: { Args: { p_slug: string }; Returns: undefined }
+      athlete_admin_duplicate_exists: {
+        Args: { p_dob: string; p_name: string }
+        Returns: boolean
+      }
       athlete_duplicate_exists: {
         Args: { p_dob: string; p_name: string }
+        Returns: boolean
+      }
+      athlete_in_admin_scope: {
+        Args: { _athlete_id: string }
         Returns: boolean
       }
       can_access_athlete_private: {
@@ -915,9 +1152,33 @@ export type Database = {
         Args: { _athlete_id: string }
         Returns: boolean
       }
+      can_manage_team: { Args: { _team_id: string }; Returns: boolean }
+      can_view_athlete_contact: {
+        Args: { _athlete_id: string }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: { p_key: string; p_limit: number; p_window_seconds: number }
         Returns: boolean
+      }
+      create_athlete_invitation: {
+        Args: {
+          p_athlete_id: string
+          p_email: string
+          p_expires_at: string
+          p_token_hash: string
+        }
+        Returns: string
+      }
+      create_entity_invitation: {
+        Args: {
+          p_email: string
+          p_entity_id: string
+          p_expires_at: string
+          p_token_hash: string
+          p_type: Database["public"]["Enums"]["invitation_type"]
+        }
+        Returns: string
       }
       create_league: {
         Args: {
@@ -949,7 +1210,48 @@ export type Database = {
         }
         Returns: string
       }
+      create_team_admin_invitation: {
+        Args: {
+          p_email: string
+          p_expires_at: string
+          p_team_id: string
+          p_token_hash: string
+        }
+        Returns: string
+      }
+      create_team_join_invitation: {
+        Args: {
+          p_athlete_id: string
+          p_expires_at: string
+          p_team_id: string
+          p_token_hash: string
+        }
+        Returns: string
+      }
+      create_team_shell: {
+        Args: {
+          p_country?: string
+          p_home_city?: string
+          p_name: string
+          p_slug: string
+        }
+        Returns: string
+      }
       delete_my_athlete_profile: { Args: never; Returns: undefined }
+      delete_unclaimed_athlete: {
+        Args: { p_athlete_id: string }
+        Returns: undefined
+      }
+      get_athlete_invitation: {
+        Args: { p_athlete_id: string }
+        Returns: {
+          email: string
+          expires_at: string
+          id: string
+          sent_at: string
+          status: string
+        }[]
+      }
       has_role: {
         Args: {
           _league_id?: string
@@ -959,12 +1261,91 @@ export type Database = {
         }
         Returns: boolean
       }
+      invitation_recipient: {
+        Args: { p_invitation_id: string }
+        Returns: string
+      }
+      invite_email_conflict: {
+        Args: { p_athlete_id?: string; p_email: string }
+        Returns: string
+      }
+      invite_email_has_account: { Args: { p_email: string }; Returns: boolean }
+      invite_signup_details: { Args: { p_token_hash: string }; Returns: Json }
       is_platform_admin: { Args: never; Returns: boolean }
+      is_valid_team_social_links: { Args: { p: Json }; Returns: boolean }
+      my_pending_invitations: {
+        Args: never
+        Returns: {
+          expired: boolean
+          expires_at: string
+          id: string
+          invited_by_name: string
+          label: string
+          sent_at: string
+          type: Database["public"]["Enums"]["invitation_type"]
+        }[]
+      }
+      preview_invitation: { Args: { p_token_hash: string }; Returns: Json }
       release_my_athlete_profile: { Args: never; Returns: undefined }
+      remove_team_admin: {
+        Args: { p_team_id: string; p_user_id: string }
+        Returns: undefined
+      }
+      remove_team_member: {
+        Args: { p_athlete_id: string; p_team_id: string }
+        Returns: undefined
+      }
       restore_fixture: { Args: { p_fixture_id: string }; Returns: undefined }
+      restore_team: { Args: { p_team_id: string }; Returns: undefined }
+      revoke_invitation: {
+        Args: { p_invitation_id: string }
+        Returns: undefined
+      }
+      revoke_team_invitation: {
+        Args: { p_invitation_id: string }
+        Returns: undefined
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       soft_delete_my_account: { Args: never; Returns: undefined }
+      soft_delete_team: { Args: { p_team_id: string }; Returns: undefined }
+      team_admins: {
+        Args: { p_team_id: string }
+        Returns: {
+          added_at: string
+          email: string
+          full_name: string
+          user_id: string
+        }[]
+      }
+      team_has_verified_results: {
+        Args: { p_team_id: string }
+        Returns: boolean
+      }
+      team_members_list: {
+        Args: { p_team_id: string }
+        Returns: {
+          athlete_id: string
+          claimed: boolean
+          full_name: string
+          joined_at: string
+          photo_url: string
+          primary_position: string
+          slug: string
+        }[]
+      }
+      team_pending_invitations: {
+        Args: { p_team_id: string }
+        Returns: {
+          email: string
+          expired: boolean
+          expires_at: string
+          id: string
+          invite_type: Database["public"]["Enums"]["invitation_type"]
+          label: string
+          sent_at: string
+        }[]
+      }
       void_fixture: {
         Args: { p_fixture_id: string; p_reason: string }
         Returns: undefined
@@ -979,6 +1360,13 @@ export type Database = {
         | "team_admin"
         | "athlete"
       fixture_status: "scheduled" | "in_progress" | "completed" | "cancelled"
+      invitation_status: "pending" | "accepted" | "revoked" | "expired"
+      invitation_type:
+        | "athlete_claim"
+        | "team_join"
+        | "team_claim"
+        | "league_claim"
+        | "org_claim"
       platform_role: "user" | "super_admin"
       season_status: "upcoming" | "active" | "completed"
       verification_status: "pending" | "approved" | "rejected"
@@ -1121,6 +1509,14 @@ export const Constants = {
         "athlete",
       ],
       fixture_status: ["scheduled", "in_progress", "completed", "cancelled"],
+      invitation_status: ["pending", "accepted", "revoked", "expired"],
+      invitation_type: [
+        "athlete_claim",
+        "team_join",
+        "team_claim",
+        "league_claim",
+        "org_claim",
+      ],
       platform_role: ["user", "super_admin"],
       season_status: ["upcoming", "active", "completed"],
       verification_status: ["pending", "approved", "rejected"],

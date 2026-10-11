@@ -1,8 +1,10 @@
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { ROLE_LABEL } from "@/features/account/account.service";
+import type { MyInvitation } from "@/features/invitations/invitation.types";
 import type { Affiliation } from "@/features/shared/types";
 import type { CurrentUser } from "@/types/users/types";
+import { PendingInvitations } from "../invitations/pending-invitations";
 import { Panel } from "../shared/panel";
 
 const CREATE_LINKS = [
@@ -14,12 +16,12 @@ const CREATE_LINKS = [
   {
     href: "/account/create/league",
     label: "Create a league",
-    body: "Run tournaments and verify results. It starts unverified until ZedyStats approves it.",
+    body: "Run tournaments and verify results. It starts unverified until FlagStats approves it.",
   },
   {
     href: "/account/create/organization",
     label: "Create an organisation",
-    body: "Link leagues under a federation. It starts unverified until ZedyStats approves it.",
+    body: "Link leagues under a federation. It starts unverified until FlagStats approves it.",
   },
 ];
 
@@ -29,9 +31,11 @@ const linkClass =
 export function TeamsTab({
   user,
   affiliations,
+  invitations,
 }: {
   user: CurrentUser;
   affiliations: Affiliation[];
+  invitations: MyInvitation[];
 }) {
   const isPlatformAdmin = user.platformRole === "super_admin";
 
@@ -101,13 +105,7 @@ export function TeamsTab({
         </div>
       </Panel>
 
-      {/* TODO(invites): replace with getMyPendingInvitations() once migration 036 exists. */}
-      <Panel title="Pending invitations">
-        <p className="text-sm text-zs-muted">
-          No pending invitations. Invitations to join a team, claim a profile,
-          or manage a team, league or organisation will appear here.
-        </p>
-      </Panel>
+      <PendingInvitations invitations={invitations} />
     </div>
   );
 }

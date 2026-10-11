@@ -21,9 +21,10 @@ const initialState: AuthActionState = { status: "idle" };
 
 interface LoginFormProps {
   next?: string;
+  defaultEmail?: string;
 }
 
-export function LoginForm({ next }: LoginFormProps) {
+export function LoginForm({ next, defaultEmail }: LoginFormProps) {
   const [state, formAction, isPending] = useActionState(
     loginAction,
     initialState,
@@ -41,6 +42,7 @@ export function LoginForm({ next }: LoginFormProps) {
               name="email"
               type="email"
               required
+              defaultValue={defaultEmail}
               autoComplete="email"
               placeholder="you@example.com"
               className={cn(fieldInputClass, "pl-10")}
@@ -89,7 +91,7 @@ export function LoginForm({ next }: LoginFormProps) {
       <SocialAuthButtons next={next} /> */}
 
       <p className="text-center text-sm text-muted-foreground">
-        New to ZedyStats?{" "}
+        New to FlagStats?{" "}
         <Link
           href="/sign-up"
           className="font-medium text-brand-lime underline-offset-4 hover:underline"

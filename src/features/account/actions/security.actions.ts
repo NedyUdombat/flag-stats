@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { StrongPasswordSchema } from "@/features/auth/schema";
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 import { deleteCloudinaryImage } from "@/lib/cloudinary/server";
 import { logServerError } from "@/lib/errors";
 import { rateKey, rateLimit } from "@/lib/rate-limit";

@@ -1,5 +1,6 @@
 import type { CurrentUser } from "@/types/users/types";
 import { canManageLeague } from "./leagues";
+import { canManageOrganization } from "./organizations";
 import { hasRole, isPlatformAdmin, isTeamAdminOf } from "./scope";
 
 export type AthleteOwnership = {
@@ -51,6 +52,16 @@ export function canManageRosterHistory(
 ): boolean {
   return (
     isTeamAdminOf(user, teamId) ||
-    canManageLeague(user, organizationId, leagueId)
+    canManageLeague(user, leagueId) ||
+    canManageOrganization(user, organizationId ?? "")
   );
+}
+
+/** Unclaimed profiles: the creator (and super admin) can edit, invite and delete. Claimed: owner only. */
+export function canManageUnclaimedAthlete(
+  user: CurrentUser | null,
+  a: AthleteOwnership,
+): boolean {
+  if (!user || a.profileUserId) return false;
+  return isPlatformAdmin(user) || a.createdBy === user.id;
 }

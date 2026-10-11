@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { AccountView } from "@/containers/Account";
 import { AccountShell } from "@/containers/Account/account-shell";
 import { parseMode, parseSettingsTab } from "@/containers/Account/account-tabs";
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 
 export const metadata = { title: "My account" };
 

@@ -21,13 +21,15 @@ function PasswordInput({
   name,
   label,
   autoComplete,
+  value,
   onChange,
 }: {
   id: string;
   name: string;
   label: string;
   autoComplete: string;
-  onChange?: (v: string) => void;
+  value: string;
+  onChange: (v: string) => void;
 }) {
   const [visible, setVisible] = useState(false);
   return (
@@ -42,18 +44,19 @@ function PasswordInput({
           type={visible ? "text" : "password"}
           required
           autoComplete={autoComplete}
-          onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           className={cn(fieldInput, "pr-11")}
         />
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
+          aria-pressed={visible}
           aria-label={
             visible
               ? `Hide ${label.toLowerCase()}`
               : `Show ${label.toLowerCase()}`
           }
-          aria-pressed={visible}
           className="absolute top-1/2 right-2 -translate-y-1/2 p-1.5 text-zs-muted hover:text-zs-ink focus-visible:outline-2 focus-visible:outline-zs-lime"
         >
           {visible ? (
@@ -69,23 +72,20 @@ function PasswordInput({
 
 export function PasswordForm() {
   const p = usePasswordForm();
-
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
       <Panel
         title="Change password"
         description="You'll stay signed in on this device."
       >
-        <form
-          action={p.action}
-          onReset={p.reset}
-          className="max-w-lg space-y-5"
-        >
+        <form action={p.action} className="max-w-lg space-y-5">
           <PasswordInput
             id="s-current"
             name="currentPassword"
             label="Current password"
             autoComplete="current-password"
+            value={p.current}
+            onChange={p.setCurrent}
           />
           <div>
             <PasswordInput
@@ -93,6 +93,7 @@ export function PasswordForm() {
               name="newPassword"
               label="New password"
               autoComplete="new-password"
+              value={p.next}
               onChange={p.setNext}
             />
             {p.next && (
@@ -121,6 +122,7 @@ export function PasswordForm() {
               name="confirmPassword"
               label="Confirm new password"
               autoComplete="new-password"
+              value={p.confirm}
               onChange={p.setConfirm}
             />
             {p.mismatch && (

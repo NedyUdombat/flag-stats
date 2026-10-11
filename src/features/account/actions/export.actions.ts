@@ -1,6 +1,6 @@
 "use server";
 
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 import { logServerError } from "@/lib/errors";
 import { rateKey, rateLimit } from "@/lib/rate-limit";
 import { createServerClient } from "@/lib/supabase/server";
@@ -33,7 +33,7 @@ export async function exportMyDataAction(): Promise<ExportActionState> {
   const priv = athlete.data
     ? await supabase
         .from("athlete_private")
-        .select("contact_phone")
+        .select("contact_phone, contact_email")
         .eq("athlete_id", athlete.data.id)
         .maybeSingle()
     : null;

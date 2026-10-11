@@ -1,4 +1,4 @@
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -7,13 +7,13 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#039;");
 }
 
-function emailShell(bodyHtml: string): string {
+export function emailShell(bodyHtml: string): string {
   return `<div style="background-color:#f1edf7;padding:40px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto;background-color:#ffffff;border-radius:12px;overflow:hidden;">
     <tr>
       <td style="background-color:#1f1038;padding:32px 40px;">
         <span style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">
-          Zedy<span style="color:#c6f24e;">Stats</span>
+          Flag<span style="color:#c6f24e;">Stats</span>
         </span>
       </td>
     </tr>
@@ -25,7 +25,7 @@ function emailShell(bodyHtml: string): string {
     <tr>
       <td style="background-color:#f1edf7;padding:24px 40px;text-align:center;">
         <p style="margin:0;font-size:12px;color:#8b7fa0;">
-          © ZedyStats — Every stat. Every league. One record.
+          © FlagStats — Every stat. Every league. One record.
         </p>
       </td>
     </tr>
@@ -33,7 +33,7 @@ function emailShell(bodyHtml: string): string {
 </div>`;
 }
 
-function button(url: string, label: string): string {
+export function button(url: string, label: string): string {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0;">
     <tr>
       <td style="border-radius:8px;background-color:#c6f24e;">
@@ -48,10 +48,10 @@ export function welcomeEmailHtml(name: string): string {
   return emailShell(`
     <h1 style="margin:0 0 16px 0;font-size:22px;line-height:1.3;color:#1d1229;">Welcome, ${escapeHtml(name)} 👋</h1>
     <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">
-      Your ZedyStats account is confirmed and ready. Every stat, every league, one record —
+      Your FlagStats account is confirmed and ready. Every stat, every league, one record —
       start exploring, or set up your team, league, or federation.
     </p>
-    ${button(siteUrl, "Go to ZedyStats")}
+    ${button(siteUrl, "Go to FlagStats")}
   `);
 }
 
@@ -60,9 +60,9 @@ export function athleteInviteEmailHtml(
   signupUrl: string,
 ): string {
   return emailShell(`
-    <h1 style="margin:0 0 16px 0;font-size:22px;line-height:1.3;color:#1d1229;">You&apos;ve been added to ZedyStats</h1>
+    <h1 style="margin:0 0 16px 0;font-size:22px;line-height:1.3;color:#1d1229;">You&apos;ve been added to FlagStats</h1>
     <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">
-      Your coach has added <strong>${escapeHtml(athleteName)}</strong> to ZedyStats — the
+      Your coach has added <strong>${escapeHtml(athleteName)}</strong> to FlagStats — the
       verified career record for African flag football. Create your account with this email
       address to claim your profile, track your career stats, and share it with scouts.
     </p>
@@ -120,7 +120,7 @@ export function roleGrantedEmailHtml(
   return emailShell(`
     <h1 style="margin:0 0 16px 0;font-size:22px;line-height:1.3;color:#1d1229;">You&apos;re all set</h1>
     <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">
-      You now manage <strong>${escapeHtml(entityName)}</strong> as ${escapeHtml(roleLabel)} on ZedyStats.
+      You now manage <strong>${escapeHtml(entityName)}</strong> as ${escapeHtml(roleLabel)} on FlagStats.
     </p>
     ${button(manageUrl, "Go to admin console")}
   `);
@@ -173,7 +173,7 @@ export function confirmEmailHtml(confirmUrl: string): string {
     <h1 style="margin:0 0 16px 0;font-size:22px;font-weight:700;line-height:1.3;color:#1d1229;">Confirm your email</h1>
     
     <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">
-      Welcome to ZedyStats — the verified career record for African flag football. Click below to confirm your email and activate your account.
+      Welcome to FlagStats — the verified career record for African flag football. Click below to confirm your email and activate your account.
     </p>
 
     ${button(confirmUrl, "Confirm email address")}
@@ -189,7 +189,7 @@ export function confirmEmailHtml(confirmUrl: string): string {
     <hr style="border:none;border-top:1px solid #e8e2f0;margin:0 0 24px 0;" />
 
     <p style="margin:0;font-size:13px;line-height:1.5;color:#8b7fa0;">
-      If you didn't create a ZedyStats account, you can safely ignore this email.
+      If you didn't create a FlagStats account, you can safely ignore this email.
     </p>
   `);
 }
@@ -201,7 +201,7 @@ export function resetPasswordEmailHtml(resetUrl: string): string {
     <h1 style="margin:0 0 16px 0;font-size:22px;font-weight:700;line-height:1.3;color:#1d1229;">Reset your password</h1>
     
     <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#4a3d5c;">
-      We received a request to reset the password for your ZedyStats account. Click the button below to choose a new password.
+      We received a request to reset the password for your FlagStats account. Click the button below to choose a new password.
     </p>
 
     ${button(resetUrl, "Reset password")}
@@ -257,8 +257,8 @@ export function athleteClaimEmailHtml(params: {
 }): string {
   return emailShell(
     inviteBody({
-      heading: "Claim your ZedyStats profile",
-      introHtml: `${escapeHtml(params.invitedBy)} created an athlete profile for <strong>${escapeHtml(params.athleteName)}</strong> on ZedyStats, the verified career record for African flag football. ${
+      heading: "Claim your FlagStats profile",
+      introHtml: `${escapeHtml(params.invitedBy)} created an athlete profile for <strong>${escapeHtml(params.athleteName)}</strong> on FlagStats, the verified career record for African flag football. ${
         params.hasAccount
           ? "Sign in to claim it and make it yours."
           : "Create your account with this email address to claim it."
@@ -283,7 +283,7 @@ export function teamJoinInviteEmailHtml(params: {
   return emailShell(
     inviteBody({
       heading: `Join ${escapeHtml(params.teamName)}`,
-      introHtml: `${escapeHtml(params.invitedBy)} invited <strong>${escapeHtml(params.athleteName)}</strong> to join <strong>${escapeHtml(params.teamName)}</strong> on ZedyStats. Accept to link your profile to the team.`,
+      introHtml: `${escapeHtml(params.invitedBy)} invited <strong>${escapeHtml(params.athleteName)}</strong> to join <strong>${escapeHtml(params.teamName)}</strong> on FlagStats. Accept to link your profile to the team.`,
       ctaLabel: "View invitation",
       url: params.acceptUrl,
       expiresInDays: params.expiresInDays,
@@ -291,7 +291,7 @@ export function teamJoinInviteEmailHtml(params: {
   );
 }
 
-/** ZedyStats (or an admin) created a team / league / federation to be claimed. */
+/** FlagStats (or an admin) created a team / league / federation to be claimed. */
 export function entityClaimEmailHtml(params: {
   entityType: "team" | "league" | "federation";
   entityName: string;
@@ -303,7 +303,7 @@ export function entityClaimEmailHtml(params: {
   return emailShell(
     inviteBody({
       heading: `Claim ${escapeHtml(params.entityName)}`,
-      introHtml: `${escapeHtml(params.createdBy)} set up <strong>${escapeHtml(params.entityName)}</strong> as a ${label} on ZedyStats. Sign in or create an account with this email address to become its admin and manage it.`,
+      introHtml: `${escapeHtml(params.createdBy)} set up <strong>${escapeHtml(params.entityName)}</strong> as a ${label} on FlagStats. Sign in or create an account with this email address to become its admin and manage it.`,
       ctaLabel: `Claim this ${label}`,
       url: params.claimUrl,
       expiresInDays: params.expiresInDays,

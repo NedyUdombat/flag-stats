@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { initials } from "@/lib/display";
@@ -23,14 +24,17 @@ export function ProfileTab({
   return (
     <div className="space-y-6">
       <section className="flex flex-wrap items-center gap-4 border border-zs-line bg-zs-panel p-5">
-        {user.avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.avatarUrl} alt="" className="size-20 object-cover" />
-        ) : (
-          <span className="grid size-20 place-items-center bg-zs-raised font-display text-3xl font-bold text-zs-lime">
+        <Avatar className="size-20 object-cover">
+          <AvatarImage
+            src={user.avatarUrl ?? ""}
+            alt={`${user.fullName ?? "User"}'s avatar`}
+            className="size-20 object-cover"
+          />
+          <AvatarFallback className="grid size-20 place-items-center bg-zs-raised font-display text-3xl font-bold text-zs-lime">
             {initials(user.fullName, user.email)}
-          </span>
-        )}
+          </AvatarFallback>
+        </Avatar>
+
         <div className="min-w-0 flex-1">
           <p className="font-display text-3xl leading-none font-bold tracking-wide text-zs-ink uppercase">
             {user.fullName ?? "Name not set"}

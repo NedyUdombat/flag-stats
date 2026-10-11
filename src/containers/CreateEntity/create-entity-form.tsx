@@ -2,6 +2,7 @@
 
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { CountrySelect } from "@/components/primitives/country-select";
 import { ImageUpload } from "@/components/primitives/image-upload";
 import { Panel } from "@/containers/Account/shared/panel";
 import {
@@ -44,7 +45,13 @@ export function CreateEntityForm({
             <label htmlFor={`c-${fld.name}`} className={fieldLabel}>
               {fld.label}
             </label>
-            {fld.multiline ? (
+            {fld.type === "country" ? (
+              <CountrySelect
+                id={`c-${fld.name}`}
+                name={fld.name}
+                className={fieldInput}
+              />
+            ) : fld.multiline ? (
               <textarea
                 id={`c-${fld.name}`}
                 name={fld.name}

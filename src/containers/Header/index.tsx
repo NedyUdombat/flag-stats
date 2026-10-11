@@ -1,5 +1,6 @@
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
+import { BrandText } from "@/components/brand-text";
 import { Button } from "@/components/primitives/button";
 import {
   Sheet,
@@ -10,7 +11,8 @@ import {
   SheetTrigger,
 } from "@/components/primitives/sheet";
 import { UserMenu } from "@/components/user-menu";
-import { getCurrentUser } from "@/features/users/service";
+import { ADMIN_ROLES } from "@/features/users/user.constants";
+import { getCurrentUser } from "@/features/users/user.service";
 
 // import { MatchTicker } from "@/features/homepage/components/match-ticker";
 const NAV_LINKS = [
@@ -26,19 +28,15 @@ const NAV_LINKS = [
 export async function SiteHeader() {
   const user = await getCurrentUser();
 
+  const showAdminLink =
+    user?.platformRole === "super_admin" ||
+    Boolean(user?.roles?.some((r) => ADMIN_ROLES.has(r.role)));
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-brand-ink text-white">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-8">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 font-display text-lg tracking-tight uppercase"
-          >
-            <span className="flex size-5 items-center justify-center rounded bg-brand-lime text-[10px] font-bold text-brand-ink">
-              Z
-            </span>
-            ZedyStats
-          </Link>
+          <BrandText href="/" />
 
           <nav className="hidden items-center gap-5 font-mono text-[11px] tracking-wide text-white/70 uppercase lg:flex">
             {NAV_LINKS.map((link, i) => (
@@ -55,7 +53,13 @@ export async function SiteHeader() {
 
         <div className="flex items-center gap-3">
           {user ? (
-            <UserMenu fullName={user.fullName} email={user.email} />
+            <UserMenu
+              avatarUrl={user.avatarUrl}
+              fullName={user.fullName}
+              email={user.email}
+              showAdminLink={showAdminLink}
+              showAccountLink={false}
+            />
           ) : (
             <>
               <Link
@@ -87,7 +91,7 @@ export async function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="bg-brand-ink text-white">
               <SheetHeader>
-                <SheetTitle className="text-white">ZedyStats</SheetTitle>
+                <SheetTitle className="text-white">FlagStats</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4">
                 {NAV_LINKS.map((link, i) => (

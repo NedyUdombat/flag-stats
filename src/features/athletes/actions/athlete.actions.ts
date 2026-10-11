@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getCurrentUser } from "@/features/users/service";
+import { getCurrentUser } from "@/features/users/user.service";
 import { isMinor } from "@/lib/age";
 import { cleanupReplacedImage } from "@/lib/cloudinary/server";
 import { logServerError } from "@/lib/errors";
@@ -29,7 +29,8 @@ function toColumns(i: AthleteProfileInput, minor: boolean) {
     gender: i.gender,
     nationality: i.nationality ?? null,
     home_city: i.homeCity ?? null,
-    positions: i.positions,
+    primary_position: i.primaryPosition,
+    secondary_positions: i.secondaryPositions,
     height_cm: i.heightCm ?? null,
     weight_kg: i.weightKg ?? null,
     dominant_hand: i.dominantHand ?? null,
@@ -39,6 +40,7 @@ function toColumns(i: AthleteProfileInput, minor: boolean) {
     social_links: buildSocialLinks(i),
     visibility: i.visibility,
     photo_url: i.photoUrl ?? null,
+    contact_visibility: i.contactVisibility,
     // Only ever set for minors, so an adult edit never wipes a consent record.
     ...(minor ? { parental_consent: true } : {}),
   };
@@ -49,19 +51,21 @@ function refresh() {
   revalidatePath("/admin/settings");
 }
 
-async function savePhone(athleteId: string, phone: string | undefined) {
+async function savePrivate(athleteId: string, phone?: string, email?: string) {
   const supabase = await createServerClient();
-  const { error } = phone
-    ? await supabase.from("athlete_private").upsert({
-        athlete_id: athleteId,
-        contact_phone: phone,
-        updated_at: new Date().toISOString(),
-      })
-    : await supabase
-        .from("athlete_private")
-        .delete()
-        .eq("athlete_id", athleteId);
-  if (error) logServerError("athlete.savePhone", error);
+  const { error } =
+    phone || email
+      ? await supabase.from("athlete_private").upsert({
+          athlete_id: athleteId,
+          contact_phone: phone ?? null,
+          contact_email: email ?? null,
+          updated_at: new Date().toISOString(),
+        })
+      : await supabase
+          .from("athlete_private")
+          .delete()
+          .eq("athlete_id", athleteId);
+  if (error) logServerError("athlete.savePrivate", error);
   return !error;
 }
 
@@ -168,11 +172,11 @@ export async function createMyAthleteProfileAction(
 
   let message = "Athlete profile created.";
   if (
-    input.contactPhone &&
-    !(await savePhone(created.id, input.contactPhone))
+    (input.contactPhone || input.contactEmail) &&
+    !(await savePrivate(created.id, input.contactPhone, input.contactEmail))
   ) {
     message =
-      "Profile created, but your phone number couldn't be saved. Add it by editing your profile.";
+      "Profile created, but your contact details couldn't be saved. Add them by editing your profile.";
   }
 
   refresh();
@@ -233,11 +237,11 @@ export async function updateMyAthleteProfileAction(
       status: "error",
       message: "We couldn't find your athlete profile.",
     };
-
-  if (!(await savePhone(data.id, input.contactPhone))) {
+  if (!(await savePrivate(data.id, input.contactPhone, input.contactEmail))) {
     return {
       status: "error",
-      message: "Saved, but your phone number couldn't be updated. Try again.",
+      message:
+        "Saved, but your contact details couldn't be updated. Try again.",
     };
   }
 

@@ -30,7 +30,7 @@ export function AthleteView({
   editHref: string;
   viewHref: string;
 }) {
-  const { athlete: a, contactPhone, careerTotals } = profile;
+  const { athlete: a, contactPhone, careerTotals, contactEmail } = profile;
   const socials = Object.entries(
     (a.social_links ?? {}) as Record<string, string>,
   );
@@ -89,7 +89,11 @@ export function AthleteView({
       >
         <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Row label="Profile ID" value={`/athletes/${a.slug}`} />
-          <Row label="Positions" value={a.positions.join(", ")} />
+          <Row label="Primary position" value={a.primary_position} />
+          <Row
+            label="Other positions"
+            value={a.secondary_positions.join(", ")}
+          />
           <Row label="Age" value={age?.toString()} />
           <Row label="Gender" value={a.gender} />
           <Row label="Nationality" value={a.nationality} />
@@ -124,7 +128,13 @@ export function AthleteView({
           </p>
         )}
         <p className="mt-4 font-data text-xs text-zs-muted">
-          Private to you: phone {contactPhone ?? "not set"}
+          Contact:{" "}
+          {[contactPhone, contactEmail].filter(Boolean).join(" · ") ||
+            "not set"}{" "}
+          ·{" "}
+          {a.contact_visibility === "teams_and_scouts"
+            ? "visible to approved teams, leagues and scouts"
+            : "private to you"}
         </p>
       </Panel>
 
