@@ -2,27 +2,29 @@ import {
   ArrowLeftIcon,
   CircleCheckIcon,
   ExternalLinkIcon,
+  PencilIcon,
   TriangleAlertIcon,
-} from "lucide-react";
+} from "lucide-react"; // add to the existing lucide import
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Panel } from "@/containers/Account/shared/panel";
+import { buttonPrimary } from "@/containers/Account/styles";
 import { ErrorState } from "@/containers/Admin/components/error-state";
 import { AdminsPanel } from "@/containers/Teams/admins-panel";
 import { TeamStatusBadges } from "@/containers/Teams/components/team-badges";
 import { TeamLogo } from "@/containers/Teams/components/team-logo";
 import { DangerZone } from "@/containers/Teams/danger-zone";
+import { TeamEditForm } from "@/containers/Teams/edit-form/team-edit-form";
 import { MembersPanel } from "@/containers/Teams/members-panel";
+import { updateTeamAction } from "@/features/teams/actions/team-manage.actions";
 import {
   getTeam,
-  listAddableUnclaimedAthletes,
   listTeamAdmins,
   listTeamMembers,
   listTeamPendingInvitations,
   teamHasVerifiedResults,
 } from "@/features/teams/team.service";
 import type {
-  AddableAthlete,
   TeamAdminRow,
   TeamInviteRow,
   TeamMemberRow,
@@ -85,7 +87,15 @@ export default async function AdminTeamDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ tab?: string; created?: string; sent?: string }>;
+  searchParams: Promise<{
+    tab?: string;
+    created?: string;
+    sent?: string;
+    saved?: string;
+    claimed?: string;
+    mode?: string;
+    added?: string;
+  }>;
 }) {
   const { id } = await params;
   const sp = await searchParams;
@@ -105,20 +115,62 @@ export default async function AdminTeamDetailPage({
   const deleted = team.deleted_at !== null;
   const membersEnabled = claimed && !deleted;
 
+  if (sp.mode === "edit" && !deleted) {
+    return (
+      <div className="space-y-6">
+        <header className="border-b border-zs-line pb-5">
+          <nav aria-label="Breadcrumb" className="mb-2 text-sm text-zs-muted">
+            <Link href="/admin/teams" className="hover:text-zs-ink">
+              Teams
+            </Link>
+            <span className="mx-2" aria-hidden>
+              /
+            </span>
+            <Link href={`/admin/teams/${id}`} className="hover:text-zs-ink">
+              {team.name}
+            </Link>
+            <span className="mx-2" aria-hidden>
+              /
+            </span>
+            <span className="text-zs-ink">Edit</span>
+          </nav>
+          <h1 className="font-display text-4xl leading-none font-bold tracking-wide text-zs-ink uppercase">
+            Edit team
+          </h1>
+        </header>
+        <TeamEditForm
+          action={updateTeamAction.bind(null, id)}
+          cancelHref={`/admin/teams/${id}`}
+          initial={{
+            name: team.name,
+            shortName: team.short_name ?? "",
+            homeCity: team.home_city ?? "",
+            homeGround: team.home_ground ?? "",
+            headCoachName: team.head_coach_name ?? "",
+            foundedYear: team.founded_year?.toString() ?? "",
+            country: team.country,
+            logoUrl: team.logo_url,
+            slogan: team.slogan ?? "",
+            bio: team.bio ?? "",
+            primaryColor: team.primary_color,
+            accentColor: team.accent_color,
+            socials: (team.social_links ?? {}) as Record<string, string>,
+          }}
+        />
+      </div>
+    );
+  }
+
   let admins: TeamAdminRow[];
   let invites: TeamInviteRow[] = [];
   let members: TeamMemberRow[] = [];
-  let addable: AddableAthlete[] = [];
   let hasVerifiedResults = false;
   try {
     admins = await listTeamAdmins(id);
     if (tab === "admins" || tab === "members")
       invites = await listTeamPendingInvitations(id);
     if (tab === "members" && membersEnabled) {
-      [members, addable] = await Promise.all([
-        listTeamMembers(id),
-        listAddableUnclaimedAthletes(id),
-      ]);
+      [members] = await Promise.all([listTeamMembers(id)]);
     }
     if (tab === "settings")
       hasVerifiedResults = await teamHasVerifiedResults(id);
@@ -167,6 +219,14 @@ export default async function AdminTeamDetailPage({
             )}
           </p>
         </div>
+        {!deleted && (
+          <Link
+            href={`/admin/teams/${id}?mode=edit`}
+            className={`${buttonPrimary} ml-auto`}
+          >
+            <PencilIcon className="size-4" aria-hidden /> Edit
+          </Link>
+        )}
       </header>
 
       {sp.created === "1" && <Banner tone="ok">Team created.</Banner>}
@@ -180,6 +240,24 @@ export default async function AdminTeamDetailPage({
       {orphaned && (
         <Banner tone="warn">
           This team has no admin. Invite one from the Admins tab.
+        </Banner>
+      )}
+
+      {sp.saved === "1" && <Banner tone="ok">Changes saved.</Banner>}
+      {sp.claimed === "1" && (
+        <Banner tone="ok">
+          You now manage this team. Use Edit to add its details.
+        </Banner>
+      )}
+      {sp.added === "1" && (
+        <Banner tone="ok">
+          Athlete created, added to the team and invited.
+        </Banner>
+      )}
+      {sp.added === "0" && (
+        <Banner tone="warn">
+          Athlete created and added, but the invitation email couldn&apos;t be
+          sent. Resend it from the athlete&apos;s page.
         </Banner>
       )}
 
@@ -256,12 +334,7 @@ export default async function AdminTeamDetailPage({
 
       {tab === "members" &&
         (membersEnabled ? (
-          <MembersPanel
-            teamId={id}
-            members={members}
-            invites={invites}
-            addable={addable}
-          />
+          <MembersPanel teamId={id} members={members} invites={invites} />
         ) : (
           <Panel title="Members">
             <p className="text-sm text-zs-muted">

@@ -49,6 +49,8 @@ export async function runCreate<T>(opts: {
   redirect(
     opts.kind === "team"
       ? `/admin/teams/${result.data}?created=1`
-      : "/account?tab=teams",
+      : opts.kind === "league"
+        ? `/admin/leagues/${result.data}?created=1`
+        : "/account?tab=teams",
   );
 }

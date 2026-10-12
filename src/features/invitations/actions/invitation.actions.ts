@@ -10,7 +10,11 @@ import { createServerClient } from "@/lib/supabase/server";
 import { ResendSchema } from "../invitation.schema";
 import { sendAthleteInvitation } from "../invitation.service";
 import { hashToken, isTokenFormat } from "../invitation.token";
-import type { InviteActionState } from "../invitation.types";
+import type {
+  AcceptedInvitation,
+  InviteActionState,
+} from "../invitation.types";
+import { invitationDestination } from "../invitation-destination";
 
 const NOT_SIGNED_IN = "Please sign in again.";
 const TOO_MANY = "Too many attempts. Please try again later.";
@@ -90,13 +94,6 @@ export async function revokeInvitationAction(
   return { status: "success", message: "Invitation revoked." };
 }
 
-function destinationFor(result: unknown): string {
-  const type = (result as { type?: string } | null)?.type;
-  return type === "athlete_claim"
-    ? "/account?tab=athlete"
-    : "/account?tab=teams";
-}
-
 async function accept(
   user: { id: string },
   rpc: () => PromiseLike<{
@@ -112,7 +109,8 @@ async function accept(
     return err(error.code === "P0001" ? error.message : GENERIC);
   }
   revalidatePath("/account", "layout");
-  redirect(destinationFor(data));
+  revalidatePath("/admin", "layout");
+  redirect(invitationDestination(data as AcceptedInvitation | null));
 }
 
 /** From /invite/[token] */

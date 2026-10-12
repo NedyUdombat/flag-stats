@@ -12,9 +12,11 @@ import {
   getTeam,
   removeTeamMember,
   revokeTeamInvitation,
+  searchAthleteCandidates,
   searchInvitableAthletes,
 } from "../team.service";
 import {
+  type AthleteCandidate,
   type AthleteSearchResult,
   type TeamActionState,
   teamError,
@@ -135,4 +137,17 @@ export async function searchInvitableAthletesAction(
   if (!(await rateLimit(rateKey("team-athlete-search", user.id), 60, 60)))
     return [];
   return searchInvitableAthletes(teamId, term);
+}
+
+export async function searchAthleteCandidatesAction(
+  teamId: string,
+  q: string,
+): Promise<AthleteCandidate[]> {
+  const user = await getCurrentUser();
+  if (!user || !isUuid(teamId) || !canManageTeam(user, teamId)) return [];
+  const term = q.trim().slice(0, 60);
+  if (term.length < 2) return [];
+  if (!(await rateLimit(rateKey("team-athlete-search", user.id), 60, 60)))
+    return [];
+  return searchAthleteCandidates(teamId, term);
 }

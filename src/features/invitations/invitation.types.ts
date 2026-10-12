@@ -17,7 +17,8 @@ export type InvitePreview =
         | "revoked"
         | "expired"
         | "confirm_email"
-        | "has_profile";
+        | "has_profile"
+        | "no_profile";
     }
   | { state: "sign_in" | "wrong_email"; maskedEmail: string }
   | { state: "ready"; type: InvitationType; label: string };
@@ -39,3 +40,11 @@ export type AthleteInvitation = {
   sentAt: string;
   expiresAt: string;
 };
+
+export interface AcceptedInvitation {
+  type: InvitationType;
+  athlete_id: string | null;
+  team_id: string | null;
+  league_id: string | null;
+  organization_id: string | null;
+}

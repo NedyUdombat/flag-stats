@@ -47,7 +47,7 @@ export function BasicsStep({
             id="a-slug"
             label="Profile ID (optional)"
             error={err.slug}
-            hint="zedistats.com/athletes/… Leave blank to use your name. It can't be changed later."
+            hint="flagstats.com/athletes/… Leave blank to use your name. It can't be changed later."
           >
             <input
               id="a-slug"
@@ -323,7 +323,7 @@ export function ContactStep({
           [
             "teams_and_scouts",
             "Teams, leagues and scouts",
-            '"Public" here doesn\'t mean anyone. Only approved team, league and federation admins on ZediStats can see these details, so potential teams and scouts can reach you. They never appear on your public profile page, and you can switch this off any time.',
+            '"Public" here doesn\'t mean anyone. Only approved team, league and federation admins on FlagStats can see these details, so potential teams and scouts can reach you. They never appear on your public profile page, and you can switch this off any time.',
           ],
         ].map(([value, title, body]) => (
           <label
@@ -373,7 +373,7 @@ export function ContactStep({
         <div className="border border-zs-amber/40 bg-zs-amber/10 p-4">
           <p className="text-sm text-zs-ink">
             This athlete is under 18. A parent or guardian must consent to this
-            profile being on ZediStats.
+            profile being on FlagStats.
           </p>
           <label className="mt-3 flex items-start gap-3 text-sm text-zs-ink">
             <input

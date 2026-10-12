@@ -35,3 +35,12 @@ export type AddableAthlete = {
   name: string;
   position: string | null;
 };
+
+export type AthleteCandidate = {
+  id: string;
+  name: string;
+  position: string | null;
+  city: string | null;
+  /** own = unclaimed athlete you created (added instantly); registered = claimed public profile (invited) */
+  kind: "own" | "registered";
+};

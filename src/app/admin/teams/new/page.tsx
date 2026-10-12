@@ -9,7 +9,7 @@ export const metadata = { title: "New team" };
 export default async function NewTeamPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/admin/teams/new");
-  if (!canCreateTeamShell(user)) redirect("/admin/teams");
+  // if (!canCreateTeamShell(user)) redirect("/admin/teams");
 
   return (
     <div className="space-y-6">

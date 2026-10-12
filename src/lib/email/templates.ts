@@ -230,7 +230,7 @@ type InviteParams = {
   expiresInDays: number;
 };
 
-function inviteBody(p: InviteParams): string {
+export function inviteBody(p: InviteParams): string {
   const safeUrl = escapeHtml(p.url);
   return `
     <h1 style="margin:0 0 16px 0;font-size:22px;font-weight:700;line-height:1.3;color:#1d1229;">${p.heading}</h1>

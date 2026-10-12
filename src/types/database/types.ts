@@ -545,10 +545,14 @@ export type Database = {
       }
       leagues: {
         Row: {
+          claimed_at: string | null
           commissioner_name: string | null
           competition_level: string | null
           country: string | null
           created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
           format: string | null
           id: string
           logo_url: string | null
@@ -560,14 +564,19 @@ export type Database = {
           rulebook: string | null
           short_code: string | null
           slug: string
+          social_links: Json
           updated_at: string
           verified: boolean
         }
         Insert: {
+          claimed_at?: string | null
           commissioner_name?: string | null
           competition_level?: string | null
           country?: string | null
           created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
           format?: string | null
           id?: string
           logo_url?: string | null
@@ -579,14 +588,19 @@ export type Database = {
           rulebook?: string | null
           short_code?: string | null
           slug: string
+          social_links?: Json
           updated_at?: string
           verified?: boolean
         }
         Update: {
+          claimed_at?: string | null
           commissioner_name?: string | null
           competition_level?: string | null
           country?: string | null
           created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
           format?: string | null
           id?: string
           logo_url?: string | null
@@ -598,6 +612,7 @@ export type Database = {
           rulebook?: string | null
           short_code?: string | null
           slug?: string
+          social_links?: Json
           updated_at?: string
           verified?: boolean
         }
@@ -1109,6 +1124,31 @@ export type Database = {
           verified: boolean
         }[]
       }
+      admin_list_leagues: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_q?: string
+          p_status?: string
+        }
+        Returns: {
+          admin_count: number
+          can_manage: boolean
+          claimed: boolean
+          country: string
+          deleted: boolean
+          id: string
+          logo_url: string
+          name: string
+          organization_name: string
+          orphaned: boolean
+          region: string
+          short_code: string
+          slug: string
+          total_count: number
+          verified: boolean
+        }[]
+      }
       admin_list_teams: {
         Args: {
           p_limit?: number
@@ -1152,6 +1192,7 @@ export type Database = {
         Args: { _athlete_id: string }
         Returns: boolean
       }
+      can_manage_league: { Args: { _league_id: string }; Returns: boolean }
       can_manage_team: { Args: { _team_id: string }; Returns: boolean }
       can_view_athlete_contact: {
         Args: { _athlete_id: string }
@@ -1184,7 +1225,24 @@ export type Database = {
         Args: {
           p_country?: string
           p_name: string
-          p_organization_id?: string
+          p_region?: string
+          p_slug: string
+        }
+        Returns: string
+      }
+      create_league_admin_invitation: {
+        Args: {
+          p_email: string
+          p_expires_at: string
+          p_league_id: string
+          p_token_hash: string
+        }
+        Returns: string
+      }
+      create_league_shell: {
+        Args: {
+          p_country?: string
+          p_name: string
           p_region?: string
           p_slug: string
         }
@@ -1272,7 +1330,32 @@ export type Database = {
       invite_email_has_account: { Args: { p_email: string }; Returns: boolean }
       invite_signup_details: { Args: { p_token_hash: string }; Returns: Json }
       is_platform_admin: { Args: never; Returns: boolean }
+      is_valid_social_links: { Args: { p: Json }; Returns: boolean }
       is_valid_team_social_links: { Args: { p: Json }; Returns: boolean }
+      league_admins: {
+        Args: { p_league_id: string }
+        Returns: {
+          added_at: string
+          email: string
+          full_name: string
+          user_id: string
+        }[]
+      }
+      league_has_verified_results: {
+        Args: { p_league_id: string }
+        Returns: boolean
+      }
+      league_pending_invitations: {
+        Args: { p_league_id: string }
+        Returns: {
+          email: string
+          expired: boolean
+          expires_at: string
+          id: string
+          invite_type: Database["public"]["Enums"]["invitation_type"]
+          sent_at: string
+        }[]
+      }
       my_pending_invitations: {
         Args: never
         Returns: {
@@ -1285,8 +1368,23 @@ export type Database = {
           type: Database["public"]["Enums"]["invitation_type"]
         }[]
       }
+      my_team_memberships: {
+        Args: never
+        Returns: {
+          athlete_id: string
+          joined_at: string
+          logo_url: string
+          team_id: string
+          team_name: string
+          team_slug: string
+        }[]
+      }
       preview_invitation: { Args: { p_token_hash: string }; Returns: Json }
       release_my_athlete_profile: { Args: never; Returns: undefined }
+      remove_league_admin: {
+        Args: { p_league_id: string; p_user_id: string }
+        Returns: undefined
+      }
       remove_team_admin: {
         Args: { p_team_id: string; p_user_id: string }
         Returns: undefined
@@ -1296,8 +1394,13 @@ export type Database = {
         Returns: undefined
       }
       restore_fixture: { Args: { p_fixture_id: string }; Returns: undefined }
+      restore_league: { Args: { p_league_id: string }; Returns: undefined }
       restore_team: { Args: { p_team_id: string }; Returns: undefined }
       revoke_invitation: {
+        Args: { p_invitation_id: string }
+        Returns: undefined
+      }
+      revoke_league_invitation: {
         Args: { p_invitation_id: string }
         Returns: undefined
       }
@@ -1305,8 +1408,17 @@ export type Database = {
         Args: { p_invitation_id: string }
         Returns: undefined
       }
+      set_league_organization: {
+        Args: { p_league_id: string; p_organization_id: string }
+        Returns: undefined
+      }
+      set_league_verified: {
+        Args: { p_league_id: string; p_verified: boolean }
+        Returns: undefined
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      soft_delete_league: { Args: { p_league_id: string }; Returns: undefined }
       soft_delete_my_account: { Args: never; Returns: undefined }
       soft_delete_team: { Args: { p_team_id: string }; Returns: undefined }
       team_admins: {

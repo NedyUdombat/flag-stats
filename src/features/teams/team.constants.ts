@@ -11,7 +11,7 @@ export const TEAM_ERROR_MESSAGES: Record<string, string> = {
   last_admin:
     "A team needs at least one admin. Invite another admin before removing this one.",
   has_verified_results:
-    "This team has verified results. Only a ZediStats admin can delete it.",
+    "This team has verified results. Only a FlagStats admin can delete it.",
   forbidden: "You don't have permission to do that.",
   team_deleted: "This team has been deleted.",
   protected_column: "You can't change that field.",

@@ -5,37 +5,74 @@ import {
   inviteTeamAthleteAction,
   removeTeamMemberAction,
   revokeTeamInvitationAction,
-  searchInvitableAthletesAction,
+  searchAthleteCandidatesAction,
 } from "@/features/teams/actions/team-invite.actions";
-import type {
-  AddableAthlete,
-  TeamInviteRow,
-  TeamMemberRow,
-} from "@/features/teams/team.types";
+import type { TeamInviteRow, TeamMemberRow } from "@/features/teams/team.types";
 import { fmtDate } from "@/utils/date";
-import { AddUnclaimedForm } from "../add-unclaimed-form";
+// import { ActionButton } from "../action-button";
+import { AddAthlete } from "../add-athlete";
 import { ActionButton } from "../components/action-button";
+
 // import { fmtDate } from "../format";
-import { InviteAthlete } from "../invite-athlete";
 
 interface Props {
   teamId: string;
   members: TeamMemberRow[];
   invites: TeamInviteRow[];
-  addable: AddableAthlete[];
 }
 
-export function MembersPanel({ teamId, members, invites, addable }: Props) {
+export function MembersPanel({ teamId, members, invites }: Props) {
   const pending = invites.filter((i) => i.invite_type === "team_join");
   return (
     <div className="space-y-6">
+      <Panel
+        title="Add athletes"
+        description="Add athletes to your team's pool. You choose who plays in each tournament later."
+      >
+        <AddAthlete
+          teamId={teamId}
+          search={searchAthleteCandidatesAction.bind(null, teamId)}
+          add={addTeamMemberAction.bind(null, teamId)}
+          invite={inviteTeamAthleteAction.bind(null, teamId)}
+        />
+        {pending.length > 0 && (
+          <div className="mt-5">
+            <h3 className="mb-2 font-data text-[11px] text-zs-muted uppercase">
+              Pending invitations
+            </h3>
+            <ul className="divide-y divide-zs-line border border-zs-line">
+              {pending.map((i) => (
+                <li
+                  key={i.id}
+                  className="flex flex-wrap items-center justify-between gap-3 px-3 py-2.5 text-sm"
+                >
+                  <span>
+                    <span className="text-zs-ink">{i.label}</span>
+                    <span className="ml-2 font-data text-xs text-zs-muted">
+                      {i.expired
+                        ? "Expired. Invite again to resend."
+                        : `Expires ${fmtDate(i.expires_at)}`}
+                    </span>
+                  </span>
+                  <ActionButton
+                    action={revokeTeamInvitationAction.bind(null, teamId, i.id)}
+                    label="Revoke"
+                    pendingLabel="Revoking…"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </Panel>
+
       <Panel
         title={`Members (${members.length})`}
         description="Your team's athlete pool. Tournament rosters are chosen from these athletes."
       >
         {members.length === 0 ? (
           <p className="text-sm text-zs-muted">
-            No members yet. Add an athlete below.
+            No members yet. Add an athlete above.
           </p>
         ) : (
           <ul className="divide-y divide-zs-line border border-zs-line">
@@ -76,61 +113,6 @@ export function MembersPanel({ teamId, members, invites, addable }: Props) {
             ))}
           </ul>
         )}
-      </Panel>
-
-      <Panel
-        title="Add an athlete you created"
-        description="Athletes who haven't claimed their profile yet."
-      >
-        <AddUnclaimedForm
-          options={addable}
-          action={addTeamMemberAction.bind(null, teamId)}
-        />
-      </Panel>
-
-      <Panel
-        title="Invite a registered athlete"
-        description="They get an email and an in-app invitation, and choose whether to join."
-      >
-        <div className="space-y-5">
-          <InviteAthlete
-            search={searchInvitableAthletesAction.bind(null, teamId)}
-            invite={inviteTeamAthleteAction.bind(null, teamId)}
-          />
-          {pending.length > 0 && (
-            <div>
-              <h3 className="mb-2 font-data text-[11px] text-zs-muted uppercase">
-                Pending invitations
-              </h3>
-              <ul className="divide-y divide-zs-line border border-zs-line">
-                {pending.map((i) => (
-                  <li
-                    key={i.id}
-                    className="flex flex-wrap items-center justify-between gap-3 px-3 py-2.5 text-sm"
-                  >
-                    <span>
-                      <span className="text-zs-ink">{i.label}</span>
-                      <span className="ml-2 font-data text-xs text-zs-muted">
-                        {i.expired
-                          ? "Expired. Invite again to resend."
-                          : `Expires ${fmtDate(i.expires_at)}`}
-                      </span>
-                    </span>
-                    <ActionButton
-                      action={revokeTeamInvitationAction.bind(
-                        null,
-                        teamId,
-                        i.id,
-                      )}
-                      label="Revoke"
-                      pendingLabel="Revoking…"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
       </Panel>
     </div>
   );

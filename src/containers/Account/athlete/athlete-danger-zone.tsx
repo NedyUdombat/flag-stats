@@ -27,7 +27,7 @@ export function AthleteDangerZone({ viewHref }: { viewHref: string }) {
             Remove from my account
           </h3>
           <p className="text-sm text-zs-muted">
-            The profile stays on ZediStats as an unclaimed record with your
+            The profile stays on FlagStats as an unclaimed record with your
             name, photo, positions, stats and verified badge. Your bio, social
             links and phone number are removed. A team or league can invite you
             to claim it again.

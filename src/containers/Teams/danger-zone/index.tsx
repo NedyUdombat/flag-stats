@@ -41,7 +41,7 @@ export function DangerZone({
     return (
       <Panel title="Delete team">
         <p className="text-sm text-zs-muted">
-          This team has verified results, so only a ZediStats admin can delete
+          This team has verified results, so only a FlagStats admin can delete
           it. Roster history and results are always kept.
         </p>
       </Panel>
@@ -50,7 +50,7 @@ export function DangerZone({
   return (
     <Panel
       title="Delete team"
-      description="The team disappears from public pages and pending invitations are revoked. Roster history and results are kept, and a ZediStats admin can restore it."
+      description="The team disappears from public pages and pending invitations are revoked. Roster history and results are kept, and a FlagStats admin can restore it."
     >
       <ActionButton
         action={softDeleteTeamAction.bind(null, teamId)}

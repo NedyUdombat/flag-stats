@@ -62,7 +62,7 @@ export async function sendTeamAdminInvitation(opts: {
     subject: `You're invited to manage ${opts.teamName} on FlagStats`,
     html: teamAdminInviteEmailHtml({
       teamName: opts.teamName,
-      invitedBy: opts.invitedByName ?? "A ZediStats admin",
+      invitedBy: opts.invitedByName ?? "A FlagStats admin",
       inviteUrl: `${siteUrl()}/invite/${token}`,
       hasAccount: await emailHasAccount(opts.email),
       expiresInDays: INVITE_TTL_DAYS,

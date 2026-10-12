@@ -1,17 +1,21 @@
 import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
-import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
+import { buttonPrimary } from "@/containers/Account/styles";
 import {
   acceptInvitationAction,
   signOutToInviteAction,
 } from "@/features/invitations/actions/invitation.actions";
-import type { InvitePreview } from "@/features/invitations/invitation.types";
+import type {
+  InvitationType,
+  InvitePreview,
+} from "@/features/invitations/invitation.types";
+import { INVITATION_COPY } from "@/features/invitations/invitation-destination";
 import { AcceptInvitationButton } from "./accept-invitation-button";
 import { InviteSignUpForm } from "./invite-signup-form";
 
 type Signup = {
   email: string;
-  type: string;
+  type: InvitationType;
   label: string;
   hasAccount: boolean;
 } | null;
@@ -38,6 +42,10 @@ const MESSAGES: Record<string, [string, string]> = {
     "You already have an athlete profile",
     "Each person can have one. Remove your current profile from your account (Account, Athlete tab) and then use this link again.",
   ],
+  no_profile: [
+    "This invitation no longer fits your account",
+    "It was sent for an athlete profile that isn't on your account any more. Ask the team to send a new invitation.",
+  ],
   rate_limited: [
     "Too many attempts",
     "Please wait a few minutes and try again.",
@@ -63,7 +71,7 @@ export function InviteView({
       return (
         <Panel
           title="Create your account"
-          description="You've been invited to FlagStats. Set up your account to claim it."
+          description="You've been invited to FlagStats. Set up your account to accept the invitation."
         >
           <InviteSignUpForm
             token={token}
@@ -111,17 +119,14 @@ export function InviteView({
   }
 
   if (preview.state === "ready") {
-    const what = preview.type === "athlete_claim" ? "athlete profile" : "role";
+    const copy = INVITATION_COPY[preview.type];
     return (
-      <Panel
-        title={`Claim ${preview.label}`}
-        description={`Accept to add this ${what} to your account.`}
-      >
+      <Panel title={copy.title(preview.label)} description={copy.description}>
         <AcceptInvitationButton
           action={acceptInvitationAction}
           fieldName="token"
           fieldValue={token}
-          label="Accept invitation"
+          label={copy.accept}
         />
       </Panel>
     );

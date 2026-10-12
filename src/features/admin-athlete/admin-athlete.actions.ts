@@ -2,17 +2,19 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import type { AthleteActionState } from "@/features/athletes/athlete.constants";
 import { invalidResult } from "@/features/athletes/athlete.schema";
 import {
   checkInviteEmail,
   sendAthleteInvitation,
 } from "@/features/invitations/invitation.service";
+import { teamErrorMessage } from "@/features/teams/team.constants";
 import { getCurrentUser } from "@/features/users/user.service";
 import { isMinor } from "@/lib/age";
 import { deleteCloudinaryImage } from "@/lib/cloudinary/server";
 import { logServerError } from "@/lib/errors";
-import { canCreateAthleteForOthers } from "@/lib/permissions";
+import { canCreateAthleteForOthers, canManageTeam } from "@/lib/permissions"; // add canManageTeam to the existing import
 import { rateKey, rateLimit } from "@/lib/rate-limit";
 import { withUniqueSlug } from "@/lib/slug/with-unique-slug";
 import { createServerClient } from "@/lib/supabase/server";
@@ -48,6 +50,20 @@ export async function createUnclaimedAthleteAction(
   if (!parsed.success) return invalidResult(parsed.error);
   const input = parsed.data;
 
+  // Optional: add the new athlete to a team you manage
+  let teamId: string | null = null;
+  const rawTeam = fd.get("teamId");
+  if (rawTeam) {
+    const t = z.uuid().safeParse(rawTeam);
+    if (!t.success || !canManageTeam(user, t.data)) {
+      return {
+        status: "error",
+        message: "You can't add athletes to that team.",
+      };
+    }
+    teamId = t.data;
+  }
+
   if (
     !(await rateLimit(rateKey("invite-send", user.id), 30, 3600)) ||
     !(await rateLimit(rateKey("invite-email", input.email), 3, 86400))
@@ -74,10 +90,7 @@ export async function createUnclaimedAthleteAction(
   if (fd.get("confirmNotDuplicate") !== "on") {
     const { data: dup, error } = await supabase.rpc(
       "athlete_admin_duplicate_exists",
-      {
-        p_name: input.fullName,
-        p_dob: input.dateOfBirth,
-      },
+      { p_name: input.fullName, p_dob: input.dateOfBirth },
     );
     if (error)
       logServerError("athlete.adminDuplicate", error); // fail open
@@ -112,6 +125,21 @@ export async function createUnclaimedAthleteAction(
     return { status: "error", message: GENERIC };
   }
 
+  const rollback = () =>
+    supabase.rpc("delete_unclaimed_athlete", { p_athlete_id: created.data });
+
+  if (teamId) {
+    const { error: addError } = await supabase.rpc("add_team_member", {
+      p_team_id: teamId,
+      p_athlete_id: created.data,
+    });
+    if (addError) {
+      logServerError("athlete.adminAddToTeam", addError);
+      await rollback();
+      return { status: "error", message: teamErrorMessage(addError.message) };
+    }
+  }
+
   const sent = await sendAthleteInvitation({
     athleteId: created.data,
     athleteName: input.fullName,
@@ -119,14 +147,18 @@ export async function createUnclaimedAthleteAction(
     invitedByName: user.fullName,
   });
   if (!sent.ok) {
-    // Roll back so we never leave an unreachable profile behind.
-    await supabase.rpc("delete_unclaimed_athlete", {
-      p_athlete_id: created.data,
-    });
+    // Roll back so we never leave an unreachable profile behind (team membership cascades).
+    await rollback();
     return { status: "error", message: sent.message };
   }
 
   revalidatePath("/admin/athletes");
+  if (teamId) {
+    revalidatePath(`/admin/teams/${teamId}`);
+    redirect(
+      `/admin/teams/${teamId}?tab=members&added=${sent.emailSent ? "1" : "0"}`,
+    );
+  }
   redirect(
     `/admin/athletes/${created.data}?sent=${sent.emailSent ? "1" : "0"}`,
   );

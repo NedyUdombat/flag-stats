@@ -55,11 +55,13 @@ export function AdminAthleteForm({
   initial,
   athleteId,
   cancelHref,
+  team,
 }: {
   mode: "create" | "edit";
   initial: AdminAthleteFormInitial;
   athleteId?: string;
   cancelHref: string;
+  team?: { id: string; name: string };
 }) {
   const f = useAdminAthleteForm({
     mode,
@@ -73,7 +75,9 @@ export function AdminAthleteForm({
       title={mode === "create" ? "Add athlete" : "Edit athlete"}
       description={
         mode === "create"
-          ? "We email the athlete a link to claim this profile. Once claimed, only they can edit it."
+          ? team
+            ? `${team.name} gets this athlete in its pool, and we email them a link to claim the profile. Once claimed, only they can edit it.`
+            : "We email the athlete a link to claim this profile. Once claimed, only they can edit it."
           : "You can edit these details until the athlete claims the profile."
       }
     >
@@ -86,6 +90,7 @@ export function AdminAthleteForm({
         {athleteId && (
           <input type="hidden" name="athleteId" value={athleteId} />
         )}
+        {team && <input type="hidden" name="teamId" value={team.id} />}
 
         <Field id="n-name" label="Full name" error={err.fullName}>
           <input
@@ -194,7 +199,9 @@ export function AdminAthleteForm({
             {f.pending
               ? "Saving…"
               : mode === "create"
-                ? "Create & send invitation"
+                ? team
+                  ? "Create, add & send invitation"
+                  : "Create & send invitation"
                 : "Save changes"}
           </button>
           <Link href={cancelHref} className={buttonSecondary}>

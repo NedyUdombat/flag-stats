@@ -7,7 +7,7 @@ import {
   teamErrorMessage,
 } from "./team.constants";
 import type { CreateTeamInput, UpdateTeamInput } from "./team.schema";
-import type { ServiceResult } from "./team.types";
+import type { AthleteCandidate, ServiceResult } from "./team.types";
 
 export async function createTeam(input: CreateTeamInput) {
   const supabase = await createServerClient();
@@ -177,8 +177,6 @@ export async function listAdminTeams(args: {
   return { rows, total: Number(rows[0]?.total_count ?? 0), page, pageSize };
 }
 
-
-
 /** Unclaimed athletes the caller can manage and who aren't on the team yet. */
 export async function listAddableUnclaimedAthletes(
   teamId: string,
@@ -230,4 +228,49 @@ export async function searchInvitableAthletes(
       position: a.primary_position,
       city: a.home_city,
     }));
+}
+
+export async function searchAthleteCandidates(
+  teamId: string,
+  term: string,
+): Promise<AthleteCandidate[]> {
+  const supabase = await createServerClient();
+  const pat = `%${term.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+  const [own, registered, members] = await Promise.all([
+    supabase.rpc("admin_list_athletes", {
+      p_q: term,
+      p_status: "unclaimed",
+      p_limit: 20,
+    }),
+    supabase
+      .from("athletes")
+      .select("id, full_name, primary_position, home_city")
+      .is("deleted_at", null)
+      .eq("visibility", "public")
+      .not("profile_user_id", "is", null)
+      .ilike("full_name", pat)
+      .order("full_name")
+      .limit(8),
+    listTeamMembers(teamId),
+  ]);
+  const taken = new Set(members.map((m) => m.athlete_id));
+  const mine = (own.data ?? [])
+    .filter((a) => a.can_manage && !taken.has(a.id))
+    .map((a) => ({
+      id: a.id,
+      name: a.full_name,
+      position: a.primary_position,
+      city: a.home_city,
+      kind: "own" as const,
+    }));
+  const others = (registered.data ?? [])
+    .filter((a) => !taken.has(a.id))
+    .map((a) => ({
+      id: a.id,
+      name: a.full_name,
+      position: a.primary_position,
+      city: a.home_city,
+      kind: "registered" as const,
+    }));
+  return [...mine, ...others];
 }

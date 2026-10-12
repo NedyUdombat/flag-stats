@@ -43,8 +43,7 @@ export function InviteSignUpForm({
           Check your inbox
         </p>
         <p className="text-sm text-muted-foreground">
-          {f.state.message} Then come back to this invitation link to claim your
-          profile.
+          {f.state.message} Then come back to this invitation link to accept it.
         </p>
       </output>
     );

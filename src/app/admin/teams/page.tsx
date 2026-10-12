@@ -66,7 +66,7 @@ export default async function AdminTeamsPage({
           Teams
         </h1>
         <p className="mt-2 text-zs-muted">
-          {superAdmin ? "Every team on ZediStats." : "Teams you administer."}
+          {superAdmin ? "Every team on FlagStats." : "Teams you administer."}
         </p>
       </div>
       {canCreateTeamShell(user) && (

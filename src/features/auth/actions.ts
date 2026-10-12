@@ -171,20 +171,23 @@ async function createAccount(
       message: "Could not create your account. Please try again.",
     };
   }
-  try {
-    await sendEmail({
-      to: data.email,
-      subject: "Confirm your FlagStats account",
-      html: confirmEmailHtml(actionLink),
-    });
-  } catch (e) {
-    logServerError("auth.signUp.sendEmail", e);
+  const sent = await sendEmail({
+    to: data.email,
+    subject: "Confirm your FlagStats account",
+    html: confirmEmailHtml(actionLink),
+  });
+  if (!sent) {
+    logServerError(
+      "auth.signUp.sendEmail",
+      new Error("Confirmation email failed"),
+    );
     return {
       status: "error",
       message:
         "Your account was created but we couldn't send the confirmation email. Try signing in to request a new one.",
     };
   }
+
   return SIGNUP_SUCCESS;
 }
 

@@ -58,24 +58,18 @@ export async function sendAthleteInvitation(opts: {
   } catch (e) {
     logServerError("invite.hasAccount", e);
   }
-
-  try {
-    await sendEmail({
-      to: opts.email,
-      subject: "Claim your FlagStats profile",
-      html: athleteClaimEmailHtml({
-        athleteName: opts.athleteName,
-        invitedBy: opts.invitedByName ?? "A FlagStats admin",
-        claimUrl: `${siteUrl()}/invite/${token}`,
-        hasAccount,
-        expiresInDays: INVITE_TTL_DAYS,
-      }),
-    });
-    return { ok: true, emailSent: true };
-  } catch (e) {
-    logServerError("invite.email", e);
-    return { ok: true, emailSent: false };
-  }
+  const sent = await sendEmail({
+    to: opts.email,
+    subject: "Claim your FlagStats profile",
+    html: athleteClaimEmailHtml({
+      athleteName: opts.athleteName,
+      invitedBy: opts.invitedByName ?? "A FlagStats admin",
+      claimUrl: `${siteUrl()}/invite/${token}`,
+      hasAccount,
+      expiresInDays: INVITE_TTL_DAYS,
+    }),
+  });
+  return { ok: true, emailSent: sent };
 }
 
 export async function previewInvitation(token: string): Promise<InvitePreview> {
@@ -106,7 +100,8 @@ export async function previewInvitation(token: string): Promise<InvitePreview> {
       | "revoked"
       | "expired"
       | "confirm_email"
-      | "has_profile",
+      | "has_profile"
+      | "no_profile",
   };
 }
 

@@ -24,7 +24,7 @@ export function DeleteAccountForm({
     ],
     [
       "What's kept",
-      "Your account record is closed, not erased: it's kept securely, never shown publicly, and support can restore it. Teams, leagues, organisations, fixtures, results and stats you created stay on ZediStats. If you're the only admin of one, it will have no admin until support assigns one.",
+      "Your account record is closed, not erased: it's kept securely, never shown publicly, and support can restore it. Teams, leagues, organisations, fixtures, results and stats you created stay on FlagStats. If you're the only admin of one, it will have no admin until support assigns one.",
     ],
   ];
   if (athleteName) {

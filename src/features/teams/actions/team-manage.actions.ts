@@ -32,7 +32,7 @@ export async function updateTeamAction(
   const res = await updateTeam(teamId, parsed.data);
   if (!res.ok) return teamError(res.message);
   refresh(teamId);
-  return teamOk("Team updated.");
+  redirect(`/admin/teams/${teamId}?saved=1`);
 }
 
 export async function removeTeamAdminAction(

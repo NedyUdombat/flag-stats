@@ -137,7 +137,7 @@ declare
   v_email text := lower(btrim(p_email));
   v_id uuid;
 begin
-  if not public.is_platform_admin() then raise exception 'Only a ZediStats admin can do this.'; end if;
+  if not public.is_platform_admin() then raise exception 'Only a FlagStats admin can do this.'; end if;
   if p_type not in ('team_claim', 'league_claim', 'org_claim') then raise exception 'Invalid invitation type.'; end if;
   if v_email !~ '^[^@\s]+@[^@\s]+\.[^@\s]+$' then raise exception 'Enter a valid email address.'; end if;
   if p_expires_at <= now() or p_expires_at > now() + interval '30 days' then raise exception 'Invalid expiry.'; end if;
@@ -325,7 +325,7 @@ begin
   if not public.is_platform_admin() and (
        exists (select 1 from public.athlete_team_history where athlete_id = p_athlete_id)
     or exists (select 1 from public.athlete_game_stats where athlete_id = p_athlete_id)) then
-    raise exception 'This athlete has roster or stats history. Ask a ZediStats admin to remove them.';
+    raise exception 'This athlete has roster or stats history. Ask a FlagStats admin to remove them.';
   end if;
 
   update public.athletes
