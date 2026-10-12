@@ -4,6 +4,7 @@ import {
   LandmarkIcon,
   LayoutGridIcon,
   type LucideIcon,
+  MedalIcon,
   SettingsIcon,
   TrophyIcon,
   UserIcon,
@@ -71,5 +72,11 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     label: "Settings",
     icon: SettingsIcon,
     show: () => true,
+  },
+  {
+    href: "/admin/tournaments",
+    label: "Tournaments",
+    icon: MedalIcon,
+    show: isLeagueMember,
   },
 ];

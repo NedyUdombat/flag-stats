@@ -17,6 +17,7 @@ import { LeagueEditForm } from "@/containers/Leagues/edit-form/league-edit-form"
 import { OrganizationLink } from "@/containers/Leagues/organization-link/organization-link";
 import { ActionButton } from "@/containers/Teams/components/action-button";
 import { TeamLogo } from "@/containers/Teams/components/team-logo";
+import { TournamentsTable } from "@/containers/Tournaments/tournaments-table";
 import { SOCIAL_LABELS, SOCIAL_PLATFORMS } from "@/features/entities/socials";
 import {
   setLeagueOrganizationAction,
@@ -35,6 +36,8 @@ import type {
   LeagueInviteRow,
   OrganizationOption,
 } from "@/features/leagues/league.types";
+import { listAdminTournaments } from "@/features/tournaments/tournament.service";
+import type { AdminTournamentRow } from "@/features/tournaments/tournament.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import {
   canManageLeague,
@@ -48,6 +51,7 @@ const TABS = [
   { id: "overview", label: "Overview" },
   { id: "admins", label: "Admins" },
   { id: "settings", label: "Settings" },
+  { id: "tournaments", label: "Tournaments" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -171,6 +175,7 @@ export default async function AdminLeagueDetailPage({
   let invites: LeagueInviteRow[] = [];
   let hasVerifiedResults = false;
   let orgOptions: OrganizationOption[] = [];
+  let tournaments: AdminTournamentRow[] = [];
   try {
     admins = await listLeagueAdmins(id);
     if (tab === "admins") invites = await listLeaguePendingInvitations(id);
@@ -192,6 +197,10 @@ export default async function AdminLeagueDetailPage({
   const socials = SOCIAL_PLATFORMS.filter(
     (p) => (league.social_links as Record<string, string>)?.[p],
   );
+
+  if (tab === "tournaments")
+    tournaments = (await listAdminTournaments({ leagueId: id, pageSize: 50 }))
+      .rows;
 
   return (
     <div className="space-y-6">
@@ -338,6 +347,29 @@ export default async function AdminLeagueDetailPage({
           invites={invites}
           canInvite={!deleted}
         />
+      )}
+
+      {tab === "tournaments" && (
+        <Panel
+          title="Tournaments"
+          description="Seasons, cups and one-day events run by this league."
+        >
+          <div className="space-y-4">
+            {claimed && !deleted && (
+              <Link
+                href={`/admin/tournaments/new?league=${id}`}
+                className={buttonPrimary}
+              >
+                New tournament
+              </Link>
+            )}
+            {tournaments.length === 0 ? (
+              <p className="text-sm text-zs-muted">No tournaments yet.</p>
+            ) : (
+              <TournamentsTable tournaments={tournaments} />
+            )}
+          </div>
+        </Panel>
       )}
 
       {tab === "settings" && (

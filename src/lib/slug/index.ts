@@ -16,6 +16,7 @@ export const RESERVED_SLUGS = new Set([
   "leagues",
   "organizations",
   "federations",
+  "seasons",
   "tournaments",
   "fixtures",
   "results",

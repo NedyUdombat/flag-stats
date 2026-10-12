@@ -4,7 +4,7 @@ import {
   ExternalLinkIcon,
   PencilIcon,
   TriangleAlertIcon,
-} from "lucide-react"; // add to the existing lucide import
+} from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Panel } from "@/containers/Account/shared/panel";
@@ -16,6 +16,7 @@ import { TeamLogo } from "@/containers/Teams/components/team-logo";
 import { DangerZone } from "@/containers/Teams/danger-zone";
 import { TeamEditForm } from "@/containers/Teams/edit-form/team-edit-form";
 import { MembersPanel } from "@/containers/Teams/members-panel";
+import { TeamTournamentsPanel } from "@/containers/Tournaments/team-tournaments-panel";
 import { updateTeamAction } from "@/features/teams/actions/team-manage.actions";
 import {
   getTeam,
@@ -29,6 +30,11 @@ import type {
   TeamInviteRow,
   TeamMemberRow,
 } from "@/features/teams/team.types";
+import { listTournamentsForTeam } from "@/features/tournaments/tournament.service";
+import type {
+  OpenTournamentRow,
+  TeamRegistrationRow,
+} from "@/features/tournaments/tournament.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canManageTeam } from "@/lib/permissions";
 import { cn } from "@/utils/cn";
@@ -40,6 +46,7 @@ const TABS = [
   { id: "members", label: "Members" },
   { id: "admins", label: "Admins" },
   { id: "settings", label: "Settings" },
+  { id: "tournaments", label: "Tournaments" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -164,6 +171,9 @@ export default async function AdminTeamDetailPage({
   let admins: TeamAdminRow[];
   let invites: TeamInviteRow[] = [];
   let members: TeamMemberRow[] = [];
+
+  let openTournaments: OpenTournamentRow[] = [];
+  let teamRegistrations: TeamRegistrationRow[] = [];
   let hasVerifiedResults = false;
   try {
     admins = await listTeamAdmins(id);
@@ -184,6 +194,10 @@ export default async function AdminTeamDetailPage({
   const socials = Object.entries(
     (team.social_links ?? {}) as Record<string, string>,
   );
+
+  if (tab === "tournaments" && membersEnabled)
+    ({ open: openTournaments, registrations: teamRegistrations } =
+      await listTournamentsForTeam(id));
 
   return (
     <div className="space-y-6">
@@ -341,6 +355,21 @@ export default async function AdminTeamDetailPage({
               {deleted
                 ? "Restore the team to manage its members."
                 : "Members can be added once the team has been claimed."}
+            </p>
+          </Panel>
+        ))}
+
+      {tab === "tournaments" &&
+        (membersEnabled ? (
+          <TeamTournamentsPanel
+            teamId={id}
+            open={openTournaments}
+            registrations={teamRegistrations}
+          />
+        ) : (
+          <Panel title="Tournaments">
+            <p className="text-sm text-zs-muted">
+              Tournaments are available once the team has been claimed.
             </p>
           </Panel>
         ))}

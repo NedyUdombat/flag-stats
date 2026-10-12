@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonSecondary } from "@/containers/Account/styles";
+import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
 import type { TeamActionState } from "@/features/teams/team.types";
 import { buttonDanger, buttonLink } from "../../styles";
 import { useActionButton } from "./use-action-button";
@@ -9,6 +9,7 @@ const variants = {
   link: buttonLink,
   danger: buttonDanger,
   secondary: buttonSecondary,
+  primary: buttonPrimary,
 } as const;
 
 interface Props {

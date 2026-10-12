@@ -392,7 +392,9 @@ export type Database = {
           referee_name: string | null
           scheduled_at: string
           season_id: string
+          stage_id: string | null
           status: Database["public"]["Enums"]["fixture_status"]
+          tournament_id: string | null
           updated_at: string
           venue: string | null
           void_reason: string | null
@@ -409,7 +411,9 @@ export type Database = {
           referee_name?: string | null
           scheduled_at: string
           season_id: string
+          stage_id?: string | null
           status?: Database["public"]["Enums"]["fixture_status"]
+          tournament_id?: string | null
           updated_at?: string
           venue?: string | null
           void_reason?: string | null
@@ -426,7 +430,9 @@ export type Database = {
           referee_name?: string | null
           scheduled_at?: string
           season_id?: string
+          stage_id?: string | null
           status?: Database["public"]["Enums"]["fixture_status"]
+          tournament_id?: string | null
           updated_at?: string
           venue?: string | null
           void_reason?: string | null
@@ -453,6 +459,20 @@ export type Database = {
             columns: ["season_id"]
             isOneToOne: false
             referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fixtures_stage_matches_tournament"
+            columns: ["stage_id", "tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournament_stages"
+            referencedColumns: ["id", "tournament_id"]
+          },
+          {
+            foreignKeyName: "fixtures_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
             referencedColumns: ["id"]
           },
         ]
@@ -618,6 +638,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "leagues_format_fkey"
+            columns: ["format"]
+            isOneToOne: false
+            referencedRelation: "ref_formats"
+            referencedColumns: ["key"]
+          },
+          {
             foreignKeyName: "leagues_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
@@ -739,6 +766,99 @@ export type Database = {
           hits?: number
           key?: string
           window_start?: string
+        }
+        Relationships: []
+      }
+      ref_age_groups: {
+        Row: {
+          active: boolean
+          key: string
+          label: string
+          sort_order: number
+          under_age: number | null
+        }
+        Insert: {
+          active?: boolean
+          key: string
+          label: string
+          sort_order?: number
+          under_age?: number | null
+        }
+        Update: {
+          active?: boolean
+          key?: string
+          label?: string
+          sort_order?: number
+          under_age?: number | null
+        }
+        Relationships: []
+      }
+      ref_formats: {
+        Row: {
+          active: boolean
+          key: string
+          label: string
+          players_per_side: number | null
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          key: string
+          label: string
+          players_per_side?: number | null
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          key?: string
+          label?: string
+          players_per_side?: number | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      ref_gender_categories: {
+        Row: {
+          active: boolean
+          allowed_genders: string[]
+          key: string
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          allowed_genders: string[]
+          key: string
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          allowed_genders?: string[]
+          key?: string
+          label?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      ref_stage_types: {
+        Row: {
+          active: boolean
+          key: string
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          key: string
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          key?: string
+          label?: string
+          sort_order?: number
         }
         Relationships: []
       }
@@ -1008,6 +1128,212 @@ export type Database = {
         }
         Relationships: []
       }
+      tournament_registrations: {
+        Row: {
+          created_at: string
+          id: string
+          rejection_reason: string | null
+          requested_by: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["registration_status"]
+          team_id: string
+          tournament_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rejection_reason?: string | null
+          requested_by?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          team_id: string
+          tournament_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rejection_reason?: string | null
+          requested_by?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          team_id?: string
+          tournament_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_registrations_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tournament_registrations_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tournament_stages: {
+        Row: {
+          config: Json
+          created_at: string
+          id: string
+          name: string
+          sequence_order: number
+          stage_type: string
+          tournament_id: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          id?: string
+          name: string
+          sequence_order: number
+          stage_type: string
+          tournament_id: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          id?: string
+          name?: string
+          sequence_order?: number
+          stage_type?: string
+          tournament_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_stages_stage_type_fkey"
+            columns: ["stage_type"]
+            isOneToOne: false
+            referencedRelation: "ref_stage_types"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "tournament_stages_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tournaments: {
+        Row: {
+          age_group: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          end_date: string
+          format: string
+          gender_category: string
+          id: string
+          is_one_day: boolean | null
+          league_id: string
+          max_teams: number | null
+          name: string
+          points_draw: number
+          points_loss: number
+          points_win: number
+          roster_limit: number | null
+          season: string
+          slug: string
+          start_date: string
+          status: Database["public"]["Enums"]["tournament_status"]
+          updated_at: string
+        }
+        Insert: {
+          age_group?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          end_date: string
+          format: string
+          gender_category: string
+          id?: string
+          is_one_day?: boolean | null
+          league_id: string
+          max_teams?: number | null
+          name: string
+          points_draw?: number
+          points_loss?: number
+          points_win?: number
+          roster_limit?: number | null
+          season: string
+          slug: string
+          start_date: string
+          status?: Database["public"]["Enums"]["tournament_status"]
+          updated_at?: string
+        }
+        Update: {
+          age_group?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          end_date?: string
+          format?: string
+          gender_category?: string
+          id?: string
+          is_one_day?: boolean | null
+          league_id?: string
+          max_teams?: number | null
+          name?: string
+          points_draw?: number
+          points_loss?: number
+          points_win?: number
+          roster_limit?: number | null
+          season?: string
+          slug?: string
+          start_date?: string
+          status?: Database["public"]["Enums"]["tournament_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournaments_age_group_fkey"
+            columns: ["age_group"]
+            isOneToOne: false
+            referencedRelation: "ref_age_groups"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "tournaments_format_fkey"
+            columns: ["format"]
+            isOneToOne: false
+            referencedRelation: "ref_formats"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "tournaments_gender_category_fkey"
+            columns: ["gender_category"]
+            isOneToOne: false
+            referencedRelation: "ref_gender_categories"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "tournaments_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1171,6 +1497,36 @@ export type Database = {
           total_count: number
         }[]
       }
+      admin_list_tournaments: {
+        Args: {
+          p_league_id?: string
+          p_limit?: number
+          p_offset?: number
+          p_q?: string
+          p_status?: string
+        }
+        Returns: {
+          age_group: string
+          approved_teams: number
+          can_manage: boolean
+          deleted: boolean
+          end_date: string
+          format: string
+          gender_category: string
+          id: string
+          is_one_day: boolean
+          league_id: string
+          league_name: string
+          max_teams: number
+          name: string
+          pending_teams: number
+          season: string
+          slug: string
+          start_date: string
+          status: string
+          total_count: number
+        }[]
+      }
       assert_valid_slug: { Args: { p_slug: string }; Returns: undefined }
       athlete_admin_duplicate_exists: {
         Args: { p_dob: string; p_name: string }
@@ -1194,6 +1550,10 @@ export type Database = {
       }
       can_manage_league: { Args: { _league_id: string }; Returns: boolean }
       can_manage_team: { Args: { _team_id: string }; Returns: boolean }
+      can_manage_tournament: {
+        Args: { _tournament_id: string }
+        Returns: boolean
+      }
       can_view_athlete_contact: {
         Args: { _athlete_id: string }
         Returns: boolean
@@ -1295,6 +1655,23 @@ export type Database = {
         }
         Returns: string
       }
+      create_tournament: {
+        Args: {
+          p_age_group: string
+          p_description?: string
+          p_end_date: string
+          p_format: string
+          p_gender_category: string
+          p_league_id: string
+          p_max_teams?: number
+          p_name: string
+          p_roster_limit?: number
+          p_season: string
+          p_slug: string
+          p_start_date: string
+        }
+        Returns: string
+      }
       delete_my_athlete_profile: { Args: never; Returns: undefined }
       delete_unclaimed_athlete: {
         Args: { p_athlete_id: string }
@@ -1393,9 +1770,25 @@ export type Database = {
         Args: { p_athlete_id: string; p_team_id: string }
         Returns: undefined
       }
+      request_tournament_registration: {
+        Args: { p_team_id: string; p_tournament_id: string }
+        Returns: string
+      }
       restore_fixture: { Args: { p_fixture_id: string }; Returns: undefined }
       restore_league: { Args: { p_league_id: string }; Returns: undefined }
       restore_team: { Args: { p_team_id: string }; Returns: undefined }
+      restore_tournament: {
+        Args: { p_tournament_id: string }
+        Returns: undefined
+      }
+      review_tournament_registration: {
+        Args: {
+          p_approve: boolean
+          p_reason?: string
+          p_registration_id: string
+        }
+        Returns: undefined
+      }
       revoke_invitation: {
         Args: { p_invitation_id: string }
         Returns: undefined
@@ -1416,11 +1809,22 @@ export type Database = {
         Args: { p_league_id: string; p_verified: boolean }
         Returns: undefined
       }
+      set_tournament_status: {
+        Args: {
+          p_status: Database["public"]["Enums"]["tournament_status"]
+          p_tournament_id: string
+        }
+        Returns: undefined
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       soft_delete_league: { Args: { p_league_id: string }; Returns: undefined }
       soft_delete_my_account: { Args: never; Returns: undefined }
       soft_delete_team: { Args: { p_team_id: string }; Returns: undefined }
+      soft_delete_tournament: {
+        Args: { p_tournament_id: string }
+        Returns: undefined
+      }
       team_admins: {
         Args: { p_team_id: string }
         Returns: {
@@ -1458,8 +1862,20 @@ export type Database = {
           sent_at: string
         }[]
       }
+      tournament_has_verified_results: {
+        Args: { p_tournament_id: string }
+        Returns: boolean
+      }
+      tournament_team_has_results: {
+        Args: { p_team_id: string; p_tournament_id: string }
+        Returns: boolean
+      }
       void_fixture: {
         Args: { p_fixture_id: string; p_reason: string }
+        Returns: undefined
+      }
+      withdraw_tournament_registration: {
+        Args: { p_registration_id: string }
         Returns: undefined
       }
     }
@@ -1480,7 +1896,14 @@ export type Database = {
         | "league_claim"
         | "org_claim"
       platform_role: "user" | "super_admin"
+      registration_status: "pending" | "approved" | "rejected" | "withdrawn"
       season_status: "upcoming" | "active" | "completed"
+      tournament_status:
+        | "draft"
+        | "registration_open"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
       verification_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -1630,7 +2053,15 @@ export const Constants = {
         "org_claim",
       ],
       platform_role: ["user", "super_admin"],
+      registration_status: ["pending", "approved", "rejected", "withdrawn"],
       season_status: ["upcoming", "active", "completed"],
+      tournament_status: [
+        "draft",
+        "registration_open",
+        "in_progress",
+        "completed",
+        "cancelled",
+      ],
       verification_status: ["pending", "approved", "rejected"],
     },
   },

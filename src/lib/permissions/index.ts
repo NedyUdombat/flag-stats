@@ -5,3 +5,4 @@ export * from "./organizations";
 export * from "./results";
 export * from "./scope";
 export * from "./teams";
+export * from "./tournaments";
