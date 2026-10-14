@@ -9,6 +9,7 @@ import type {
   RosterContext,
   RosterEntryRow,
   RosterSummaryRow,
+  TeamRosterRow,
 } from "./roster.types";
 
 export type ServiceResult = { ok: true } | { ok: false; message: string };
@@ -113,7 +114,8 @@ type VoidRpc =
   | "update_roster_entry"
   | "withdraw_roster_entry"
   | "review_roster_entry"
-  | "set_roster_unlocked";
+  | "set_roster_unlocked"
+  | "delete_team_roster";
 
 async function rpcVoid(
   fn: VoidRpc,
@@ -177,3 +179,18 @@ export async function acceptUnflaggedRosterEntries(
   );
   return error ? fail(error) : { ok: true, count: Number(data ?? 0) };
 }
+
+export async function listTeamRosters(
+  teamId: string,
+): Promise<TeamRosterRow[]> {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.rpc("team_rosters", {
+    p_team_id: teamId,
+  });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export const deleteTeamRoster = (registrationId: string) =>
+  rpcVoid("delete_team_roster", { p_registration_id: registrationId });

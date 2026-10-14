@@ -1704,6 +1704,10 @@ export type Database = {
         Returns: string
       }
       delete_my_athlete_profile: { Args: never; Returns: undefined }
+      delete_team_roster: {
+        Args: { p_registration_id: string }
+        Returns: undefined
+      }
       delete_unclaimed_athlete: {
         Args: { p_athlete_id: string }
         Returns: undefined
@@ -1788,6 +1792,60 @@ export type Database = {
         }[]
       }
       preview_invitation: { Args: { p_token_hash: string }; Returns: Json }
+      public_list_athletes: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_position?: string
+          p_q?: string
+          p_sort?: string
+          p_verified_only?: boolean
+        }
+        Returns: {
+          bio: string
+          caps: number
+          contact_visibility: string
+          created_at: string
+          date_of_birth: string
+          dominant_hand: string
+          full_name: string
+          gender: string
+          height_cm: number
+          home_city: string
+          id: string
+          jersey_number: number
+          nationality: string
+          photo_url: string
+          preferred_jersey_number: number
+          primary_position: string
+          secondary_positions: string[]
+          slug: string
+          social_links: Json
+          started_playing_year: number
+          team_name: string
+          total_count: number
+          touchdowns: number
+          updated_at: string
+          verified: boolean
+          visibility: string
+          weight_kg: number
+        }[]
+      }
+      public_tournament_roster: {
+        Args: { p_team_id?: string; p_tournament_id: string }
+        Returns: {
+          athlete_slug: string
+          display_name: string
+          jersey_number: number
+          masked: boolean
+          photo_url: string
+          position: string
+          team_id: string
+          team_logo_url: string
+          team_name: string
+          team_slug: string
+        }[]
+      }
       release_my_athlete_profile: { Args: never; Returns: undefined }
       remove_league_admin: {
         Args: { p_league_id: string; p_user_id: string }
@@ -1908,6 +1966,29 @@ export type Database = {
           invite_type: Database["public"]["Enums"]["invitation_type"]
           label: string
           sent_at: string
+        }[]
+      }
+      team_rosters: {
+        Args: { p_team_id: string }
+        Returns: {
+          accepted_count: number
+          age_group: string
+          can_delete: boolean
+          can_edit: boolean
+          format: string
+          gender_category: string
+          league_name: string
+          pending_count: number
+          registration_id: string
+          registration_status: string
+          rejection_reason: string
+          roster_limit: number
+          roster_unlocked: boolean
+          season: string
+          start_date: string
+          tournament_id: string
+          tournament_name: string
+          tournament_status: string
         }[]
       }
       tournament_has_verified_results: {

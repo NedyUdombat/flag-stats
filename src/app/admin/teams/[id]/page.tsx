@@ -10,6 +10,7 @@ import { notFound, redirect } from "next/navigation";
 import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary } from "@/containers/Account/styles";
 import { ErrorState } from "@/containers/Admin/components/error-state";
+import { TeamRostersPanel } from "@/containers/Rosters/team-rosters-panel";
 import { AdminsPanel } from "@/containers/Teams/admins-panel";
 import { TeamStatusBadges } from "@/containers/Teams/components/team-badges";
 import { TeamLogo } from "@/containers/Teams/components/team-logo";
@@ -17,6 +18,8 @@ import { DangerZone } from "@/containers/Teams/danger-zone";
 import { TeamEditForm } from "@/containers/Teams/edit-form/team-edit-form";
 import { MembersPanel } from "@/containers/Teams/members-panel";
 import { TeamTournamentsPanel } from "@/containers/Tournaments/team-tournaments-panel";
+import { listTeamRosters } from "@/features/rosters/roster.service";
+import type { TeamRosterRow } from "@/features/rosters/roster.types";
 import { updateTeamAction } from "@/features/teams/actions/team-manage.actions";
 import {
   getTeam,
@@ -43,10 +46,11 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const HEX = /^#[0-9a-f]{6}$/i;
 const TABS = [
   { id: "overview", label: "Overview" },
+  { id: "tournaments", label: "Tournaments" },
+  { id: "rosters", label: "Rosters" },
   { id: "members", label: "Members" },
   { id: "admins", label: "Admins" },
   { id: "settings", label: "Settings" },
-  { id: "tournaments", label: "Tournaments" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -113,6 +117,7 @@ export default async function AdminTeamDetailPage({
   if (!canManageTeam(user, id)) notFound(); // public teams are readable, admin pages are not
 
   const team = await getTeam(id);
+
   if (!team) notFound();
 
   const tab: TabId = TABS.some((t) => t.id === sp.tab)
@@ -174,6 +179,7 @@ export default async function AdminTeamDetailPage({
 
   let openTournaments: OpenTournamentRow[] = [];
   let teamRegistrations: TeamRegistrationRow[] = [];
+  let teamRosters: TeamRosterRow[] = [];
   let hasVerifiedResults = false;
   try {
     admins = await listTeamAdmins(id);
@@ -184,6 +190,31 @@ export default async function AdminTeamDetailPage({
     }
     if (tab === "settings")
       hasVerifiedResults = await teamHasVerifiedResults(id);
+
+    if (tab === "rosters" && membersEnabled) {
+      const [rosters, tournaments] = await Promise.all([
+        listTeamRosters(id),
+        listTournamentsForTeam(id),
+      ]);
+
+      teamRosters = rosters;
+      openTournaments = tournaments.open;
+    }
+
+    if (tab === "tournaments" && membersEnabled)
+      ({ open: openTournaments, registrations: teamRegistrations } =
+        await listTournamentsForTeam(id));
+
+    console.log({
+      teamRosters,
+      openTournaments,
+      teamRegistrations,
+      hasVerifiedResults,
+      team,
+      admins,
+      invites,
+      members,
+    });
   } catch {
     return (
       <ErrorState description="Couldn't load this team. Refresh the page to try again." />
@@ -194,10 +225,6 @@ export default async function AdminTeamDetailPage({
   const socials = Object.entries(
     (team.social_links ?? {}) as Record<string, string>,
   );
-
-  if (tab === "tournaments" && membersEnabled)
-    ({ open: openTournaments, registrations: teamRegistrations } =
-      await listTournamentsForTeam(id));
 
   return (
     <div className="space-y-6">
@@ -370,6 +397,22 @@ export default async function AdminTeamDetailPage({
           <Panel title="Tournaments">
             <p className="text-sm text-zs-muted">
               Tournaments are available once the team has been claimed.
+            </p>
+          </Panel>
+        ))}
+
+      {tab === "rosters" &&
+        (membersEnabled ? (
+          <TeamRostersPanel
+            teamId={id}
+            teamName={team.name}
+            rosters={teamRosters}
+            open={openTournaments}
+          />
+        ) : (
+          <Panel title="Rosters">
+            <p className="text-sm text-zs-muted">
+              Rosters are available once the team has been claimed.
             </p>
           </Panel>
         ))}

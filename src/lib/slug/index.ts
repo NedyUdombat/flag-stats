@@ -43,7 +43,7 @@ export const RESERVED_SLUGS = new Set([
   "undefined",
 ]);
 
-export type SlugTable = "athletes" | "teams" | "leagues" | "organizations";
+export type SlugTable = "athletes" | "teams" | "leagues" | "organizations" | "tournaments";
 
 export function slugify(input: string): string {
   return input

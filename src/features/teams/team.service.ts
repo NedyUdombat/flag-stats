@@ -1,11 +1,7 @@
 import "server-only";
 import { withUniqueSlug } from "@/lib/slug/with-unique-slug";
 import { createServerClient } from "@/lib/supabase/server";
-import {
-  TEAM_ERROR_MESSAGES,
-  TEAM_SOCIALS,
-  teamErrorMessage,
-} from "./team.constants";
+import { TEAM_SOCIALS, teamErrorMessage } from "./team.constants";
 import type { CreateTeamInput, UpdateTeamInput } from "./team.schema";
 import type { AthleteCandidate, ServiceResult } from "./team.types";
 

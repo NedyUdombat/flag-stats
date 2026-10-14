@@ -163,6 +163,7 @@ export async function listTournamentsForTeam(teamId: string) {
   const openTournaments: OpenTournamentRow[] = (open.data ?? [])
     .filter((t) => !active.has(t.id))
     .map((t) => ({ ...t, league_name: one(t.league)?.name ?? null }));
+
   return { open: openTournaments, registrations };
 }
 

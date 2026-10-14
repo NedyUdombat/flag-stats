@@ -54,6 +54,8 @@ const MESSAGES: Record<string, string> = {
   athlete_has_stats:
     "That athlete already has stats in this tournament, so they can't be removed.",
   tournament_closed: "This tournament is closed to roster changes.",
+  roster_active:
+    "This roster is active. Once the tournament has started, only the league can remove a team.",
 };
 
 export function rosterErrorMessage(raw: string, code?: string): string {

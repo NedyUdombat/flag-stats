@@ -24,6 +24,12 @@ export function canCreateAthleteForOthers(user: CurrentUser | null): boolean {
   );
 }
 
+export function canCreateAthlete(user: CurrentUser | null): boolean {
+  return (
+    canCreateAthleteForOthers(user) || canCreateOwnAthleteProfile(user, false)
+  );
+}
+
 export function canEditAthleteProfile(
   user: CurrentUser | null,
   a: AthleteOwnership,

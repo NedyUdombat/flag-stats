@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUser } from "@/features/users/user.service";
+import { canManageTeam } from "@/lib/permissions";
 import { rateKey, rateLimit } from "@/lib/rate-limit";
 import { RosterEntryEditSchema, RosterEntrySchema } from "../roster.schema";
 import {
+  deleteTeamRoster,
   submitRosterEntry,
   updateRosterEntry,
   withdrawRosterEntry,
@@ -76,5 +78,25 @@ export async function withdrawRosterEntryAction(
   const res = await withdrawRosterEntry(entryId);
   if (!res.ok) return rosterError(res.message);
   refresh(registrationId);
+  return rosterOk();
+}
+
+export async function deleteTeamRosterAction(
+  teamId: string,
+  registrationId: string,
+): Promise<RosterActionState> {
+  const user = await getCurrentUser();
+  if (
+    !user ||
+    !isUuid(teamId) ||
+    !isUuid(registrationId) ||
+    !canManageTeam(user, teamId)
+  )
+    return denied;
+  const res = await deleteTeamRoster(registrationId);
+  if (!res.ok) return rosterError(res.message);
+  revalidatePath(`/admin/teams/${teamId}`);
+  revalidatePath(`/admin/rosters/${registrationId}`);
+  revalidatePath("/admin/tournaments", "layout");
   return rosterOk();
 }

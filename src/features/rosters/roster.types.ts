@@ -35,3 +35,22 @@ export type RosterContext = {
     season: string;
   };
 };
+
+export type TeamRosterRow = Fn["team_rosters"]["Returns"][number];
+export type PublicRosterRow = Fn["public_tournament_roster"]["Returns"][number];
+
+export type PublicRosterPlayer = {
+  jerseyNumber: number;
+  position: string;
+  displayName: string;
+  athleteSlug: string | null;
+  photoUrl: string | null;
+  masked: boolean;
+};
+export type PublicRosterTeam = {
+  teamId: string;
+  teamName: string;
+  teamSlug: string;
+  logoUrl: string | null;
+  players: PublicRosterPlayer[];
+};
