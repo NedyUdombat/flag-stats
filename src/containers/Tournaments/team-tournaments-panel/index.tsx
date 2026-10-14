@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
 import { ActionButton } from "@/containers/Teams/components/action-button";
 import {
@@ -89,6 +90,16 @@ export function TeamTournamentsPanel({ teamId, open, registrations }: Props) {
                 </div>
                 <div className="flex items-center gap-3">
                   <RegistrationStatusBadge status={r.status} />
+                  {r.status === "approved" &&
+                    r.tournament?.status !== "completed" &&
+                    r.tournament?.status !== "cancelled" && (
+                      <Link
+                        href={`/admin/rosters/${r.id}`}
+                        className="font-data text-xs text-zs-lime uppercase hover:underline"
+                      >
+                        Manage roster
+                      </Link>
+                    )}
                   {(r.status === "pending" || r.status === "approved") &&
                     r.tournament?.status !== "completed" &&
                     r.tournament?.status !== "cancelled" && (

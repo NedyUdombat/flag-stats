@@ -7,9 +7,11 @@ import { AdminAthleteForm } from "@/containers/Admin/Athletes/athlete-form/athle
 import { UnclaimedDangerZone } from "@/containers/Admin/Athletes/danger-zone/danger-zone";
 import { InvitePanel } from "@/containers/Admin/Athletes/invite-panel/invite-panel";
 import { getAdminAthleteDetail } from "@/features/admin-athlete/admin-athlete.service";
+import { getAthleteRosters } from "@/features/rosters/roster.service";
 import { getCurrentUser } from "@/features/users/user.service";
 import { ageFromDob } from "@/lib/age";
 import { canManageUnclaimedAthlete } from "@/lib/permissions";
+import { fmtDate, fmtDay } from "@/utils/date";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -52,6 +54,8 @@ export default async function AdminAthleteDetailPage({
     createdBy: a.created_by,
   });
   const viewHref = `/admin/athletes/${id}`;
+
+  const rosters = await getAthleteRosters(id);
 
   if (sp.mode === "edit" && canManage) {
     return (
@@ -169,25 +173,58 @@ export default async function AdminAthleteDetailPage({
       )}
 
       <Panel
-        title="Roster history"
-        description="Roster entries (jersey and position per tournament) will be added here once tournaments and rosters exist."
+        title="Teams"
+        description="Jersey numbers and positions per tournament will show here once rosters exist."
       >
-        {detail.rosterHistory.length === 0 ? (
-          <p className="text-sm text-zs-muted">Not on any roster yet.</p>
+        {detail.teamMemberships.length === 0 ? (
+          <p className="text-sm text-zs-muted">Not on any team yet.</p>
         ) : (
           <ul className="divide-y divide-zs-line border border-zs-line">
-            {detail.rosterHistory.map((h) => (
+            {detail.teamMemberships.map((m) => (
               <li
-                key={h.id}
+                key={m.teamId}
                 className="flex flex-wrap items-center justify-between gap-2 px-3 py-3 text-sm"
               >
                 <span className="font-display text-lg font-bold text-zs-ink">
-                  {h.teamName}
+                  {m.teamName}
                 </span>
                 <span className="font-data text-xs text-zs-muted">
-                  {h.seasonName} ·{" "}
-                  {h.jerseyNumber != null ? `#${h.jerseyNumber}` : "no number"}{" "}
-                  · {h.position ?? "no position"}
+                  {m.status === "active"
+                    ? `Member since ${fmtDate(m.joinedAt)}`
+                    : `Left ${m.leftAt ? fmtDate(m.leftAt) : ""}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
+
+      <Panel
+        title="Tournament rosters"
+        description="Jersey and position per tournament."
+      >
+        {rosters.length === 0 ? (
+          <p className="text-sm text-zs-muted">
+            Not on any tournament roster yet.
+          </p>
+        ) : (
+          <ul className="divide-y divide-zs-line border border-zs-line">
+            {rosters.map((r) => (
+              <li
+                key={`${r.tournament_id}-${r.team_id}`}
+                className="flex flex-wrap items-center justify-between gap-2 px-3 py-3 text-sm"
+              >
+                <span>
+                  <span className="font-display text-lg font-bold text-zs-ink">
+                    {r.tournament_name}
+                  </span>
+                  <span className="ml-2 font-data text-xs text-zs-muted">
+                    {r.team_name} · {r.league_name} · {fmtDay(r.start_date)}
+                  </span>
+                </span>
+                <span className="font-data text-xs text-zs-muted">
+                  #{r.jersey_number} · {r.position} ·{" "}
+                  {r.status === "accepted" ? "Accepted" : "Pending"}
                 </span>
               </li>
             ))}

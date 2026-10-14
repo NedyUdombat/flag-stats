@@ -5,11 +5,14 @@ import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary } from "@/containers/Account/styles";
 import { Banner } from "@/containers/Admin/components/banner";
 import { ErrorState } from "@/containers/Admin/components/error-state";
+import { RostersPanel } from "@/containers/Rosters/rosters-panel";
 import { TournamentStatusBadge } from "@/containers/Tournaments/components/badges";
 import { StatusControls } from "@/containers/Tournaments/components/status-controls";
 import { TournamentDangerZone } from "@/containers/Tournaments/danger-zone";
 import { RegistrationsPanel } from "@/containers/Tournaments/registrations-panel";
 import { TournamentForm } from "@/containers/Tournaments/tournament-form";
+import { listRosterSummary } from "@/features/rosters/roster.service";
+import type { RosterSummaryRow } from "@/features/rosters/roster.types";
 import { updateTournamentAction } from "@/features/tournaments/actions/tournament-manage.actions";
 import {
   isStarted,
@@ -32,6 +35,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const TABS = [
   { id: "overview", label: "Overview" },
   { id: "registrations", label: "Registrations" },
+  { id: "rosters", label: "Rosters" },
   { id: "settings", label: "Settings" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
@@ -82,6 +86,10 @@ export default async function AdminTournamentDetailPage({
   let registrations: RegistrationRow[];
   let options;
   let hasVerifiedResults = false;
+  let rosterSummary: RosterSummaryRow[] = [];
+
+  if (tab === "rosters") rosterSummary = await listRosterSummary(id);
+
   try {
     [registrations, options] = await Promise.all([
       listTournamentRegistrations(id),
@@ -289,6 +297,8 @@ export default async function AdminTournamentDetailPage({
           }
         />
       )}
+
+      {tab === "rosters" && <RostersPanel summary={rosterSummary} />}
 
       {tab === "settings" && (
         <TournamentDangerZone

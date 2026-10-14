@@ -9,9 +9,15 @@ interface Props {
   review: (approve: boolean, reason: string) => Promise<TournamentActionState>;
   mode: "pending" | "approved";
   canApprove: boolean;
+  removeLabel?: string;
 }
 
-export function ReviewButtons({ review, mode, canApprove }: Props) {
+export function ReviewButtons({
+  review,
+  mode,
+  canApprove,
+  removeLabel = "Remove team",
+}: Props) {
   const { pending, error, rejecting, setRejecting, reason, setReason, run } =
     useReviewButtons(review);
   return (
@@ -34,7 +40,7 @@ export function ReviewButtons({ review, mode, canApprove }: Props) {
             disabled={pending}
             className={buttonSecondary}
           >
-            {mode === "pending" ? "Reject" : "Remove team"}
+            {mode === "pending" ? "Reject" : removeLabel}
           </button>
         </div>
       ) : (
