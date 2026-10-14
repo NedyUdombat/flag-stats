@@ -1,23 +1,13 @@
 "use client";
 
-import {
-  ArrowRightIcon,
-  LifeBuoyIcon,
-  MailCheckIcon,
-  MailIcon,
-} from "lucide-react";
+import { ArrowRightIcon, MailCheckIcon, MailIcon } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 
-import {
-  FormAlert,
-  FormField,
-  fieldInputClass,
-  InputWithIcon,
-  primaryButtonClass,
-} from "@/components/form-field";
+import { FormAlert, FormField, InputWithIcon } from "@/components/form-field";
 import { Button } from "@/components/primitives/button";
 import { Input } from "@/components/primitives/input";
+import { fieldInputClass } from "@/containers/Auth/styles";
 import {
   type AuthActionState,
   forgotPasswordAction,
@@ -35,8 +25,8 @@ export function ForgotPasswordForm() {
   if (state.status === "success") {
     return (
       <div className="space-y-3 rounded-md bg-background p-6 text-center">
-        <MailCheckIcon aria-hidden className="mx-auto size-8 text-brand-lime" />
-        <p className="font-display text-xl uppercase tracking-wide">
+        <MailCheckIcon aria-hidden className="mx-auto size-8 text-accent" />
+        <p className="font-sans text-xl uppercase tracking-wide">
           Check your email
         </p>
         <p className="text-sm text-muted-foreground">{state.message}</p>
@@ -46,7 +36,7 @@ export function ForgotPasswordForm() {
 
   return (
     <div className="space-y-6">
-      <form action={formAction} className="space-y-5">
+      <form action={formAction} className="flex flex-col gap-8">
         <FormField id="email" label="Email address">
           <InputWithIcon icon={MailIcon}>
             <Input
@@ -67,38 +57,22 @@ export function ForgotPasswordForm() {
 
         <Button
           type="submit"
-          className={primaryButtonClass}
           disabled={isPending}
+          variant="default"
+          size="lg"
+          className="h-14"
+          isLoading={isPending}
+          rightIcon={<ArrowRightIcon aria-hidden />}
         >
           {isPending ? "Sending…" : "Send reset link"}
-          {isPending ? null : <ArrowRightIcon aria-hidden />}
         </Button>
       </form>
-
-      <div className="flex gap-3 rounded-md bg-background/60 p-4">
-        <LifeBuoyIcon
-          aria-hidden
-          className="mt-0.5 size-5 shrink-0 text-brand-cyan"
-        />
-        <div className="space-y-1 text-sm">
-          <p className="font-medium">Can&apos;t get into that email?</p>
-          <p className="text-muted-foreground">
-            <Link
-              href="/contact?topic=account"
-              className="text-brand-cyan underline-offset-4 hover:underline"
-            >
-              Contact support
-            </Link>{" "}
-            and we&apos;ll help you recover your account.
-          </p>
-        </div>
-      </div>
 
       <p className="text-center text-sm text-muted-foreground">
         Remembered it?{" "}
         <Link
           href="/login"
-          className="font-medium text-brand-lime underline-offset-4 hover:underline"
+          className="font-medium text-accent/75 underline-offset-4 hover:underline"
         >
           Sign in
         </Link>

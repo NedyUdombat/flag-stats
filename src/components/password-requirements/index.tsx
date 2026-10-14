@@ -6,7 +6,7 @@ import { cn } from "@/utils/cn";
 
 export function PasswordRequirements({ password }: { password: string }) {
   return (
-    <ul className="space-y-2.5" aria-label="Password requirements">
+    <ul className="space-y-2.5 px-1" aria-label="Password requirements">
       {PASSWORD_REQUIREMENTS.map((req) => {
         const met = req.test(password);
         return (

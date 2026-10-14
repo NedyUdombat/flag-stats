@@ -1,4 +1,4 @@
-import { Barlow_Condensed, JetBrains_Mono } from "next/font/google";
+import { Barlow_Condensed, DM_Mono, DM_Sans } from "next/font/google";
 
 /** Condensed athletic display face for headings, team names and big numbers. */
 export const displayFont = Barlow_Condensed({
@@ -9,9 +9,17 @@ export const displayFont = Barlow_Condensed({
 });
 
 /** Monospace for scores, timestamps, referee/meta lines — the "ledger" voice. */
-export const dataFont = JetBrains_Mono({
+export const dataFont = DM_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["300", "400", "500"],
   variable: "--font-zs-data",
+  display: "swap",
+});
+
+/** Sans-serif for everything else. */
+export const dmSansFont = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-zs-sans",
   display: "swap",
 });

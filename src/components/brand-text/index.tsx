@@ -11,17 +11,13 @@ export function BrandText({ href, showProBadge }: BrandTextProps) {
       href={href || "/"}
       className="inline-flex items-center gap-2 group transition-opacity hover:opacity-90"
     >
-      <span className="flex size-6 items-center justify-center rounded bg-brand-lime font-display text-[11px] font-black text-brand-ink shadow-sm">
-        F
-      </span>
-
       <div className="flex items-baseline gap-1.5">
-        <span className="font-display text-xl font-black tracking-tight text-white ">
-          FLAG<span className="text-zs-lime">STATS</span>
+        <span className="text-lg font-black tracking-[-1.5px] text-accent-gold">
+          Flag<span className="text-white">Stats</span>
         </span>
 
         {showProBadge && (
-          <span className="rounded bg-zs-muted/20 px-1.5 py-0.5 font-data text-[10px] font-semibold tracking-widest text-white uppercase">
+          <span className="rounded bg-[#FFB703] px-1 py-0.5 text-[#0B1019] text-[8px] font-bold tracking-widest uppercase">
             PRO
           </span>
         )}

@@ -1,16 +1,8 @@
 import { AlertCircleIcon, type LucideIcon } from "lucide-react";
 
 import { Label } from "@/components/primitives/label";
+import { fieldLabelClass } from "@/containers/Auth/styles";
 import { cn } from "@/utils/cn";
-
-export const fieldInputClass =
-  "h-12 rounded-sm border-transparent bg-background text-base shadow-none md:text-base placeholder:text-muted-foreground/50 focus-visible:border-brand-lime/50 focus-visible:ring-brand-lime/20";
-
-export const fieldLabelClass =
-  "font-mono text-[0.7rem] font-medium uppercase tracking-[0.18em] text-foreground/80";
-
-export const primaryButtonClass =
-  "h-13 w-full rounded-sm bg-brand-lime font-display text-lg uppercase tracking-wide text-black hover:bg-brand-lime/90 focus-visible:ring-brand-lime/40 disabled:opacity-60 [&_svg]:size-5";
 
 interface FormFieldProps {
   id: string;
@@ -33,7 +25,7 @@ export function FormField({
     <div className={cn("space-y-2", className)}>
       <div className="flex min-h-4 items-baseline justify-between gap-3">
         {label && (
-          <Label htmlFor={id} className={fieldLabelClass}>
+          <Label htmlFor={id} className={cn(fieldLabelClass, "font-data")}>
             {label}
           </Label>
         )}
@@ -73,7 +65,7 @@ export function InputWithIcon({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Icon
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-3.5 z-10 size-4 -translate-y-1/2 text-muted-foreground"

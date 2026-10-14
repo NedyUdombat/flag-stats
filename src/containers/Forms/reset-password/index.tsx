@@ -4,16 +4,11 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 
-import {
-  FieldHint,
-  FormAlert,
-  FormField,
-  fieldInputClass,
-  primaryButtonClass,
-} from "@/components/form-field";
+import { FieldHint, FormAlert, FormField } from "@/components/form-field";
 import { PasswordRequirements } from "@/components/password-requirements";
 import { Button } from "@/components/primitives/button";
 import { PasswordInput } from "@/components/primitives/password-input";
+import { fieldInputClass } from "@/containers/Auth/styles";
 import {
   type AuthActionState,
   resetPasswordAction,
@@ -39,21 +34,23 @@ export function ResetPasswordForm({ tokenHash }: ResetPasswordFormProps) {
 
   return (
     <div className="space-y-6">
-      <form action={formAction} className="space-y-5">
+      <form action={formAction} className="flex flex-col gap-8">
         <input type="hidden" name="tokenHash" value={tokenHash} />
-        <FormField id="password" label="New password">
-          <PasswordInput
-            id="password"
-            name="password"
-            required
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={fieldInputClass}
-          />
-        </FormField>
+        <div className="space-y-4">
+          <FormField id="password" label="New password">
+            <PasswordInput
+              id="password"
+              name="password"
+              required
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={fieldInputClass}
+            />
+          </FormField>
 
-        <PasswordRequirements password={password} />
+          <PasswordRequirements password={password} />
+        </div>
 
         <FormField
           id="confirmPassword"
@@ -87,17 +84,20 @@ export function ResetPasswordForm({ tokenHash }: ResetPasswordFormProps) {
 
         <Button
           type="submit"
-          className={primaryButtonClass}
           disabled={isPending || !rulesMet || !matches}
+          variant="default"
+          size="lg"
+          className="h-14"
+          isLoading={isPending}
+          rightIcon={<ArrowRightIcon aria-hidden />}
         >
-          {isPending ? "Saving…" : "Reset password & sign in"}
-          {isPending ? null : <ArrowRightIcon aria-hidden />}
+          {isPending ? "Saving…" : "Reset password"}
         </Button>
       </form>
 
       <Link
         href="/login"
-        className="mx-auto flex w-fit items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        className="mx-auto flex w-fit items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-accent-blue"
       >
         <ArrowLeftIcon aria-hidden className="size-4" />
         Cancel and return to sign in

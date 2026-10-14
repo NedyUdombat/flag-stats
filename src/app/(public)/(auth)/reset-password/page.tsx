@@ -1,3 +1,7 @@
+import { AlertCircleIcon } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/primitives/button";
+// import { Button } from "@/components/ui/button"; // adjust path to your Button component
 import { AuthShell } from "@/containers/Auth/shell";
 import { ResetPasswordForm } from "@/containers/Forms/reset-password";
 
@@ -9,23 +13,33 @@ export default async function ResetPasswordPage({
   searchParams: Promise<{ token_hash?: string }>;
 }) {
   const { token_hash } = await searchParams;
-  if (!token_hash) return <p>This reset link is invalid. Request a new one.</p>;
+
+  if (!token_hash) {
+    return (
+      <AuthShell
+        headline="Invalid or expired link"
+        supporting="This password reset link is missing required verification details or has expired."
+        icon={
+          <div className="mb-6 flex size-14 items-center justify-center rounded-full bg-rose-500/10 text-rose-500 ring-1 ring-rose-500/20">
+            <AlertCircleIcon className="size-7" aria-hidden="true" />
+          </div>
+        }
+      >
+        <div className="flex flex-col items-center justify-center text-center">
+          <Button type="button" className="w-full" asChild size="lg">
+            <Link href="/forgot-password">Request new link</Link>
+          </Button>
+        </div>
+      </AuthShell>
+    );
+  }
+
   return (
     <AuthShell
       headline="One more step back to the sideline."
-      supporting="Choose a new password to get back into your dashboard."
+      supporting="Choose a new password to get back into your account."
     >
-      <div className="space-y-2">
-        <h2 className="font-display text-2xl tracking-tight">
-          Choose a new password
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Enter and confirm your new password below.
-        </p>
-      </div>
-      <div className="mt-8">
-        <ResetPasswordForm tokenHash={token_hash} />
-      </div>
+      <ResetPasswordForm tokenHash={token_hash} />
     </AuthShell>
   );
 }

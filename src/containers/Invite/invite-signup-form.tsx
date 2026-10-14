@@ -11,9 +11,7 @@ import {
   FieldHint,
   FormAlert,
   FormField,
-  fieldInputClass,
   InputWithIcon,
-  primaryButtonClass,
 } from "@/components/form-field";
 import { PasswordStrengthMeter } from "@/components/password-strength-meter";
 import { Button } from "@/components/primitives/button";
@@ -21,6 +19,7 @@ import { Checkbox } from "@/components/primitives/checkbox";
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
 import { PasswordInput } from "@/components/primitives/password-input";
+import { fieldInputClass, primaryButtonClass } from "@/containers/Auth/styles";
 import { cn } from "@/utils/cn";
 import { useInviteSignUp } from "./invite-signup-form.logic";
 

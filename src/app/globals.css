@@ -1,81 +1,121 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
 @import "./admin-theme.css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 
-  /* Raw new-system colors */
-  --brand-lime: #ccff00;
-  --brand-lime-deep: #a3cc00;
-  --brand-cyan: #06b6d4;
-  --brand-cyan-deep: #0891b2;
-  --brand-orange: #f59e0b;
-  --brand-orange-deep: #d97706;
-  --brand-ink: #0b0f19;
-  --brand-ink-elevated: #141a2b;
+  /* Figma Design Tokens (Mode 1) */
+  --neutral-black: #0b1019;
+  --neutral-white: #ffffff;
+  --neutral-gray-1: #1e2230;
+  --neutral-gray-2: #8a94a6;
+  --neutral-covert: #16171a;
 
-  /* Backward-compatible aliases (see note above) — do not remove until
-     every page referencing the old violet-system names has been migrated. */
-  --brand-violet: var(--brand-cyan);
-  --brand-violet-deep: var(--brand-ink);
-  --brand-violet-ink: var(--brand-ink);
-  --brand-orchid: var(--brand-orange);
+  --accent-yellow: #faff00;
+  --accent-blue: #00e5ff;
+  --accent-orange: #ff5e00;
+  --accent-gold: #ffb703;
 
-  --background: #faf9f7;
-  --foreground: #0b0f19;
+  /* Light Theme Mapping */
+  --background: #ffffff;
+  --foreground: #0b1019;
   --card: #ffffff;
-  --card-foreground: #0b0f19;
+  --card-foreground: #0b1019;
   --popover: #ffffff;
-  --popover-foreground: #0b0f19;
-  --primary: var(--brand-ink);
-  --primary-foreground: #faf9f7;
-  --secondary: #eef1f5;
-  --secondary-foreground: var(--brand-ink);
-  --muted: #f1f2f4;
-  --muted-foreground: #5c6270;
-  --accent: #e7eef2;
-  --accent-foreground: var(--brand-ink);
+  --popover-foreground: #0b1019;
+  --primary: #0b1019;
+  --primary-foreground: #ffffff;
+  --secondary: #1e2230;
+  --secondary-foreground: #ffffff;
+  --muted: #1e2230;
+  --muted-foreground: #8a94a6;
+  --accent: #ffb703;
+  --accent-foreground: #0b1019;
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: #e2e4e8;
-  --input: #e2e4e8;
-  --ring: var(--brand-cyan);
-  --success: var(--brand-lime);
-  --success-foreground: #0b0f19;
-  --warning: var(--brand-orange);
-  --warning-foreground: #0b0f19;
+  --border: rgba(138, 148, 166, 0.2);
+  --input: rgba(138, 148, 166, 0.2);
+  --ring: #faff00;
+
+  --chart-1: #faff00;
+  --chart-2: #00e5ff;
+  --chart-3: #ff5e00;
+  --chart-4: #ffb703;
+  --chart-5: #8a94a6;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0b1019;
+  --sidebar-primary: #0b1019;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e2230;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(138, 148, 166, 0.2);
+  --sidebar-ring: #faff00;
+
+  --verified-green: #00ff87;
+  --verified-blue: #00e5ff;
+
+  /* Optional Muted Glow/Background Tints for Badges */
+  --verified-green-tint: rgba(0, 255, 135, 0.15);
+  --verified-blue-tint: rgba(0, 229, 255, 0.15);
 }
 
 .dark {
-  --background: var(--brand-ink);
-  --foreground: #f2f4f8;
-  --card: var(--brand-ink-elevated);
-  --card-foreground: #f2f4f8;
-  --popover: var(--brand-ink-elevated);
-  --popover-foreground: #f2f4f8;
-  --primary: var(--brand-lime);
-  --primary-foreground: #0b0f19;
-  --secondary: #1c2338;
-  --secondary-foreground: #f2f4f8;
-  --muted: #171d30;
-  --muted-foreground: #9aa1b5;
-  --accent: #22293f;
-  --accent-foreground: #f2f4f8;
+  color-scheme: dark;
+
+  /* Dark Theme Mapping matching your FlagStats / Athletic Dark Aesthetic */
+  --background: #0b1019;
+  --foreground: #ffffff;
+  --card: #1e2230;
+  --card-foreground: #ffffff;
+  --popover: #1e2230;
+  --popover-foreground: #ffffff;
+  --primary: #faff00;
+  --primary-foreground: #0b1019;
+  --secondary: #1e2230;
+  --secondary-foreground: #ffffff;
+  --muted: #1e2230;
+  --muted-foreground: #8a94a6;
+  --accent: #ffb703;
+  --accent-foreground: #0b1019;
   --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
   --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.12);
-  --ring: var(--brand-lime);
-  --success: var(--brand-lime);
-  --success-foreground: #0b0f19;
-  --warning: var(--brand-orange);
-  --warning-foreground: #0b0f19;
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #faff00;
+
+  --chart-1: #faff00;
+  --chart-2: #00e5ff;
+  --chart-3: #ff5e00;
+  --chart-4: #ffb703;
+  --chart-5: #8a94a6;
+
+  --sidebar: #0b1019;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #faff00;
+  --sidebar-primary-foreground: #0b1019;
+  --sidebar-accent: #1e2230;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #faff00;
 }
 
 @theme inline {
+  /* Direct Figma Token Aliases */
+  --color-neutral-black: var(--neutral-black);
+  --color-neutral-white: var(--neutral-white);
+  --color-neutral-gray-1: var(--neutral-gray-1);
+  --color-neutral-gray-2: var(--neutral-gray-2);
+  --color-neutral-covert: var(--neutral-covert);
+
+  --color-accent-yellow: var(--accent-yellow);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-gold: var(--accent-gold);
+
+  /* Shadcn / Semantic Theme Mapping */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -91,54 +131,36 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-brand-violet: var(--brand-violet);
-  --color-brand-violet-deep: var(--brand-violet-deep);
-  --color-brand-violet-ink: var(--brand-violet-ink);
-  --color-brand-lime: var(--brand-lime);
-  --color-brand-lime-deep: var(--brand-lime-deep);
-  --color-brand-orchid: var(--brand-orchid);
-  --color-brand-cyan: var(--brand-cyan);
-  --color-brand-cyan-deep: var(--brand-cyan-deep);
-  --color-brand-orange: var(--brand-orange);
-  --color-brand-orange-deep: var(--brand-orange-deep);
-  --color-brand-ink: var(--brand-ink);
-  --color-brand-ink-elevated: var(--brand-ink-elevated);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-verified-green: var(--verified-green);
+  --color-verified-blue: var(--verified-blue);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --font-sans:
-    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --font-display:
-    "Barlow Condensed", "Archivo Black", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:
-    "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
-    "Liberation Mono", monospace;
-}
+  --radius-xl: calc(var(--radius) * 1.4);
 
-.dark {
-  color-scheme: dark;
-  /* ...your existing tokens... */
-}
-
-@layer base {
-  .dark input:-webkit-autofill,
-  .dark input:-webkit-autofill:hover,
-  .dark input:-webkit-autofill:focus {
-    -webkit-text-fill-color: var(--foreground);
-    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
-    caret-color: var(--foreground);
-    transition: background-color 9999s ease-out 0s;
-  }
+  --font-sans: var(--font-zs-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-zs-display), "Arial Narrow", sans-serif;
+  --font-data: var(--font-zs-data), ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {
@@ -147,14 +169,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
   }
 }

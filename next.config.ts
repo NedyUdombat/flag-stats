@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const hostnames = ["res.cloudinary.com"];
+const hostnames = ["res.cloudinary.com", "images.unsplash.com"];
 
 const nextConfig: NextConfig = {
   /* config options here */

@@ -18,9 +18,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       headline="Sign in"
       supporting="Pick up where you left off: your stats, your team, or your league."
     >
-      <div className="mt-10">
-        <LoginForm next={safeNext(next)} defaultEmail={defaultEmail} />
-      </div>
+      <LoginForm next={safeNext(next)} defaultEmail={defaultEmail} />
     </AuthShell>
   );
 }

@@ -1,57 +1,17 @@
 import Link from "next/link";
 
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
-  XIcon,
-} from "@/components/icons/social-icons";
-import { BrandText } from "../../components/brand-text";
-
-const PLATFORM_LINKS = [
-  { href: "/athletes", label: "Athletes" },
-  { href: "/teams", label: "Teams" },
-  { href: "/leagues", label: "Leagues" },
-  { href: "/organizations", label: "Federations" },
-  { href: "/standings", label: "Standings" },
-  { href: "/blog", label: "Blog" },
-];
-
-const COMPANY_LINKS = [
-  { href: "/contact", label: "Contact" },
-  { href: "/sign-up", label: "Sign up" },
-  { href: "/login", label: "Sign in" },
-  { href: "/cookies-policy", label: "Cookies Policy" },
-];
-
-const SOCIAL_LINKS = [
-  { href: "", label: "X (Twitter)", icon: XIcon },
-  {
-    href: "",
-    label: "Instagram",
-    icon: InstagramIcon,
-  },
-  {
-    href: "",
-    label: "Facebook",
-    icon: FacebookIcon,
-  },
-  {
-    href: "",
-    label: "LinkedIn",
-    icon: LinkedInIcon,
-  },
-];
+import { BrandText } from "@/components/brand-text";
+import { FOOTER_SECTIONS, SOCIAL_LINKS } from "./footer.constants";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-brand-violet-deep text-white">
-      <div className="mx-auto max-w-6xl px-4 py-14">
+    <footer className="bg-transparent text-white lg:px-24 lg:py-14 px-6 py-5">
+      <div className="mx-auto max-w-8xl">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4 lg:col-span-2">
             <BrandText href="/" />
-            <p className="max-w-sm text-sm text-white/60">
-              The verified career record for African flag football — every stat,
+            <p className="max-w-sm text-sm text-muted-foreground">
+              The verified career record for African flag football: every stat,
               every league, one record.
             </p>
             <div className="flex items-center gap-3 pt-2">
@@ -70,42 +30,27 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-white/50 uppercase">
-              Platform
-            </p>
-            <nav className="mt-4 flex flex-col gap-2.5 text-sm text-white/70">
-              {PLATFORM_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-white/50 uppercase">
-              Company
-            </p>
-            <nav className="mt-4 flex flex-col gap-2.5 text-sm text-white/70">
-              {COMPANY_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
+          {FOOTER_SECTIONS.map((section) => (
+            <div key={section.title} className="space-y-4 col-span-1">
+              <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                {section.title}
+              </p>
+              <nav className="mt-4 flex flex-col gap-2.5 text-sm text-white">
+                {section.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-muted pt-6 text-xs text-muted-foreground sm:flex-row">
           <span>
             © {new Date().getFullYear()} FlagStats. All rights reserved.
           </span>
