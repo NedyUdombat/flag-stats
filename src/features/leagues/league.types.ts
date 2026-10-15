@@ -26,3 +26,13 @@ export interface ListAdminLeaguesResponse {
   page: number;
   pageSize: number;
 }
+
+export interface LeagueOption {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url: string | null;
+  country: string | null;
+  verified: boolean;
+  created_at: string;
+}

@@ -78,3 +78,20 @@ export interface ListAdminTournamentsResponse {
   page: number;
   pageSize: number;
 }
+
+export interface TournamentOption {
+  id: string;
+  name: string;
+  format: string;
+  gender_category: string;
+  age_group: string;
+  season: string;
+  start_date: string;
+  end_date: string;
+  max_teams: number | null;
+  league_id: string;
+  league: {
+    id: string;
+    name: string;
+  };
+}

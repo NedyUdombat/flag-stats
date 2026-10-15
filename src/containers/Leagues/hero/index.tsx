@@ -6,7 +6,7 @@ export async function LeaguesPageHero() {
 
   return (
     <section
-      id="top"
+      id="league-hero"
       className="relative flex flex-col gap-2 justify-center items-center min-h-[45vh] md:min-h-[60vh] w-full bg-black/20 px-6 lg:px-52"
     >
       <div className="max-w-6xl w-full flex flex-col gap-2">

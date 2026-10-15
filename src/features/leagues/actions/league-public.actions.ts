@@ -146,3 +146,15 @@ export async function getLeagueDirectoryStats() {
     activeNations: uniqueNations,
   };
 }
+
+export async function getLeagueFilterOptions() {
+  const supabase = await createServerClient();
+  const { data: leagues, error } = await supabase
+    .from("leagues")
+    .select("id, name, slug, logo_url, country, verified, created_at")
+    .order("name", { ascending: true });
+
+  if (error || !leagues) return [];
+
+  return leagues;
+}

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   ),
   title: {
-    default: "FlagStats",
+    default: "Flag Stats",
     template: "%s | FlagStats",
   },
   description:

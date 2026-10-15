@@ -98,3 +98,86 @@ export function AmericanFootballIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function CalendarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <title>Calendar Icon</title>
+      {/* Calendar Outer Body */}
+      <rect
+        x="0.75"
+        y="1.75"
+        width="9.5"
+        height="8.5"
+        rx="1.5"
+        stroke={props.stroke}
+        strokeWidth="0.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      {/* Top Header Bar / Binding Line */}
+      <path
+        d="M0.75 4.25H10.25"
+        stroke={props.stroke}
+        strokeWidth="0.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Left Hanger / Ring */}
+      <path
+        d="M3.25 0.75V2.25"
+        stroke={props.stroke}
+        strokeWidth="0.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Right Hanger / Ring */}
+      <path
+        d="M7.75 0.75V2.25"
+        stroke={props.stroke}
+        strokeWidth="0.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Optional calendar grid dots/squares */}
+      <path
+        d="M3.25 6.25H3.5"
+        stroke={props.stroke}
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.5 6.25H5.75"
+        stroke={props.stroke}
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7.75 6.25H8"
+        stroke={props.stroke}
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3.25 8.25H3.5"
+        stroke={props.stroke}
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.5 8.25H5.75"
+        stroke={props.stroke}
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
