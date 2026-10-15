@@ -1,6 +1,5 @@
 import { logServerError } from "@/lib/errors";
 import { createServerClient } from "@/lib/supabase/server";
-import type { Json } from "@/types/database/types";
 
 export interface LeagueDirectoryItem {
   id: string;
@@ -171,25 +170,31 @@ export async function getLeagueTeams(leagueId: string): Promise<LeagueTeam[]> {
     return [];
   }
 
-  // Deduplicate teams across multiple tournaments in the same league
+  // Aggregate tournament IDs per team across the league
   const teamMap = new Map<string, LeagueTeam>();
+
   for (const reg of data) {
     const t = Array.isArray(reg.team) ? reg.team[0] : reg.team;
-    if (t && !teamMap.has(t.id)) {
-      teamMap.set(t.id, {
-        id: t.id,
-        name: t.name,
-        slug: t.slug,
-        logoUrl: t.logo_url,
-        primaryColor: t.primary_color,
-        homeCity: t.home_city,
-        verified: t.verified ?? false,
-        tournamentIds: [],
-      });
-    }
-    const teamEntry = teamMap.get(t.id)!;
-    if (!teamEntry.tournamentIds.includes(reg.tournament_id)) {
-      teamEntry.tournamentIds.push(reg.tournament_id);
+    if (t && reg.tournament_id) {
+      let teamEntry = teamMap.get(t.id);
+
+      if (!teamEntry) {
+        teamEntry = {
+          id: t.id,
+          name: t.name,
+          slug: t.slug,
+          logoUrl: t.logo_url,
+          primaryColor: t.primary_color,
+          homeCity: t.home_city,
+          verified: t.verified ?? false,
+          tournamentIds: [],
+        };
+        teamMap.set(t.id, teamEntry);
+      }
+
+      if (!teamEntry.tournamentIds.includes(reg.tournament_id)) {
+        teamEntry.tournamentIds.push(reg.tournament_id);
+      }
     }
   }
 

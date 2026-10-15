@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { CountryField, LogoField } from "@/components/entity-fields";
 import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
 import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import { SOCIAL_LABELS, SOCIAL_PLATFORMS } from "@/features/entities/socials";
 import { LEAGUE_FORMATS } from "@/features/leagues/league.constants";
 import type { LeagueActionState } from "@/features/leagues/league.types";
-import { CountryField, LogoField } from "../../../components/entity-fields";
 import { useLeagueEditForm } from "./use-league-edit-form";
 
 export interface LeagueEditInitial {

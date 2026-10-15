@@ -10,8 +10,8 @@ import { AdminPagination } from "@/containers/Admin/components/admin-pagination"
 import { StatTile } from "@/containers/Admin/components/dashboard-ui";
 import { EmptyState } from "@/containers/Admin/components/empty-state";
 import { ErrorState } from "@/containers/Admin/components/error-state";
-import { LeagueFilters } from "@/containers/Leagues/components/league-filters";
-import { LeaguesTable } from "@/containers/Leagues/components/leagues-table";
+import { LeagueFilters } from "@/containers/Admin/Leagues/components/league-filters";
+import { LeaguesTable } from "@/containers/Admin/Leagues/components/leagues-table";
 import {
   LEAGUE_LIST_STATUSES,
   type LeagueListStatus,
