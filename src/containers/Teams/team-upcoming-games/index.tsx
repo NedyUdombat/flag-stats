@@ -35,14 +35,14 @@ export function UpcomingFixturesList({
   if (!upcoming || upcoming.length === 0) return null;
 
   return (
-    <div className="rounded-none border border-white/10 bg-neutral-950/80 p-5 shadow-xl">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="font-data text-[12px] tracking-wide text-brand-lime uppercase">
           Upcoming Fixtures
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {upcoming.map((f) => {
           const homeName = f.isHome ? teamName : f.opponentName;
           const awayName = f.isHome ? f.opponentName : teamName;
@@ -57,26 +57,10 @@ export function UpcomingFixturesList({
           return (
             <div
               key={f.id}
-              className="group relative overflow-hidden rounded-none border border-white/10 bg-black/40 p-3 transition-all duration-300 hover:border-white/20 first:mt-0"
+              className="group relative overflow-hidden rounded-none bg-neutral-covert shadow-xl transition-all duration-300 border border-transparent hover:border-white/20"
             >
-              <div className="mb-3 flex items-center justify-between font-mono text-[9px] uppercase tracking-wider text-white/50 border-b border-white/5 pb-2">
-                <span>
-                  {new Date(f.scheduledAt).toLocaleDateString("en-GB", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  })}{" "}
-                  ·{" "}
-                  {new Date(f.scheduledAt).toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-                {f.venue && <span className="text-white/40">📍 {f.venue}</span>}
-              </div>
-
-              <div className="relative grid grid-cols-2 h-24 w-full items-center">
-                <div className="flex size-full items-center justify-center pl-2 pr-4 border-r border-white/10">
+              <div className="relative grid grid-cols-2 h-28 w-full items-center">
+                <div className="flex size-full items-center justify-center pl-2 pr-4 bg-black/40 border-r border-white/10">
                   <Link
                     href={`/teams/${homeSlug}`}
                     className="flex flex-col items-center gap-1.5 text-center group/team"
@@ -96,13 +80,13 @@ export function UpcomingFixturesList({
                         {initials(homeName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-[11px] font-extrabold uppercase tracking-tight text-white group-hover/team:text-accent transition-colors max-w-25 truncate">
+                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate group-hover/team:text-accent transition-colors ">
                       {homeName}
                     </span>
                   </Link>
                 </div>
 
-                <div className="flex size-full items-center justify-center pr-2 pl-4">
+                <div className="flex size-full items-center justify-center pr-2 pl-4 bg-black/40">
                   <Link
                     href={`/teams/${awaySlug}`}
                     className="flex flex-col items-center gap-1.5 text-center group/team"
@@ -122,25 +106,30 @@ export function UpcomingFixturesList({
                         {initials(awayName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-[11px] font-extrabold uppercase tracking-tight text-white group-hover/team:text-accent transition-colors max-w-25 truncate">
+                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate group-hover/team:text-accent transition-colors ">
                       {awayName}
                     </span>
                   </Link>
                 </div>
 
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <span className="font-mono text-xs font-bold text-white/30 tracking-widest bg-neutral-950 px-2 py-0.5 border border-white/10">
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-1">
+                  <span className="font-data text-md font-bold text-white tracking-widest  px-2 py-0.5 ">
                     VS
+                  </span>
+                  <span className="font-data text-[10px] tracking-widest text-white uppercase px-2 py-0.5 rounded-none">
+                    {new Date(f.scheduledAt).toLocaleDateString("en-GB", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })}{" "}
+                    ·{" "}
+                    {new Date(f.scheduledAt).toLocaleTimeString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
               </div>
-
-              {f.headToHead.wins + f.headToHead.losses > 0 && (
-                <div className="mt-2 pt-2 border-t border-white/5 text-center font-mono text-[9px] text-white/40 uppercase tracking-wide">
-                  H2H: {teamName} leads {f.headToHead.wins}W -{" "}
-                  {f.headToHead.losses}L
-                </div>
-              )}
             </div>
           );
         })}

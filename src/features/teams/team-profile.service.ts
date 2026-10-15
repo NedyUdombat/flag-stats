@@ -41,6 +41,8 @@ export interface TeamRecentResult {
   awayPrimaryColor: string | null;
   homeAccentColor: string | null;
   awayAccentColor: string | null;
+  homeSlug: string | null;
+  awaySlug: string | null;
 }
 
 // Helper for formatting key player stats based on position
@@ -264,8 +266,8 @@ export async function getTeamRecentResults(
           venue,
           home_team_id,
           away_team_id,
-          home_team:teams!fixtures_home_team_id_fkey(name, logo_url, primary_color, accent_color),
-          away_team:teams!fixtures_away_team_id_fkey(name, logo_url, primary_color, accent_color)
+          home_team:teams!fixtures_home_team_id_fkey(name, logo_url, primary_color, accent_color, slug),
+          away_team:teams!fixtures_away_team_id_fkey(name, logo_url, primary_color, accent_color, slug)
         )
       `)
       .eq("verification_status", "approved")
@@ -283,8 +285,8 @@ export async function getTeamRecentResults(
           venue,
           home_team_id,
           away_team_id,
-          home_team:teams!fixtures_home_team_id_fkey(name, logo_url, primary_color, accent_color),
-          away_team:teams!fixtures_away_team_id_fkey(name, logo_url, primary_color, accent_color)
+          home_team:teams!fixtures_home_team_id_fkey(name, logo_url, primary_color, accent_color,slug),
+          away_team:teams!fixtures_away_team_id_fkey(name, logo_url, primary_color, accent_color,slug)
         )
       `)
       .eq("verification_status", "approved")
@@ -326,6 +328,8 @@ export async function getTeamRecentResults(
         homeScore: r.home_score,
         awayScore: r.away_score,
         outcome,
+        homeSlug: homeTeamObj?.slug ?? "",
+        awaySlug: awayTeamObj?.slug ?? "",
       };
     }),
     ...(away ?? []).map((r) => {
@@ -360,6 +364,8 @@ export async function getTeamRecentResults(
         outcome,
         homeAccentColor: homeTeamObj?.accent_color ?? null,
         awayAccentColor: awayTeamObj?.accent_color ?? null,
+        homeSlug: homeTeamObj?.slug ?? "",
+        awaySlug: awayTeamObj?.slug ?? "",
       };
     }),
   ]

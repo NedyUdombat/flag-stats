@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Avatar,
   AvatarFallback,
@@ -39,13 +40,16 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
             <div
               key={r.fixtureId}
               className={cn(
-                "group relative overflow-hidden rounded-none bg-neutral-covert shadow-xl transition-all duration-300 ",
+                "group relative overflow-hidden rounded-none bg-neutral-covert shadow-xl transition-all duration-300 border border-transparent hover:border-white/20",
                 outcomeBorderClass,
               )}
             >
               <div className="relative grid grid-cols-2 h-28 w-full items-center">
                 <div className="flex size-full items-center justify-center pl-4 pr-8 transition-all bg-black/40 border-r border-white/10">
-                  <div className="flex flex-col items-center gap-1.5 text-center">
+                  <Link
+                    href={`/teams/${r.homeSlug}`}
+                    className="flex flex-col items-center gap-1.5 text-center group/team"
+                  >
                     <Avatar className="size-10 rounded-none border border-white/10 shadow-lg bg-neutral-900">
                       <AvatarImage
                         src={r.homeLogoUrl ?? ""}
@@ -61,15 +65,17 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
                         {initials(r.homeTeamName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate">
+                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate group-hover/team:text-accent transition-colors ">
                       {r.homeTeamName}
                     </span>
-                  </div>
+                  </Link>
                 </div>
 
-                {/* Away Team Side (Vertical Layout) */}
                 <div className="flex size-full items-center justify-center pr-4 pl-8 transition-all bg-black/40">
-                  <div className="flex flex-col items-center gap-1.5 text-center">
+                  <Link
+                    href={`/teams/${r.awaySlug}`}
+                    className="flex flex-col items-center gap-1.5 text-center group/team"
+                  >
                     <Avatar className="size-10 rounded-none border border-white/10 shadow-lg bg-neutral-900">
                       <AvatarImage
                         src={r.awayLogoUrl ?? ""}
@@ -85,10 +91,10 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
                         {initials(r.awayTeamName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate">
+                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate group-hover/team:text-accent transition-colors ">
                       {r.awayTeamName}
                     </span>
-                  </div>
+                  </Link>
                 </div>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-1">

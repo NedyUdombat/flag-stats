@@ -40,7 +40,7 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
         <div className="max-w-6xl w-full grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
           <TeamRosterFiltered tournaments={tournaments} roster={roster} />
 
-          <div className="">
+          <div className="flex flex-col gap-8">
             <RecentResultsList results={recentResults} />
             <UpcomingFixturesList
               upcoming={upcoming}
