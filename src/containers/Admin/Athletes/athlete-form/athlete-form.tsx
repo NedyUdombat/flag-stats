@@ -49,7 +49,11 @@ function Field({
     </div>
   );
 }
-
+const defaultDob = (() => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 20);
+  return date.toISOString().split("T")[0]; // "2006-10-15"
+})();
 export function AdminAthleteForm({
   mode,
   initial,
@@ -109,7 +113,7 @@ export function AdminAthleteForm({
               name="dateOfBirth"
               type="date"
               required
-              defaultValue={initial.dateOfBirth}
+              defaultValue={initial.dateOfBirth || defaultDob}
               onChange={(e) => f.setDob(e.target.value)}
               className={fieldInput}
             />
@@ -119,7 +123,7 @@ export function AdminAthleteForm({
               id="n-gender"
               name="gender"
               required
-              defaultValue={initial.gender}
+              defaultValue={initial.gender || "female"}
               className={fieldInput}
             >
               <option value="">Choose…</option>

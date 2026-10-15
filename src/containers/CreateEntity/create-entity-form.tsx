@@ -50,6 +50,7 @@ export function CreateEntityForm({
                 id={`c-${fld.name}`}
                 name={fld.name}
                 className={fieldInput}
+                defaultValue={"Nigeria"}
               />
             ) : fld.multiline ? (
               <textarea

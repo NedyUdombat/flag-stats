@@ -5,12 +5,15 @@ import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary } from "@/containers/Account/styles";
 import { Banner } from "@/containers/Admin/components/banner";
 import { ErrorState } from "@/containers/Admin/components/error-state";
+import { FixturesTable } from "@/containers/Admin/Fixtures/fixtures-table";
 import { RostersPanel } from "@/containers/Rosters/rosters-panel";
 import { TournamentStatusBadge } from "@/containers/Tournaments/components/badges";
 import { StatusControls } from "@/containers/Tournaments/components/status-controls";
 import { TournamentDangerZone } from "@/containers/Tournaments/danger-zone";
 import { RegistrationsPanel } from "@/containers/Tournaments/registrations-panel";
 import { TournamentForm } from "@/containers/Tournaments/tournament-form";
+import { listAdminFixtures } from "@/features/fixtures/fixture.service";
+import type { AdminFixtureRow } from "@/features/fixtures/fixture.types";
 import { listRosterSummary } from "@/features/rosters/roster.service";
 import type { RosterSummaryRow } from "@/features/rosters/roster.types";
 import { updateTournamentAction } from "@/features/tournaments/actions/tournament-manage.actions";
@@ -35,6 +38,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const TABS = [
   { id: "overview", label: "Overview" },
   { id: "registrations", label: "Registrations" },
+  { id: "fixtures", label: "Fixtures" },
   { id: "rosters", label: "Rosters" },
   { id: "settings", label: "Settings" },
 ] as const;
@@ -87,8 +91,12 @@ export default async function AdminTournamentDetailPage({
   let options;
   let hasVerifiedResults = false;
   let rosterSummary: RosterSummaryRow[] = [];
+  let fixtures: AdminFixtureRow[] = [];
 
   if (tab === "rosters") rosterSummary = await listRosterSummary(id);
+  if (tab === "fixtures")
+    fixtures = (await listAdminFixtures({ tournamentId: id, pageSize: 100 }))
+      .rows;
 
   try {
     [registrations, options] = await Promise.all([
@@ -297,7 +305,29 @@ export default async function AdminTournamentDetailPage({
           }
         />
       )}
-
+      {tab === "fixtures" && (
+        <Panel
+          title="Fixtures"
+          description="The tournament's games. Open one to submit or verify its result."
+        >
+          <div className="space-y-4">
+            {(status === "registration_open" || status === "in_progress") &&
+              !deleted && (
+                <Link
+                  href={`/admin/fixtures/new?tournament=${id}`}
+                  className={buttonPrimary}
+                >
+                  New fixture
+                </Link>
+              )}
+            {fixtures.length === 0 ? (
+              <p className="text-sm text-zs-muted">No fixtures yet.</p>
+            ) : (
+              <FixturesTable fixtures={fixtures} showTournament={false} />
+            )}
+          </div>
+        </Panel>
+      )}
       {tab === "rosters" && <RostersPanel summary={rosterSummary} />}
 
       {tab === "settings" && (

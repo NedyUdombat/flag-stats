@@ -204,17 +204,6 @@ export default async function AdminTeamDetailPage({
     if (tab === "tournaments" && membersEnabled)
       ({ open: openTournaments, registrations: teamRegistrations } =
         await listTournamentsForTeam(id));
-
-    console.log({
-      teamRosters,
-      openTournaments,
-      teamRegistrations,
-      hasVerifiedResults,
-      team,
-      admins,
-      invites,
-      members,
-    });
   } catch {
     return (
       <ErrorState description="Couldn't load this team. Refresh the page to try again." />

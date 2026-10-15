@@ -26,8 +26,6 @@ export interface AdminNavItem {
 }
 
 const teamOrLeagueOrFederation = (u: CurrentUser) => hasAnyEntityRole(u);
-const leagueOrFederation = (u: CurrentUser) =>
-  isLeagueMember(u) || isFederationMember(u);
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   {
@@ -65,7 +63,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     href: "/admin/verification",
     label: "Verification",
     icon: BadgeCheckIcon,
-    show: leagueOrFederation,
+    show: isLeagueMember,
   },
   {
     href: "/admin/settings",

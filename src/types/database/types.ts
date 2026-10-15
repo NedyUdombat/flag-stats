@@ -336,6 +336,70 @@ export type Database = {
         }
         Relationships: []
       }
+      fixture_disputes: {
+        Row: {
+          created_at: string
+          fixture_id: string
+          id: string
+          raised_by: string | null
+          reason: string
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          fixture_id: string
+          id?: string
+          raised_by?: string | null
+          reason: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          fixture_id?: string
+          id?: string
+          raised_by?: string | null
+          reason?: string
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fixture_disputes_fixture_id_fkey"
+            columns: ["fixture_id"]
+            isOneToOne: false
+            referencedRelation: "fixtures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fixture_disputes_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fixture_disputes_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "tournament_standings"
+            referencedColumns: ["team_id"]
+          },
+        ]
+      }
       fixtures: {
         Row: {
           attendance: number | null
@@ -1395,6 +1459,15 @@ export type Database = {
     }
     Functions: {
       _accept_invitation: { Args: { p_id: string }; Returns: Json }
+      _audit: {
+        Args: {
+          p_action: string
+          p_entity_id: string
+          p_entity_type: string
+          p_metadata?: Json
+        }
+        Returns: undefined
+      }
       _invite_email_conflict: {
         Args: { p_athlete_id: string; p_email: string }
         Returns: string
@@ -1447,6 +1520,37 @@ export type Database = {
           team_name: string
           total_count: number
           verified: boolean
+        }[]
+      }
+      admin_list_fixtures: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_q?: string
+          p_status?: string
+          p_team_id?: string
+          p_tournament_id?: string
+        }
+        Returns: {
+          away_logo_url: string
+          away_score: number
+          away_team_id: string
+          away_team_name: string
+          can_review: boolean
+          home_logo_url: string
+          home_score: number
+          home_team_id: string
+          home_team_name: string
+          id: string
+          open_disputes: number
+          result_status: string
+          scheduled_at: string
+          status: string
+          total_count: number
+          tournament_id: string
+          tournament_name: string
+          venue: string
+          voided: boolean
         }[]
       }
       admin_list_leagues: {
@@ -1593,6 +1697,15 @@ export type Database = {
         Args: { p_key: string; p_limit: number; p_window_seconds: number }
         Returns: boolean
       }
+      correct_result: {
+        Args: {
+          p_away_score: number
+          p_fixture_id: string
+          p_home_score: number
+          p_reason: string
+        }
+        Returns: undefined
+      }
       create_athlete_invitation: {
         Args: {
           p_athlete_id: string
@@ -1609,6 +1722,19 @@ export type Database = {
           p_expires_at: string
           p_token_hash: string
           p_type: Database["public"]["Enums"]["invitation_type"]
+        }
+        Returns: string
+      }
+      create_fixture: {
+        Args: {
+          p_away_team_id: string
+          p_home_team_id: string
+          p_pitch?: string
+          p_referee_name?: string
+          p_scheduled_at: string
+          p_stage_id?: string
+          p_tournament_id: string
+          p_venue?: string
         }
         Returns: string
       }
@@ -1703,6 +1829,7 @@ export type Database = {
         }
         Returns: string
       }
+      delete_fixture: { Args: { p_fixture_id: string }; Returns: undefined }
       delete_my_athlete_profile: { Args: never; Returns: undefined }
       delete_team_roster: {
         Args: { p_registration_id: string }
@@ -1711,6 +1838,15 @@ export type Database = {
       delete_unclaimed_athlete: {
         Args: { p_athlete_id: string }
         Returns: undefined
+      }
+      fixture_audit: {
+        Args: { p_fixture_id: string }
+        Returns: {
+          action: string
+          actor_name: string
+          created_at: string
+          metadata: Json
+        }[]
       }
       get_athlete_invitation: {
         Args: { p_athlete_id: string }
@@ -1846,6 +1982,10 @@ export type Database = {
           team_slug: string
         }[]
       }
+      raise_dispute: {
+        Args: { p_fixture_id: string; p_reason: string; p_team_id: string }
+        Returns: string
+      }
       release_my_athlete_profile: { Args: never; Returns: undefined }
       remove_league_admin: {
         Args: { p_league_id: string; p_user_id: string }
@@ -1863,11 +2003,19 @@ export type Database = {
         Args: { p_team_id: string; p_tournament_id: string }
         Returns: string
       }
+      resolve_dispute: {
+        Args: { p_dispute_id: string; p_note?: string; p_upheld: boolean }
+        Returns: undefined
+      }
       restore_fixture: { Args: { p_fixture_id: string }; Returns: undefined }
       restore_league: { Args: { p_league_id: string }; Returns: undefined }
       restore_team: { Args: { p_team_id: string }; Returns: undefined }
       restore_tournament: {
         Args: { p_tournament_id: string }
+        Returns: undefined
+      }
+      reverse_result: {
+        Args: { p_fixture_id: string; p_reason: string }
         Returns: undefined
       }
       review_roster_entry: {
@@ -1892,6 +2040,13 @@ export type Database = {
       }
       revoke_team_invitation: {
         Args: { p_invitation_id: string }
+        Returns: undefined
+      }
+      set_fixture_status: {
+        Args: {
+          p_fixture_id: string
+          p_status: Database["public"]["Enums"]["fixture_status"]
+        }
         Returns: undefined
       }
       set_league_organization: {
@@ -1920,6 +2075,14 @@ export type Database = {
       soft_delete_team: { Args: { p_team_id: string }; Returns: undefined }
       soft_delete_tournament: {
         Args: { p_tournament_id: string }
+        Returns: undefined
+      }
+      submit_result: {
+        Args: {
+          p_away_score: number
+          p_fixture_id: string
+          p_home_score: number
+        }
         Returns: undefined
       }
       submit_roster_entry: {
@@ -2031,8 +2194,43 @@ export type Database = {
         Args: { p_team_id: string; p_tournament_id: string }
         Returns: boolean
       }
+      update_fixture: {
+        Args: {
+          p_attendance: number
+          p_away_team_id: string
+          p_fixture_id: string
+          p_home_team_id: string
+          p_pitch: string
+          p_referee_name: string
+          p_scheduled_at: string
+          p_venue: string
+        }
+        Returns: undefined
+      }
       update_roster_entry: {
         Args: { p_entry_id: string; p_jersey: number; p_position: string }
+        Returns: undefined
+      }
+      verification_queue: {
+        Args: { p_limit?: number; p_offset?: number }
+        Returns: {
+          away_score: number
+          away_team_name: string
+          fixture_id: string
+          home_score: number
+          home_team_name: string
+          league_name: string
+          open_disputes: number
+          result_status: string
+          scheduled_at: string
+          submitted_at: string
+          total_count: number
+          tournament_id: string
+          tournament_name: string
+        }[]
+      }
+      verify_result: {
+        Args: { p_approve: boolean; p_fixture_id: string; p_reason?: string }
         Returns: undefined
       }
       void_fixture: {
