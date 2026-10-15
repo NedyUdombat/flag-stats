@@ -9,7 +9,7 @@ import {
 import type { PublicAthleteListItem } from "@/features/athletes/actions/athlete-public.actions";
 import { initials } from "@/lib/display";
 import { cn } from "@/utils/cn";
-import { getTint } from "./tints";
+import { getAthleteTint } from "./tints";
 
 export function AthleteDirectoryCard({
   athlete,
@@ -18,7 +18,9 @@ export function AthleteDirectoryCard({
 }) {
   const jerseyNo = athlete.jerseyNumber ?? athlete.preferredJerseyNumber;
 
-  const fallbackTint = getTint(athlete.id || athlete.fullName || "default");
+  const fallbackTint = getAthleteTint(
+    athlete.id || athlete.fullName || "default",
+  );
 
   return (
     <div className="rounded-lg bg-white/2 p-4 hover:shadow-2xl transition hover:-translate-y-1 hover:border hover:border-accent/50">

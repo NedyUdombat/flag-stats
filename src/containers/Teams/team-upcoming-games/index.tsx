@@ -4,9 +4,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
-import { getTint } from "@/containers/Athletes/athlete-directory-card/tints";
 import { initials } from "@/lib/display";
 import { cn } from "@/utils/cn";
+import { getTeamTint } from "../team-directory-card/tints";
 
 interface UpcomingFixture {
   id: string;
@@ -36,10 +36,11 @@ export function UpcomingFixturesList({
 
   return (
     <div className="rounded-none border border-white/10 bg-neutral-950/80 p-5 shadow-xl">
-      <p className="mb-4 flex items-center gap-2 font-mono text-[10px] tracking-widest text-brand-lime uppercase">
-        <span className="size-1.5 rounded-none bg-brand-lime animate-pulse" />{" "}
-        Upcoming Fixtures
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="font-data text-[12px] tracking-wide text-brand-lime uppercase">
+          Upcoming Fixtures
+        </p>
+      </div>
 
       <div className="space-y-4">
         {upcoming.map((f) => {
@@ -50,15 +51,14 @@ export function UpcomingFixturesList({
           const homeSlug = f.isHome ? teamSlug : f.opponentSlug;
           const awaySlug = f.isHome ? f.opponentSlug : teamSlug;
 
-          const homeTint = getTint(homeName || "home");
-          const awayTint = getTint(awayName || "away");
+          const homeTint = getTeamTint(homeName || "home");
+          const awayTint = getTeamTint(awayName || "away");
 
           return (
             <div
               key={f.id}
               className="group relative overflow-hidden rounded-none border border-white/10 bg-black/40 p-3 transition-all duration-300 hover:border-white/20 first:mt-0"
             >
-              {/* Date & Venue Bar */}
               <div className="mb-3 flex items-center justify-between font-mono text-[9px] uppercase tracking-wider text-white/50 border-b border-white/5 pb-2">
                 <span>
                   {new Date(f.scheduledAt).toLocaleDateString("en-GB", {
@@ -75,9 +75,7 @@ export function UpcomingFixturesList({
                 {f.venue && <span className="text-white/40">📍 {f.venue}</span>}
               </div>
 
-              {/* Split Match Banner */}
               <div className="relative grid grid-cols-2 h-24 w-full items-center">
-                {/* Home Side (Vertical) */}
                 <div className="flex size-full items-center justify-center pl-2 pr-4 border-r border-white/10">
                   <Link
                     href={`/teams/${homeSlug}`}
@@ -98,13 +96,12 @@ export function UpcomingFixturesList({
                         {initials(homeName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-[11px] font-extrabold uppercase tracking-tight text-white group-hover/team:text-accent transition-colors max-w-[100px] truncate">
+                    <span className="font-display text-[11px] font-extrabold uppercase tracking-tight text-white group-hover/team:text-accent transition-colors max-w-25 truncate">
                       {homeName}
                     </span>
                   </Link>
                 </div>
 
-                {/* Away Side (Vertical) */}
                 <div className="flex size-full items-center justify-center pr-2 pl-4">
                   <Link
                     href={`/teams/${awaySlug}`}
@@ -125,13 +122,12 @@ export function UpcomingFixturesList({
                         {initials(awayName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-[11px] font-extrabold uppercase tracking-tight text-white group-hover/team:text-accent transition-colors max-w-[100px] truncate">
+                    <span className="font-display text-[11px] font-extrabold uppercase tracking-tight text-white group-hover/team:text-accent transition-colors max-w-25 truncate">
                       {awayName}
                     </span>
                   </Link>
                 </div>
 
-                {/* Center "VS" Badge */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <span className="font-mono text-xs font-bold text-white/30 tracking-widest bg-neutral-950 px-2 py-0.5 border border-white/10">
                     VS
@@ -139,7 +135,6 @@ export function UpcomingFixturesList({
                 </div>
               </div>
 
-              {/* Head-to-Head Footer Context */}
               {f.headToHead.wins + f.headToHead.losses > 0 && (
                 <div className="mt-2 pt-2 border-t border-white/5 text-center font-mono text-[9px] text-white/40 uppercase tracking-wide">
                   H2H: {teamName} leads {f.headToHead.wins}W -{" "}

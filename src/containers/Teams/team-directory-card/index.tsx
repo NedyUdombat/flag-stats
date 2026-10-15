@@ -9,10 +9,10 @@ import {
 import type { PublicTeamListItem } from "@/features/teams/actions/team-public.actions";
 import { initials } from "@/lib/display";
 import { cn } from "@/utils/cn";
-import { getTint } from "./tints"; // Or shared tint utility
+import { getTeamTint } from "./tints"; // Or shared tint utility
 
 export function TeamDirectoryCard({ team }: { team: PublicTeamListItem }) {
-  const fallbackTint = getTint(team.id || team.name || "default");
+  const fallbackTint = getTeamTint(team.id || team.name || "default");
 
   return (
     <div className="rounded-lg bg-white/2 p-4 hover:shadow-2xl transition hover:-translate-y-1 hover:border hover:border-[#ffb703]/50">
@@ -90,7 +90,7 @@ export function TeamDirectoryCard({ team }: { team: PublicTeamListItem }) {
 
       <Link
         href={`/teams/${team.slug}`}
-        className="mt-3 inline-flex w-full justify-center cursor-pointer items-center gap-1.5 rounded-sm border border-white/10 py-2 text-center font-data text-[10px] tracking-wide text-white/70 uppercase hover:border-white hover:text-white"
+        className="mt-3 inline-flex w-full justify-center cursor-pointer items-center gap-1.5 rounded-sm border border-white/10 py-2 text-center font-data text-[10px] tracking-wide text-white/70 uppercase hover:border-accent/50 hover:text-accent/70 transition-colors"
       >
         View full profile <ArrowRightIcon className="size-3" aria-hidden />
       </Link>

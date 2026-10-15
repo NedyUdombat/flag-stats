@@ -19,9 +19,7 @@ interface AthletesPageProps {
   }>;
 }
 
-export default async function AthletesPage({
-  searchParams,
-}: AthletesPageProps) {
+export default async function TeamsPage({ searchParams }: AthletesPageProps) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
   const verifiedOnly = params.verified === "true";

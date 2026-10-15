@@ -1861,6 +1861,29 @@ export type Database = {
           status: string
         }[]
       }
+      get_league_passport_summary: {
+        Args: { p_league_id: string }
+        Returns: {
+          commissioner_name: string
+          competition_level: string
+          country: string
+          format: string
+          id: string
+          logo_url: string
+          matches_played: number
+          name: string
+          region: string
+          rulebook: string
+          short_code: string
+          slug: string
+          social_links: Json
+          teams_count: number
+          total_fixtures: number
+          tournaments_count: number
+          verified: boolean
+          verified_athletes_pct: number
+        }[]
+      }
       has_role: {
         Args: {
           _league_id?: string

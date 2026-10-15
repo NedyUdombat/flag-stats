@@ -22,7 +22,7 @@ export function FactGrid({
   return (
     <section className={className} aria-label={title}>
       {title ? (
-        <p className="mb-3 font-data text-[10px] tracking-wide text-brand-lime uppercase">
+        <p className="mb-3 font-data text-[12px] tracking-wide text-brand-lime uppercase">
           {title}
         </p>
       ) : null}

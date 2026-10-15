@@ -1,4 +1,4 @@
-export const TINTS = [
+export const ATHLETE_TINTS = [
   "bg-gradient-to-br from-amber-500/80 via-amber-900/60 to-stone-950 text-amber-200",
   "bg-gradient-to-br from-yellow-500/80 via-stone-900 to-black text-yellow-300",
   "bg-gradient-to-br from-cyan-400/80 via-slate-800 to-slate-950 text-cyan-200",
@@ -13,11 +13,11 @@ export const TINTS = [
   "bg-gradient-to-br from-teal-400/80 via-slate-900 to-black text-teal-200",
 ];
 
-export function getTint(seed: string): string {
+export function getAthleteTint(seed: string): string {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = seed.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const index = Math.abs(hash) % TINTS.length;
-  return TINTS[index];
+  const index = Math.abs(hash) % ATHLETE_TINTS.length;
+  return ATHLETE_TINTS[index];
 }

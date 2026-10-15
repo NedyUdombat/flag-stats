@@ -3,10 +3,10 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
-import { getTint } from "@/containers/Athletes/athlete-directory-card/tints";
 import type { TeamRecentResult } from "@/features/teams/team-profile.service";
 import { initials } from "@/lib/display";
 import { cn } from "@/utils/cn";
+import { getTeamTint } from "../team-directory-card/tints";
 
 interface RecentResultsListProps {
   results: TeamRecentResult[];
@@ -18,14 +18,13 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="font-data text-[10px] tracking-wide text-brand-lime uppercase">
+        <p className="font-data text-[12px] tracking-wide text-brand-lime uppercase">
           Recent Results
         </p>
       </div>
 
       <div className="space-y-3">
         {results.map((r) => {
-          // Outcome border styling (strict color usage: only outcome indicator)
           const outcomeBorderClass =
             r.outcome === "W"
               ? "border-l-4 border-l-emerald-500"
@@ -33,8 +32,8 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
                 ? "border-l-4 border-l-white/40"
                 : "border-l-4 border-l-red-500";
 
-          const homeTint = getTint(r.homeTeamName || "home");
-          const awayTint = getTint(r.awayTeamName || "away");
+          const homeTint = getTeamTint(r.homeTeamName || "home");
+          const awayTint = getTeamTint(r.awayTeamName || "away");
 
           return (
             <div
@@ -44,9 +43,7 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
                 outcomeBorderClass,
               )}
             >
-              {/* Split Match Banner */}
               <div className="relative grid grid-cols-2 h-28 w-full items-center">
-                {/* Home Team Side (Vertical Layout) */}
                 <div className="flex size-full items-center justify-center pl-4 pr-8 transition-all bg-black/40 border-r border-white/10">
                   <div className="flex flex-col items-center gap-1.5 text-center">
                     <Avatar className="size-10 rounded-none border border-white/10 shadow-lg bg-neutral-900">
@@ -64,7 +61,7 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
                         {initials(r.homeTeamName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-[120px] truncate">
+                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate">
                       {r.homeTeamName}
                     </span>
                   </div>
@@ -88,13 +85,12 @@ export function RecentResultsList({ results }: RecentResultsListProps) {
                         {initials(r.awayTeamName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-[120px] truncate">
+                    <span className="font-display text-xs font-extrabold uppercase tracking-tight text-white max-w-30 truncate">
                       {r.awayTeamName}
                     </span>
                   </div>
                 </div>
 
-                {/* Center Floating Scores & Date Overlay */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-1">
                   <div className="flex items-center gap-3 pointer-events-auto">
                     <span className="font-mono text-3xl font-black text-white tracking-tighter drop-shadow-md">

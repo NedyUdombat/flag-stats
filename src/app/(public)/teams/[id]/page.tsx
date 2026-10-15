@@ -1,15 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { TeamCareerSummary } from "@/containers/Teams/team-career-summary";
 import { RecentResultsList } from "@/containers/Teams/team-recent-results";
 import { TeamRosterFiltered } from "@/containers/Teams/team-roster";
 import { TeamSummary } from "@/containers/Teams/team-summary";
 import { UpcomingFixturesList } from "@/containers/Teams/team-upcoming-games";
-// import {
-//   getTeamRecentResults,
-//   getTeamTournamentsRoster,
-//   getTeamUpcomingFixtures,
-// } from "@/features/teams/team-profile.service";
 import {
   getTeamPassportSummary,
   getTeamTournamentsRoster,
@@ -28,7 +22,6 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
   const summary = await getTeamPassportSummary(slug);
   if (!summary) notFound();
 
-  // Fetch filtered tournament roster data, upcoming fixtures, and recent results concurrently
   const [{ tournaments, roster }, upcoming, recentResults] = await Promise.all([
     getTeamTournamentsRoster(summary.id),
     getTeamUpcomingFixtures(summary.id),

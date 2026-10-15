@@ -33,7 +33,7 @@ export function TeamRosterFiltered({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="font-data text-[10px] tracking-wide text-brand-lime uppercase">
+        <p className="font-data text-[12px] tracking-wide text-brand-lime uppercase">
           Squad Roster
         </p>
 
@@ -68,7 +68,7 @@ export function TeamRosterFiltered({
         ) : null}
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
+      <div className="overflow-hidden rounded-lg border border-white/10 bg-white/2">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-white/10 font-mono text-[10px] text-white/40 uppercase">
@@ -83,7 +83,7 @@ export function TeamRosterFiltered({
               filteredRoster.map((athlete) => (
                 <tr
                   key={`${athlete.id}-${athlete.tournamentId}`}
-                  className="hover:bg-white/[0.04] transition-colors"
+                  className="hover:bg-white/4 transition-colors"
                 >
                   <td className="p-3 font-bold text-accent">
                     {athlete.jerseyNumber

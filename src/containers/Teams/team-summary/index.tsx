@@ -4,14 +4,11 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
-import { getTint } from "@/containers/Athletes/athlete-directory-card/tints";
-// import { getTint } from "@/features/athletes/athlete-directory-card/tints";
 import type { TeamPassportSummary } from "@/features/teams/team-passport.service";
-// import type { TeamPassportSummary } from "@/features/teams/actions/team-passport.actions";
 import { initials } from "@/lib/display";
 import { cn } from "@/utils/cn";
+import { getTeamTint } from "../team-directory-card/tints";
 import { TeamPassportActions } from "../team-passport-actions";
-// import { TeamPassportActions } from "../team-passport-actions";
 import { TeamProfileFacts } from "../team-profile-facts";
 
 interface TeamSummaryProps {
@@ -20,7 +17,7 @@ interface TeamSummaryProps {
 
 export async function TeamSummary({ summary }: TeamSummaryProps) {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/teams/${summary.slug}`;
-  const fallbackTint = getTint(summary.id || summary.name || "default");
+  const fallbackTint = getTeamTint(summary.id || summary.name || "default");
 
   return (
     <section

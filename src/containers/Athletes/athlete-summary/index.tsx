@@ -7,7 +7,7 @@ import {
 import type { AthletePassportSummary } from "@/features/athletes/athlete-passport.service";
 import { initials } from "@/lib/display";
 import { cn } from "@/utils/cn";
-import { getTint } from "../athlete-directory-card/tints";
+import { getAthleteTint } from "../athlete-directory-card/tints";
 import { AthletePassportActions } from "../athlete-passport-actions";
 import { AthleteProfileFacts } from "../athlete-profile-facts";
 
@@ -18,7 +18,9 @@ interface AthleteSummaryProps {
 export async function AthleteSummary({ summary }: AthleteSummaryProps) {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/athletes/${summary.slug}`;
   const jerseyNo = summary.jerseyNumber ?? summary.preferredJerseyNumber;
-  const fallbackTint = getTint(summary.id || summary.fullName || "default");
+  const fallbackTint = getAthleteTint(
+    summary.id || summary.fullName || "default",
+  );
 
   return (
     <section
