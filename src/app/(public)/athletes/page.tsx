@@ -1,9 +1,4 @@
-import { UsersIcon } from "lucide-react";
-import Link from "next/link";
-import { Pagination } from "@/components/pagination";
-import { EmptyState } from "@/containers/Admin/components/empty-state";
 import { AthleteDirectory } from "@/containers/Athletes/athlete-directory";
-import { AthleteDirectoryCard } from "@/containers/Athletes/athlete-directory-card";
 import { AthleteDirectoryFilters } from "@/containers/Athletes/athlete-directory-filters";
 import { AthleteStatsDisclaimer } from "@/containers/Athletes/athlete-stats-disclaimer";
 import { AthletePageHero } from "@/containers/Athletes/hero";

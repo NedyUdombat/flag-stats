@@ -141,6 +141,7 @@ export async function submitRosterEntry(
   });
   return error ? fail(error) : { ok: true };
 }
+
 export const updateRosterEntry = (
   entryId: string,
   jersey: number,

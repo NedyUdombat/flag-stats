@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { InviteView } from "@/containers/Invite/invite-view";
 import {
   getInviteSignupDetails,
@@ -5,6 +6,7 @@ import {
 } from "@/features/invitations/invitation.service";
 import { isTokenFormat } from "@/features/invitations/invitation.token";
 import { getClientIp, rateKey, rateLimit } from "@/lib/rate-limit";
+import { cn } from "@/utils/cn";
 
 export const metadata = {
   title: "Invitation",
@@ -34,5 +36,26 @@ export default async function InvitePage({
     content = <InviteView token={token} preview={preview} signup={signup} />;
   }
 
-  return <main className="mx-auto max-w-xl px-4 py-16">{content}</main>;
+  return (
+    <main className="pt-30 dark relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-neutral-black px-4 py-12 text-foreground sm:px-6">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-128 bg-[radial-gradient(ellipse_45%_60%_at_50%_0%,color-mix(in_oklab,var(--accent-gold)_18%,transparent),transparent)]"
+      />
+
+      <div className={cn("relative w-full", "max-w-136")}>
+        {content}
+
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Having trouble?{" "}
+          <Link
+            href="/contact?topic=account"
+            className="text-foreground underline-offset-4 hover:underline hover:text-accent-blue"
+          >
+            Contact support
+          </Link>
+        </p>
+      </div>
+    </main>
+  );
 }
