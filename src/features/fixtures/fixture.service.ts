@@ -13,10 +13,15 @@ import type {
 } from "./fixture.types";
 
 export type ServiceResult = { ok: true } | { ok: false; message: string };
-const fail = (e: { code?: string; message: string }): ServiceResult => ({
-  ok: false,
-  message: fixtureErrorMessage(e.message, e.code),
-});
+const fail = <T = { ok: false; message: string }>(e: {
+  code?: string;
+  message: string;
+}): T =>
+  ({
+    ok: false,
+    message: fixtureErrorMessage(e.message, e.code),
+  }) as unknown as T;
+
 const one = <T>(v: T | T[] | null | undefined): T | null =>
   Array.isArray(v) ? (v[0] ?? null) : (v ?? null);
 const teamRef = (
@@ -37,7 +42,8 @@ export async function getFixture(id: string): Promise<FixtureDetail | null> {
     )
     .eq("id", id)
     .maybeSingle();
-  const row = data as unknown as Record<string, any> | null; // biome-ignore lint/suspicious/noExplicitAny: embedded relations
+  // biome-ignore lint/suspicious/noExplicitAny: embedded relations
+  const row = data as unknown as Record<string, any> | null;
   const t = one(row?.tournament);
   if (!row || !t) return null;
   const r = one(row.result);
@@ -190,7 +196,7 @@ export async function createFixture(a: {
     p_pitch: a.pitch,
     p_referee_name: a.refereeName,
   });
-  if (error || !data) return fail(error ?? { message: "" });
+  if (error || !data) return fail(error ?? { code: "false", message: "" });
   return { ok: true, id: data };
 }
 

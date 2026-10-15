@@ -11,6 +11,8 @@ type Fn = Database["public"]["Functions"];
 export type AdminFixtureRow = Fn["admin_list_fixtures"]["Returns"][number];
 export type QueueRow = Fn["verification_queue"]["Returns"][number];
 export type AuditRow = Fn["fixture_audit"]["Returns"][number];
+export type AdminVerificationQueueRow =
+  Fn["verification_queue"]["Returns"][number];
 
 export type TeamRef = {
   id: string;
@@ -57,3 +59,22 @@ export type DisputeRow = {
   team: { id: string; name: string } | null;
 };
 export type TeamOption = { id: string; name: string };
+
+export interface listAdminFixturesResponse {
+  total: number;
+  page: number;
+  pageSize: number;
+  rows: AdminFixtureRow[];
+}
+
+export interface AdminFixtureStats {
+  needsResult: number;
+  pendingVerification: number;
+}
+
+export interface listAdminVerificationQueueResponse {
+  total: number;
+  page: number;
+  pageSize: number;
+  rows: AdminVerificationQueueRow[];
+}

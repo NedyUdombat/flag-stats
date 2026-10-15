@@ -65,3 +65,16 @@ export type OpenTournamentRow = {
   max_teams: number | null;
   league_name: string | null;
 };
+
+export type AdminTournamentsStats = [
+  draft: number,
+  registration_open: number,
+  in_progress: number,
+];
+
+export interface ListAdminTournamentsResponse {
+  rows: AdminTournamentRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

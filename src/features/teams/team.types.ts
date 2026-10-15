@@ -44,3 +44,17 @@ export type AthleteCandidate = {
   /** own = unclaimed athlete you created (added instantly); registered = claimed public profile (invited) */
   kind: "own" | "registered";
 };
+
+export type AdminTeamsStats = [
+  active: number,
+  unverified: number,
+  orphaned: number,
+  unclaimed: number,
+];
+
+export interface ListAdminTeamsResponse {
+  rows: AdminTeamRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

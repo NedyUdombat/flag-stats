@@ -13,3 +13,16 @@ export type LeagueAdminRow = Fn["league_admins"]["Returns"][number];
 export type LeagueInviteRow =
   Fn["league_pending_invitations"]["Returns"][number];
 export type OrganizationOption = { id: string; name: string };
+export type AdminLeagueStats = [
+  active: number,
+  unverified: number,
+  orphaned: number,
+  unclaimed: number,
+];
+
+export interface ListAdminLeaguesResponse {
+  rows: AdminLeagueRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

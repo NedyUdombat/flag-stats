@@ -17,6 +17,10 @@ import {
   type TeamListStatus,
 } from "@/features/teams/team.constants";
 import { listAdminTeams } from "@/features/teams/team.service";
+import type {
+  AdminTeamsStats,
+  ListAdminTeamsResponse,
+} from "@/features/teams/team.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateTeamShell } from "@/lib/permissions";
 import { isPlatformAdmin } from "@/lib/permissions/scope";
@@ -83,7 +87,7 @@ export default async function AdminTeamsPage({
   const count = (s: TeamListStatus) =>
     listAdminTeams({ status: s, pageSize: 1 }).then((r) => r.total);
 
-  let result, stats;
+  let result: ListAdminTeamsResponse, stats: AdminTeamsStats | null;
   try {
     [result, stats] = await Promise.all([
       listAdminTeams({ q, status, page, pageSize: PAGE_SIZE }),

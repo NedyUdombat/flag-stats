@@ -6,6 +6,7 @@ import { EmptyState } from "@/containers/Admin/components/empty-state";
 import { ErrorState } from "@/containers/Admin/components/error-state";
 import { DisputeBadge } from "@/containers/Admin/Fixtures/fixture-badge";
 import { listVerificationQueue } from "@/features/fixtures/fixture.service";
+import type { listAdminVerificationQueueResponse } from "@/features/fixtures/fixture.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateTournament } from "@/lib/permissions";
 import { fmtDateTime } from "@/utils/date";
@@ -28,7 +29,7 @@ export default async function VerificationPage({
   if (!canCreateTournament(user)) redirect("/admin"); // league admins and super admin only
 
   const page = Math.max(1, Number(sp.page) || 1);
-  let result;
+  let result: listAdminVerificationQueueResponse;
   try {
     result = await listVerificationQueue(page, PAGE_SIZE);
   } catch {
@@ -68,12 +69,12 @@ export default async function VerificationPage({
       ) : (
         <div>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] border-collapse border border-zs-line bg-zs-panel text-zs-ink">
+            <table className="w-full min-w-190 border-collapse border border-zs-line bg-zs-panel text-zs-ink">
               <thead>
                 <tr>
                   {["Match", "Submitted score", "Submitted", "Flags", ""].map(
-                    (h, i) => (
-                      <th key={i} scope="col" className={th}>
+                    (h) => (
+                      <th key={h} scope="col" className={th}>
                         {h}
                       </th>
                     ),

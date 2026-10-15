@@ -26,7 +26,7 @@ export default async function AdminDashboardPage() {
   // requireRole() in the layout already redirects; this narrows the type.
   if (!user) return null;
 
-  let _data;
+  // let _data;
   // try {
   //   data = await Promise.all([
   //     getDashboardStats(user),
@@ -45,7 +45,7 @@ export default async function AdminDashboardPage() {
   // }
 
   // const [stats, { matches, total }, activity] = data;
-  const _primaryRole = user.roles[0]?.role;
+  // const _primaryRole = user.roles[0]?.role;
 
   const userCanVerify = canVerify(user);
   // const canVerify = canManageLeaguesOrHigher(user);

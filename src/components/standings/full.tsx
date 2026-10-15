@@ -1,4 +1,3 @@
-import React from "react";
 import StandingsTable, { type TeamStanding } from "@/components/standings";
 
 // Complete Dummy Standings Data for Full League View

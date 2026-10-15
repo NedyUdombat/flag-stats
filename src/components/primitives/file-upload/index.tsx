@@ -16,16 +16,21 @@ export function FileUpload({ name, label, defaultValue }: FileUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+  if (!uploadPreset) {
+    setError(
+      "Image upload isn't configured yet (missing Cloudinary environment variables).",
+    );
+    return;
+  }
+
   async function handleFile(file: File) {
     setUploading(true);
     setError(null);
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append(
-      "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
-    );
+    formData.append("upload_preset", uploadPreset as string);
 
     try {
       const response = await fetch(

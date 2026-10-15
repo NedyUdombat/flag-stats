@@ -17,6 +17,7 @@ import {
   type FixtureListFilter,
 } from "@/features/fixtures/fixture.constants";
 import { listAdminFixtures } from "@/features/fixtures/fixture.service";
+import type { listAdminFixturesResponse } from "@/features/fixtures/fixture.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateTournament } from "@/lib/permissions";
 
@@ -98,7 +99,7 @@ export default async function AdminFixturesPage({
       (r) => r.total,
     );
 
-  let result, stats;
+  let result: listAdminFixturesResponse, stats: [number, number];
   try {
     [result, stats] = await Promise.all([
       listAdminFixtures({ q, status, tournamentId, page, pageSize: PAGE_SIZE }),

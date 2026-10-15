@@ -79,7 +79,7 @@ export default async function AdminAthleteDetailPage({
     <div className="space-y-6">
       {sp.sent === "1" && (
         <p
-          role="status"
+          // role="status"
           className="border border-zs-lime/40 bg-zs-lime/10 px-4 py-3 text-sm text-zs-lime"
         >
           Athlete created and invitation sent.

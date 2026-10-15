@@ -1,6 +1,7 @@
 "use client";
 
 import { ImageIcon, Loader2Icon, UploadIcon, XIcon } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/primitives/button";
 import { cn } from "@/utils/cn";
 import { ACCEPT, useImageUpload } from "./use-image-upload";
@@ -35,7 +36,12 @@ export function ImageUpload({
             <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
           ) : u.previewSrc ? (
             // eslint-disable-next-line @next/next/no-img-element -- Cloudinary URLs
-            <img src={u.previewSrc} alt="" className="size-full object-cover" />
+            <Image
+              src={u.previewSrc}
+              alt=""
+              className="size-full object-cover"
+            />
+            // <img src={u.previewSrc} alt="" className="size-full object-cover" />
           ) : (
             <ImageIcon className="size-6 text-muted-foreground" />
           )}

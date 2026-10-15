@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ShellForm } from "@/containers/Teams/shell-form";
 import { getCurrentUser } from "@/features/users/user.service";
-import { canCreateTeamShell } from "@/lib/permissions";
 
 export const metadata = { title: "New team" };
 

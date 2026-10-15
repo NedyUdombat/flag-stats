@@ -6,14 +6,13 @@ export function canSubmitResult(
   user: CurrentUser | null,
   homeTeamId: string,
   awayTeamId: string,
-  organizationId: string | null,
   leagueId: string,
 ): boolean {
   return (
     isPlatformAdmin(user) ||
     isTeamAdminOf(user, homeTeamId) ||
     isTeamAdminOf(user, awayTeamId) ||
-    canManageLeague(user, organizationId, leagueId)
+    canManageLeague(user, leagueId)
   );
 }
 
@@ -29,23 +28,21 @@ export function canEditOwnPendingSubmission(
 /** Verifying is deliberately NOT satisfied by the submitting team admin. */
 export function canVerifyResult(
   user: CurrentUser | null,
-  organizationId: string | null,
   leagueId: string,
 ): boolean {
-  return canManageLeague(user, organizationId, leagueId);
+  return canManageLeague(user, leagueId);
 }
 
 /** Team admins and league admins edit stats (never profiles). */
 export function canSubmitAthleteGameStats(
   user: CurrentUser | null,
   teamId: string,
-  organizationId: string | null,
   leagueId: string,
 ): boolean {
   return (
     isPlatformAdmin(user) ||
     isTeamAdminOf(user, teamId) ||
-    canManageLeague(user, organizationId, leagueId)
+    canManageLeague(user, leagueId)
   );
 }
 

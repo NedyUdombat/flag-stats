@@ -27,7 +27,10 @@ import {
   listTournamentRegistrations,
   tournamentHasVerifiedResults,
 } from "@/features/tournaments/tournament.service";
-import type { RegistrationRow } from "@/features/tournaments/tournament.types";
+import type {
+  RegistrationRow,
+  TournamentOptions,
+} from "@/features/tournaments/tournament.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canManageTournament } from "@/lib/permissions";
 import { isPlatformAdmin } from "@/lib/permissions/scope";
@@ -88,7 +91,7 @@ export default async function AdminTournamentDetailPage({
     : "overview";
 
   let registrations: RegistrationRow[];
-  let options;
+  let options: TournamentOptions;
   let hasVerifiedResults = false;
   let rosterSummary: RosterSummaryRow[] = [];
   let fixtures: AdminFixtureRow[] = [];

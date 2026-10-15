@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import type { AthleteCandidate, TeamActionState } from "@/features/teams/team.types";
+import type {
+  AthleteCandidate,
+  TeamActionState,
+} from "@/features/teams/team.types";
 
-interface Notice { tone: "ok" | "error"; text: string }
+interface Notice {
+  tone: "ok" | "error";
+  text: string;
+}
 interface Deps {
   search: (q: string) => Promise<AthleteCandidate[]>;
   add: (athleteId: string) => Promise<TeamActionState>;
@@ -47,7 +53,10 @@ export function useAddAthlete({ search, add, invite }: Deps) {
         setNotice({ tone: "ok", text: res.message ?? "Done." });
         setResults((r) => r.filter((x) => x.id !== c.id));
       } else {
-        setNotice({ tone: "error", text: res.message ?? "Something went wrong." });
+        setNotice({
+          tone: "error",
+          text: res.message ?? "Something went wrong.",
+        });
       }
     });
   };

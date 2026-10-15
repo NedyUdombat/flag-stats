@@ -10,8 +10,8 @@ interface TeamsHeaderProps {
   filters: {
     q: string | undefined;
     league: string | undefined;
-    status: any;
-    sort: any;
+    status: string | undefined;
+    sort: string | undefined;
   };
 }
 

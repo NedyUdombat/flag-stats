@@ -13,10 +13,14 @@ import type {
 } from "./roster.types";
 
 export type ServiceResult = { ok: true } | { ok: false; message: string };
-const fail = (e: { code?: string; message: string }): ServiceResult => ({
-  ok: false,
-  message: rosterErrorMessage(e.message, e.code),
-});
+const fail = <T = { ok: false; message: string }>(e: {
+  code?: string;
+  message: string;
+}): T =>
+  ({
+    ok: false,
+    message: rosterErrorMessage(e.message, e.code),
+  }) as unknown as T;
 const one = <T>(v: T | T[] | null | undefined): T | null =>
   Array.isArray(v) ? (v[0] ?? null) : (v ?? null);
 

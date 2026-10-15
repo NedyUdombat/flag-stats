@@ -17,6 +17,10 @@ import {
   type LeagueListStatus,
 } from "@/features/leagues/league.constants";
 import { listAdminLeagues } from "@/features/leagues/league.service";
+import type {
+  AdminLeagueStats,
+  ListAdminLeaguesResponse,
+} from "@/features/leagues/league.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateLeagueShell } from "@/lib/permissions";
 import { isPlatformAdmin } from "@/lib/permissions/scope";
@@ -84,7 +88,7 @@ export default async function AdminLeaguesPage({
   const count = (s: LeagueListStatus) =>
     listAdminLeagues({ status: s, pageSize: 1 }).then((r) => r.total);
 
-  let result, stats;
+  let result: ListAdminLeaguesResponse, stats: AdminLeagueStats | null;
   try {
     [result, stats] = await Promise.all([
       listAdminLeagues({ q, status, page, pageSize: PAGE_SIZE }),

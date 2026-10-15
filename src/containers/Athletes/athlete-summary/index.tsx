@@ -108,7 +108,9 @@ export async function AthleteSummary({ summary }: AthleteSummaryProps) {
                 <span className="text-white/20">•</span>
                 <span className="text-white/80">
                   {summary.seasonsRegistered}
-                  {summary.seasonsRegistered === 1 ? " Tournament " : " Tournaments "}
+                  {summary.seasonsRegistered === 1
+                    ? " Tournament "
+                    : " Tournaments "}
                   Registered
                 </span>
               </div>

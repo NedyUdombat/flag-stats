@@ -11,7 +11,7 @@ export function Banner({
   const Icon = tone === "ok" ? CircleCheckIcon : TriangleAlertIcon;
   return (
     <p
-      role="status"
+      // role="status"
       className={cn(
         "flex items-center gap-2 border px-4 py-3 text-sm",
         tone === "ok"

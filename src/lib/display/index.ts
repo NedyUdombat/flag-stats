@@ -25,7 +25,7 @@ export function initials(name: string | null, email?: string | null) {
   return source.slice(0, 2).toUpperCase();
 }
 
-const tints = [
+const _tints = [
   "from-amber-300/70 to-stone-900",
   "from-yellow-500/70 to-black",
   "from-cyan-200/80 to-slate-700",

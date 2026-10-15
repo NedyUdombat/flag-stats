@@ -22,3 +22,10 @@ export type AdminAthleteListItem = {
   teamName: string | null;
   jerseyNumber: number | null;
 };
+
+export interface AdminAthletesListResponse {
+  athletes: AdminAthleteListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

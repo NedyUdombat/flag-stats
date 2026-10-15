@@ -18,6 +18,10 @@ import {
   type TournamentListStatus,
 } from "@/features/tournaments/tournament.constants";
 import { listAdminTournaments } from "@/features/tournaments/tournament.service";
+import type {
+  AdminTournamentsStats,
+  ListAdminTournamentsResponse,
+} from "@/features/tournaments/tournament.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateTournament } from "@/lib/permissions";
 import { isPlatformAdmin } from "@/lib/permissions/scope";
@@ -104,7 +108,7 @@ export default async function AdminTournamentsPage({
       (r) => r.total,
     );
 
-  let result, stats;
+  let result: ListAdminTournamentsResponse, stats: AdminTournamentsStats | null;
   try {
     [result, stats] = await Promise.all([
       listAdminTournaments({ q, status, leagueId, page, pageSize: PAGE_SIZE }),

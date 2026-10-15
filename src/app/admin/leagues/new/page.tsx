@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LeagueShellForm } from "@/containers/Leagues/shell-form";
 import { getCurrentUser } from "@/features/users/user.service";
-import { canCreateLeagueShell } from "@/lib/permissions";
 
 export const metadata = { title: "New league" };
 

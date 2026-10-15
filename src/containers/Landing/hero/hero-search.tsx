@@ -9,7 +9,7 @@ import { cn } from "@/utils/cn";
 
 export function HeroSearch() {
   const [searchValue, setSearchValue] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, _setIsSearching] = useState(false);
   return (
     <div className="mx-auto flex gap-2 justify-between max-w-lg w-full items-center rounded-sm bg-[#212226] p-1 shadow-2xl backdrop-blur-md">
       <InputWithIcon icon={Search}>

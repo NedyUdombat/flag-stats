@@ -23,9 +23,21 @@ export function useEntryEditor(
     startTransition(async () => {
       const n = jersey.trim() === "" ? Number.NaN : Number(jersey);
       const res = await update(n, position);
-      if (res.status === "error") setError(res.message ?? "Something went wrong.");
+      if (res.status === "error")
+        setError(res.message ?? "Something went wrong.");
       else setEditing(false);
     });
 
-  return { editing, jersey, setJersey, position, setPosition, error, pending, open, cancel: () => setEditing(false), save };
+  return {
+    editing,
+    jersey,
+    setJersey,
+    position,
+    setPosition,
+    error,
+    pending,
+    open,
+    cancel: () => setEditing(false),
+    save,
+  };
 }

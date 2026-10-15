@@ -57,10 +57,10 @@ export function AdminPagination({
           >
             <ChevronLeftIcon className="size-4" />
           </PageLink>
-          {pageWindow(page, totalPages).map((p, i) =>
+          {pageWindow(page, totalPages).map((p) =>
             p === "gap" ? (
               <span
-                key={`gap-${i}`}
+                key={`gap-${p}`}
                 className={cn(box, "text-zs-muted")}
                 aria-hidden
               >

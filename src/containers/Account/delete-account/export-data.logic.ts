@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { exportMyDataAction } from "@/features/account/actions/export.actions";
-import type { SettingsActionState } from "@/features/account/actions/types";
+import type { SettingsActionState } from "@/features/shared/types";
 
 function download(filename: string, json: string) {
   const url = URL.createObjectURL(

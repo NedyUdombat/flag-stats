@@ -34,8 +34,8 @@ export function RosterTable({
         <thead>
           <tr>
             {["#", "Athlete", "Position", "Eligibility", "Status", ""].map(
-              (h, i) => (
-                <th key={i} scope="col" className={th}>
+              (h) => (
+                <th key={h} scope="col" className={th}>
                   {h}
                 </th>
               ),

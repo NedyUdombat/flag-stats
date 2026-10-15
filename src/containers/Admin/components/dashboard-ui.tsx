@@ -4,7 +4,6 @@ import {
   CalendarClockIcon,
   CalendarPlusIcon,
   ChevronRightIcon,
-  CircleCheckIcon,
   ClockIcon,
   HistoryIcon,
   type LucideIcon,
@@ -187,7 +186,7 @@ export function Panel({
 
 /* ------------------------------- match card ------------------------------- */
 
-const STATE_META: Record<
+const _STATE_META: Record<
   MatchState,
   { label: string; icon: LucideIcon; pill: string; score: string }
 > = {
@@ -217,7 +216,7 @@ const STATE_META: Record<
   },
 };
 
-function TeamSide({ name, align }: { name: string; align: "start" | "end" }) {
+function _TeamSide({ name, align }: { name: string; align: "start" | "end" }) {
   return (
     <div
       className={cn(
@@ -235,97 +234,97 @@ function TeamSide({ name, align }: { name: string; align: "start" | "end" }) {
   );
 }
 
-const btnBase =
+const _btnBase =
   "inline-flex items-center gap-2 px-3 py-1.5 font-display text-sm font-bold tracking-wider uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zs-lime";
 
-export function MatchCard({
-  match,
-  canVerify,
-}: {
-  match: RecentMatch;
-  canVerify: boolean;
-}) {
-  const meta = STATE_META[match.state];
-  const StateIcon = meta.icon;
-  const tag = [match.competition, match.season].filter(Boolean).join(" / ");
+// export function MatchCard({
+//   match,
+//   canVerify,
+// }: {
+//   match: RecentMatch;
+//   canVerify: boolean;
+// }) {
+//   const meta = STATE_META[match.state];
+//   const StateIcon = meta.icon;
+//   const tag = [match.competition, match.season].filter(Boolean).join(" / ");
 
-  return (
-    <article className="bg-zs-bg/60 p-4">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 font-data text-xs">
-        <div className="flex flex-wrap items-center gap-3">
-          {tag && (
-            <span className="bg-zs-raised px-2 py-0.5 text-zs-lime">{tag}</span>
-          )}
-          <span className="text-zs-muted">{formatDate(match.scheduledAt)}</span>
-        </div>
-        <span
-          className={cn(
-            "inline-flex items-center gap-1.5 px-2 py-0.5 font-bold",
-            meta.pill,
-          )}
-        >
-          <StateIcon className="size-3.5" aria-hidden />
-          {meta.label}
-        </span>
-      </div>
+//   return (
+//     <article className="bg-zs-bg/60 p-4">
+//       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 font-data text-xs">
+//         <div className="flex flex-wrap items-center gap-3">
+//           {tag && (
+//             <span className="bg-zs-raised px-2 py-0.5 text-zs-lime">{tag}</span>
+//           )}
+//           <span className="text-zs-muted">{formatDate(match.scheduledAt)}</span>
+//         </div>
+//         <span
+//           className={cn(
+//             "inline-flex items-center gap-1.5 px-2 py-0.5 font-bold",
+//             meta.pill,
+//           )}
+//         >
+//           <StateIcon className="size-3.5" aria-hidden />
+//           {meta.label}
+//         </span>
+//       </div>
 
-      <div className="grid gap-4 md:grid-cols-[1fr_auto]">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-zs-panel p-3">
-          <TeamSide name={match.home.name} align="start" />
-          <div
-            className={cn(
-              "bg-zs-raised px-3 py-1 text-center font-data text-2xl font-bold tabular-nums",
-              meta.score,
-            )}
-            aria-label={
-              match.score
-                ? `${match.score.home} to ${match.score.away}`
-                : "No score yet"
-            }
-          >
-            {match.score ? `${match.score.home}–${match.score.away}` : "–"}
-          </div>
-          <TeamSide name={match.away.name} align="end" />
-        </div>
+//       <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+//         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 bg-zs-panel p-3">
+//           <TeamSide name={match.home.name} align="start" />
+//           <div
+//             className={cn(
+//               "bg-zs-raised px-3 py-1 text-center font-data text-2xl font-bold tabular-nums",
+//               meta.score,
+//             )}
+//             aria-label={
+//               match.score
+//                 ? `${match.score.home} to ${match.score.away}`
+//                 : "No score yet"
+//             }
+//           >
+//             {match.score ? `${match.score.home}–${match.score.away}` : "–"}
+//           </div>
+//           <TeamSide name={match.away.name} align="end" />
+//         </div>
 
-        <dl className="grid grid-cols-[auto_1fr] content-center gap-x-3 gap-y-1 font-data text-xs">
-          <dt className="text-zs-muted">Kick-off</dt>
-          <dd className="text-zs-ink">{formatTime(match.scheduledAt)}</dd>
-          <dt className="text-zs-muted">Result</dt>
-          <dd className={cn(match.resultId ? "text-zs-cyan" : "text-zs-muted")}>
-            {match.resultId ? "Submitted" : "Not submitted"}
-          </dd>
-        </dl>
-      </div>
+//         <dl className="grid grid-cols-[auto_1fr] content-center gap-x-3 gap-y-1 font-data text-xs">
+//           <dt className="text-zs-muted">Kick-off</dt>
+//           <dd className="text-zs-ink">{formatTime(match.scheduledAt)}</dd>
+//           <dt className="text-zs-muted">Result</dt>
+//           <dd className={cn(match.resultId ? "text-zs-cyan" : "text-zs-muted")}>
+//             {match.resultId ? "Submitted" : "Not submitted"}
+//           </dd>
+//         </dl>
+//       </div>
 
-      <div className="mt-3 flex flex-wrap items-center justify-end gap-2 border-t border-zs-line pt-3">
-        {match.state === "approved" && (
-          <p className="mr-auto font-data text-xs text-zs-muted">
-            Result verified and final
-          </p>
-        )}
-        <Link
-          href={`/admin/fixtures/${match.id}`}
-          className={cn(btnBase, "bg-zs-raised text-zs-ink hover:bg-zs-line")}
-        >
-          View fixture
-        </Link>
-        {match.state === "pending" && canVerify && (
-          <Link
-            href="/admin/verification"
-            className={cn(
-              btnBase,
-              "bg-zs-lime text-zs-lime-ink hover:brightness-110",
-            )}
-          >
-            <CircleCheckIcon className="size-4" aria-hidden />
-            Review & approve
-          </Link>
-        )}
-      </div>
-    </article>
-  );
-}
+//       <div className="mt-3 flex flex-wrap items-center justify-end gap-2 border-t border-zs-line pt-3">
+//         {match.state === "approved" && (
+//           <p className="mr-auto font-data text-xs text-zs-muted">
+//             Result verified and final
+//           </p>
+//         )}
+//         <Link
+//           href={`/admin/fixtures/${match.id}`}
+//           className={cn(btnBase, "bg-zs-raised text-zs-ink hover:bg-zs-line")}
+//         >
+//           View fixture
+//         </Link>
+//         {match.state === "pending" && canVerify && (
+//           <Link
+//             href="/admin/verification"
+//             className={cn(
+//               btnBase,
+//               "bg-zs-lime text-zs-lime-ink hover:brightness-110",
+//             )}
+//           >
+//             <CircleCheckIcon className="size-4" aria-hidden />
+//             Review & approve
+//           </Link>
+//         )}
+//       </div>
+//     </article>
+//   );
+// }
 
 export function MatchLegend({
   shown,

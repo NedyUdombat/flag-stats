@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { AdminAthleteListItem } from "@/features/admin-athlete/admin-athlete.types";
 import { initials } from "@/lib/display";
@@ -69,11 +70,17 @@ export function AdminAthletesTable({
                 <div className="flex items-center gap-3">
                   {a.photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img
+
+                    <Image
                       src={a.photoUrl}
                       alt=""
                       className="size-11 shrink-0 object-cover"
                     />
+                    //             <img
+                    //   src={a.photoUrl}
+                    //   alt=""
+                    //   className="size-11 shrink-0 object-cover"
+                    // />
                   ) : (
                     <span className="grid size-11 shrink-0 place-items-center bg-zs-raised font-data text-xs font-bold text-zs-muted">
                       {initials(a.fullName, null)}

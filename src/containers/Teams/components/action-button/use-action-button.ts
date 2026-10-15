@@ -3,7 +3,10 @@
 import { useState, useTransition } from "react";
 import type { TeamActionState } from "@/features/teams/team.types";
 
-export function useActionButton(action: () => Promise<TeamActionState>, confirmText?: string) {
+export function useActionButton(
+  action: () => Promise<TeamActionState>,
+  confirmText?: string,
+) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +15,8 @@ export function useActionButton(action: () => Promise<TeamActionState>, confirmT
     setError(null);
     startTransition(async () => {
       const res = await action();
-      if (res.status === "error") setError(res.message ?? "Something went wrong.");
+      if (res.status === "error")
+        setError(res.message ?? "Something went wrong.");
     });
   };
   return { pending, error, run };

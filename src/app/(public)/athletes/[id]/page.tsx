@@ -28,7 +28,7 @@ export default async function AthletePassportPage({
   //   getAthletePublicDetails(summary.id),
   // ]);
 
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/athletes/${summary.slug}`;
+  const _url = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/athletes/${summary.slug}`;
 
   return (
     <div className="">

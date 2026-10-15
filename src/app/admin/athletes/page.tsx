@@ -15,9 +15,11 @@ import { EmptyState } from "@/containers/Admin/components/empty-state";
 import { ErrorState } from "@/containers/Admin/components/error-state";
 import { isAthleteStatus } from "@/features/admin-athlete/admin-athlete.constants";
 import {
+  type AdminAthleteStats,
   getAdminAthleteStats,
   listAdminAthletes,
 } from "@/features/admin-athlete/admin-athlete.service";
+import type { AdminAthletesListResponse } from "@/features/admin-athlete/admin-athlete.types";
 import { POSITIONS } from "@/features/athletes/athlete.constants";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateAthleteForOthers } from "@/lib/permissions";
@@ -101,7 +103,7 @@ export default async function AdminAthletesPage({
     </header>
   );
 
-  let result, stats;
+  let result: AdminAthletesListResponse, stats: AdminAthleteStats;
   try {
     [result, stats] = await Promise.all([
       listAdminAthletes({ ...filters, page }),
