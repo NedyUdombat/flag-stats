@@ -148,12 +148,13 @@ export interface AthleteDirectoryStats {
   verifiedRate: number;
   activeNations: number;
   teamsRegistered: number;
+  leaguesRegistered: number;
 }
 
 export async function getAthleteDirectoryStats(): Promise<AthleteDirectoryStats> {
   const supabase = await createServerClient();
 
-  const [total, verified, nationalities, teams] = await Promise.all([
+  const [total, verified, nationalities, teams, leagues] = await Promise.all([
     supabase.from("athletes").select("id", { count: "exact", head: true }),
     supabase
       .from("athletes")
@@ -164,6 +165,7 @@ export async function getAthleteDirectoryStats(): Promise<AthleteDirectoryStats>
       .select("nationality")
       .not("nationality", "is", null),
     supabase.from("teams").select("id", { count: "exact", head: true }),
+    supabase.from("leagues").select("id", { count: "exact", head: true }),
   ]);
 
   if (total.error) logServerError("athleteDirectory.stats.total", total.error);
@@ -172,6 +174,8 @@ export async function getAthleteDirectoryStats(): Promise<AthleteDirectoryStats>
   if (nationalities.error)
     logServerError("athleteDirectory.stats.nationalities", nationalities.error);
   if (teams.error) logServerError("athleteDirectory.stats.teams", teams.error);
+  if (leagues.error)
+    logServerError("athleteDirectory.stats.leagues", leagues.error);
 
   const totalAthletes = total.count ?? 0;
   const verifiedCount = verified.count ?? 0;
@@ -185,5 +189,6 @@ export async function getAthleteDirectoryStats(): Promise<AthleteDirectoryStats>
       totalAthletes > 0 ? Math.round((verifiedCount / totalAthletes) * 100) : 0,
     activeNations,
     teamsRegistered: teams.count ?? 0,
+    leaguesRegistered: leagues.count ?? 0,
   };
 }

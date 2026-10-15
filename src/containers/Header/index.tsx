@@ -1,4 +1,5 @@
 import { MenuIcon } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { BrandText } from "@/components/brand-text";
 import { Button } from "@/components/primitives/button";
@@ -17,13 +18,15 @@ import { NAV_LINKS } from "./nav-links";
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
+  const headersList = await headers();
+  const pathname = headersList.get("x-current-path") || "";
 
   const showAdminLink =
     user?.platformRole === "super_admin" ||
     Boolean(user?.roles?.some((r) => ADMIN_ROLES.has(r.role)));
 
   return (
-    <header className="h-22 px-6 lg:px-18 flex items-center justify-between font-sans fixed inset-x-0 top-0 z-50  bg-[#000000]/20 backdrop-blur-md">
+    <header className="h-22 px-6 lg:px-18 flex items-center justify-between font-sans fixed inset-x-0 top-0 z-50  bg-black/20 backdrop-blur-md">
       <div className="flex w-full items-center justify-between">
         <BrandText href="/" />
 
@@ -32,7 +35,7 @@ export async function SiteHeader() {
             <Link
               key={`${link.href}-${i}`}
               href={link.href}
-              className="hover:text-accent p-2"
+              className={`${pathname.startsWith(link.href) ? "text-accent" : "text-white"} hover:text-accent p-2`}
             >
               {link.label}
             </Link>

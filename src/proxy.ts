@@ -2,14 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 const PROTECTED = ["/account", "/admin"];
-const AUTH_PAGES = ["/login", "/sign-up", "/forgot-password"]; // NOT /reset-password
+const AUTH_PAGES = ["/login", "/sign-up", "/forgot-password"];
 
 const matches = (path: string, prefixes: string[]) =>
   prefixes.some((p) => path === p || path.startsWith(`${p}/`));
 
 function redirectTo(request: NextRequest, path: string, carry?: NextResponse) {
   const res = NextResponse.redirect(new URL(path, request.url));
-  // keep any refreshed session cookies
   carry?.cookies.getAll().forEach((c) => {
     res.cookies.set(c);
   });
@@ -21,8 +20,9 @@ export async function proxy(request: NextRequest) {
   const isProtected = matches(pathname, PROTECTED);
   const isAuthPage = matches(pathname, AUTH_PAGES);
   const loginUrl = `/login?next=${encodeURIComponent(pathname + search)}`;
+  const headers = new Headers(request.headers);
+  headers.set("x-current-path", request.nextUrl.pathname);
 
-  // Anonymous visitors (most public traffic) skip the Supabase call entirely
   const hasSession = request.cookies
     .getAll()
     .some((c) => c.name.startsWith("sb-"));
@@ -30,7 +30,12 @@ export async function proxy(request: NextRequest) {
     return isProtected ? redirectTo(request, loginUrl) : NextResponse.next();
   }
 
-  let response = NextResponse.next({ request });
+  let response = NextResponse.next({
+    request: {
+      ...request,
+      headers,
+    },
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL as string,

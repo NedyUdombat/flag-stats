@@ -1,5 +1,5 @@
-import { CircleCheckBig, ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import { BadgeCheckIcon, ShieldCheckIcon } from "@/components/icons";
 import { HeroSearch } from "./hero-search";
 
 export function Hero() {
@@ -23,7 +23,10 @@ export function Hero() {
       <div className="relative z-10 mx-auto my-auto md:mt-auto md:mb-0 max-w-5xl text-center flex flex-col gap-6">
         <div className="mx-auto flex flex-col items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-accent-gold/10 p-2 backdrop-blur-sm sm:inline-flex sm:flex-row sm:gap-3 sm:rounded-lg sm:p-1">
           <div className="flex items-center gap-1.5 px-1.5 py-1 font-data text-xs uppercase tracking-wider text-accent-gold">
-            <ShieldCheck className="shrink-0 text-accent-orange" size={14} />
+            <ShieldCheckIcon
+              className="shrink-0 text-transparent w-3.5 h-3.5"
+              stroke="#FF5E00"
+            />
             <span>Multi-federation verified</span>
           </div>
 
@@ -33,7 +36,10 @@ export function Hero() {
           />
 
           <div className="flex items-center gap-1.5 px-1.5 py-1 font-data text-xs uppercase tracking-wider text-accent-gold">
-            <CircleCheckBig className="shrink-0 text-accent-orange" size={14} />
+            <BadgeCheckIcon
+              className="shrink-0 text-transparent w-3.5 h-3.5"
+              stroke="#ff5e00"
+            />
             <span>Official career passport system</span>
           </div>
         </div>

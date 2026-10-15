@@ -37,13 +37,15 @@ export function FeaturedAthleteCard({ athlete }: FeaturedAthleteCardProps) {
                 />
               )}
             </div>
-            <p className="font-data text-xs font-semibold uppercase text-accent-gold tracking-wide mt-0.5">
-              {athlete.teamName}
-            </p>
+            {athlete.teamName && (
+              <p className="font-data text-xs font-semibold uppercase text-accent-gold tracking-wide mt-0.5">
+                {athlete.teamName}
+              </p>
+            )}
           </div>
 
           <span className="font-data text-xs font-semibold uppercase text-muted-foreground tracking-wider">
-            ID: <span className="text-accent-gold">{athlete.passportId}</span>
+            #: <span className="text-accent-gold">{athlete.passportId}</span>
           </span>
         </div>
 

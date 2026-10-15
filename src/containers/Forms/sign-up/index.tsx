@@ -112,7 +112,7 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
             name="acceptTerms"
             checked={agreed}
             onCheckedChange={(value) => setAgreed(value === true)}
-            className="mt-0.5 size-4.5 data-[state=checked]:border-brand-lime data-[state=checked]:bg-brand-lime data-[state=checked]:text-black"
+            className="mt-0.5"
           />
           <Label
             htmlFor="acceptTerms"
