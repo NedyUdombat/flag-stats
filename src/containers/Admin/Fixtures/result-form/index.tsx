@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonPrimary } from "@/containers/Account/styles";
-import { fieldClass, labelClass } from "@/containers/Teams/styles";
+import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import type { FixtureActionState } from "@/features/fixtures/fixture.types";
 import { useResultForm } from "./use-result-form";
 

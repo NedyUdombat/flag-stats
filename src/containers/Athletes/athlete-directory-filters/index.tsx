@@ -83,7 +83,7 @@ export function AthleteDirectoryFilters({
     >
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="rounded-lg  bg-white/2 p-4 sm:p-5 max-w-6xl w-full"
+        className="rounded-lg bg-white/2 p-4 sm:p-5 max-w-6xl w-full"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <InputWithIcon icon={Search}>

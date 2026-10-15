@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
-import { buttonDanger, fieldClass } from "@/containers/Teams/styles";
+import { buttonDanger, fieldClass } from "@/containers/Admin/Teams/styles";
 import type { FixtureActionState } from "@/features/fixtures/fixture.types";
 import { useReasonButton } from "./use-reason-button";
 

@@ -10,8 +10,8 @@ import { AdminPagination } from "@/containers/Admin/components/admin-pagination"
 import { StatTile } from "@/containers/Admin/components/dashboard-ui";
 import { EmptyState } from "@/containers/Admin/components/empty-state";
 import { ErrorState } from "@/containers/Admin/components/error-state";
-import { TeamFilters } from "@/containers/Teams/components/team-filters";
-import { TeamsTable } from "@/containers/Teams/components/teams-table";
+import { TeamFilters } from "@/containers/Admin/Teams/components/team-filters";
+import { TeamsTable } from "@/containers/Admin/Teams/components/teams-table";
 import {
   TEAM_LIST_STATUSES,
   type TeamListStatus,

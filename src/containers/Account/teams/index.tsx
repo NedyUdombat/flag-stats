@@ -1,6 +1,6 @@
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { TeamMembershipsSection } from "@/containers/Teams/team-memberships-section";
+import { TeamMembershipsSection } from "@/containers/Admin/Teams/team-memberships-section";
 import { ROLE_LABEL } from "@/features/account/account.service";
 import type { MyInvitation } from "@/features/invitations/invitation.types";
 import type { Affiliation } from "@/features/shared/types";

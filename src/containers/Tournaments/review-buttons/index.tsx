@@ -2,7 +2,7 @@
 
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
 import type { TournamentActionState } from "@/features/tournaments/tournament.types";
-import { buttonDanger, fieldClass } from "../../Teams/styles";
+import { buttonDanger, fieldClass } from "../../Admin/Teams/styles";
 import { useReviewButtons } from "./use-review-buttons";
 
 interface Props {

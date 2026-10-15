@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
 import { buttonSecondary } from "@/containers/Account/styles";
-import { ActionButton } from "@/containers/Teams/components/action-button";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import {
   RegistrationStatusBadge,
   TournamentStatusBadge,

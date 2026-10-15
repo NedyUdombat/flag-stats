@@ -1,9 +1,9 @@
 "use client";
 
-import { ActionButton } from "@/containers/Teams/components/action-button";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import { POSITIONS } from "@/features/athletes/athlete.constants";
 import type { RosterActionState } from "@/features/rosters/roster.types";
-import { buttonLink, fieldClass } from "../../Teams/styles";
+import { buttonLink, fieldClass } from "../../Admin/Teams/styles";
 import { useEntryEditor } from "./use-entry-editor";
 
 interface Props {

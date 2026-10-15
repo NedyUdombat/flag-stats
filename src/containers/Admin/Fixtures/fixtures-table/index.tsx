@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TeamLogo } from "@/containers/Teams/components/team-logo";
+import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
 import type { AdminFixtureRow } from "@/features/fixtures/fixture.types";
 import { fmtDateTime } from "@/utils/date";
 import {

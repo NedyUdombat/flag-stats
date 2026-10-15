@@ -6,7 +6,7 @@ import {
   type TournamentListStatus,
   type TournamentStatus,
 } from "@/features/tournaments/tournament.constants";
-import { fieldClass, labelClass } from "../Teams/styles";
+import { fieldClass, labelClass } from "../Admin/Teams/styles";
 
 const label = (s: TournamentListStatus) =>
   s === "all"

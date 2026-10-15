@@ -33,9 +33,8 @@ export default async function AthletePassportPage({
   return (
     <div className="">
       <AthleteSummary summary={summary} />
+      <AthleteCareerSummary careerSummary={summary.careerTotals} />
       <div className="mx-auto max-w-6xl px-4 py-6">
-        <AthleteCareerSummary careerSummary={summary.careerTotals} />
-
         {/* {summary.catchRate !== null || summary.redzoneConversion !== null ? (
           <div className="mt-10">
             <p className="mb-3 font-mono text-[10px] tracking-wide text-brand-lime uppercase">

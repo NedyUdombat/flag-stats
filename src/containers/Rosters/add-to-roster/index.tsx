@@ -7,7 +7,7 @@ import type {
   RosterActionState,
   RosterCandidate,
 } from "@/features/rosters/roster.types";
-import { fieldClass, labelClass } from "../../Teams/styles";
+import { fieldClass, labelClass } from "../../Admin/Teams/styles";
 import { useAddToRoster } from "./use-add-to-roster";
 
 interface Props {

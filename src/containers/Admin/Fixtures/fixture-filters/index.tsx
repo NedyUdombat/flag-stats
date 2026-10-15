@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { buttonPrimary } from "@/containers/Account/styles";
-import { fieldClass, labelClass } from "@/containers/Teams/styles";
+import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import {
   FIXTURE_FILTER_LABELS,
   FIXTURE_LIST_FILTERS,

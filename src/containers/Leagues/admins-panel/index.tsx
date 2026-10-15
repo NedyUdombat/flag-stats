@@ -1,6 +1,6 @@
 import { Panel } from "@/containers/Account/shared/panel";
-import { ActionButton } from "@/containers/Teams/components/action-button";
-import { InviteAdminForm } from "@/containers/Teams/invite-admin-form";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
+import { InviteAdminForm } from "@/containers/Admin/Teams/invite-admin-form";
 import {
   inviteLeagueAdminAction,
   revokeLeagueInvitationAction,

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
-import { ActionButton } from "@/containers/Teams/components/action-button";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import {
   requestTournamentRegistrationAction,
   withdrawTournamentRegistrationAction,

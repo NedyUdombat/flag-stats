@@ -1,7 +1,7 @@
 import { Panel } from "@/containers/Account/shared/panel";
 import { reviewTournamentRegistrationAction } from "@/features/tournaments/actions/tournament-registration.actions";
 import type { RegistrationRow } from "@/features/tournaments/tournament.types";
-import { TeamLogo } from "../Teams/components/team-logo";
+import { TeamLogo } from "../Admin/Teams/components/team-logo";
 import { RegistrationStatusBadge } from "./components/badges";
 import { ReviewButtons } from "./review-buttons";
 

@@ -4,10 +4,10 @@ import { notFound, redirect } from "next/navigation";
 import { Panel } from "@/containers/Account/shared/panel";
 import { Banner } from "@/containers/Admin/components/banner";
 import { ErrorState } from "@/containers/Admin/components/error-state";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
+import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
 import { AddToRoster } from "@/containers/Rosters/add-to-roster";
 import { RosterTable } from "@/containers/Rosters/roster-table";
-import { ActionButton } from "@/containers/Teams/components/action-button";
-import { TeamLogo } from "@/containers/Teams/components/team-logo";
 import {
   acceptUnflaggedAction,
   setRosterUnlockedAction,

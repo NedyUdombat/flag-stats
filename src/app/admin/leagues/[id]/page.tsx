@@ -10,13 +10,13 @@ import { notFound, redirect } from "next/navigation";
 import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary } from "@/containers/Account/styles";
 import { ErrorState } from "@/containers/Admin/components/error-state";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
+import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
 import { LeagueAdminsPanel } from "@/containers/Leagues/admins-panel";
 import { LeagueStatusBadges } from "@/containers/Leagues/components/league-badges";
 import { LeagueDangerZone } from "@/containers/Leagues/danger-zone";
 import { LeagueEditForm } from "@/containers/Leagues/edit-form/league-edit-form";
 import { OrganizationLink } from "@/containers/Leagues/organization-link/organization-link";
-import { ActionButton } from "@/containers/Teams/components/action-button";
-import { TeamLogo } from "@/containers/Teams/components/team-logo";
 import { TournamentsTable } from "@/containers/Tournaments/tournaments-table";
 import { SOCIAL_LABELS, SOCIAL_PLATFORMS } from "@/features/entities/socials";
 import {

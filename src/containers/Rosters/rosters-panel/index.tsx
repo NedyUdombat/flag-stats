@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
-import { TeamLogo } from "@/containers/Teams/components/team-logo";
+import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
 import type { RosterSummaryRow } from "@/features/rosters/roster.types";
 
 export function RostersPanel({ summary }: { summary: RosterSummaryRow[] }) {

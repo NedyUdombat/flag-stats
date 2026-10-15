@@ -21,7 +21,7 @@ export function AthleteDirectoryCard({
   const fallbackTint = getTint(athlete.id || athlete.fullName || "default");
 
   return (
-    <div className="rounded-lg bg-white/2 p-4 hover:shadow-2xl transition hover:-translate-y-1 hover:border hover:border-[#ffb703]/50">
+    <div className="rounded-lg bg-white/2 p-4 hover:shadow-2xl transition hover:-translate-y-1 hover:border hover:border-accent/50">
       <div className="mb-3 flex items-center justify-between">
         {athlete.verified ? (
           <ShieldCheckIconFill
@@ -94,7 +94,7 @@ export function AthleteDirectoryCard({
 
       <Link
         href={`/athletes/${athlete.slug}`}
-        className="mt-3 inline-flex w-full justify-center cursor-pointer items-center gap-1.5 rounded-sm border border-white/10 py-2 text-center font-data text-[10px] tracking-wide text-white/70 uppercase hover:border-white hover:text-white"
+        className="mt-3 inline-flex w-full justify-center cursor-pointer items-center gap-1.5 rounded-sm border border-white/10 py-2 text-center font-data text-[10px] tracking-wide text-white/70 uppercase hover:border-accent/50 hover:text-accent/70 transition-colors"
       >
         View full passport <ArrowRightIcon className="size-3" aria-hidden />
       </Link>

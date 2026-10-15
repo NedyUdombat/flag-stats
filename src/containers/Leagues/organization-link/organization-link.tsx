@@ -1,7 +1,7 @@
 "use client";
 
 import { buttonPrimary } from "@/containers/Account/styles";
-import { fieldClass, labelClass } from "@/containers/Teams/styles";
+import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import type {
   LeagueActionState,
   OrganizationOption,

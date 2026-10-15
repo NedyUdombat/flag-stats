@@ -1,4 +1,4 @@
-import { ActionButton } from "@/containers/Teams/components/action-button";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import { setTournamentStatusAction } from "@/features/tournaments/actions/tournament-manage.actions";
 import {
   STATUS_ACTIONS,

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
-import { fieldClass, labelClass } from "@/containers/Teams/styles";
+import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import { useLeagueShellForm } from "./use-league-shell-form";
 
 export function LeagueShellForm() {

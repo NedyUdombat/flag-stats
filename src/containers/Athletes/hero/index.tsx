@@ -46,7 +46,7 @@ export async function AthletePageHero() {
               <p className="text-[36px] font-black tracking-[-4px] text-accent-gold font-sans">
                 {s.value}
               </p>
-              <p className="mt-1 text-[14px] uppercase tracking-[.12em] text-white/80 font-data">
+              <p className="mt-1 text-[12px] uppercase tracking-[.12em] text-white/80 font-data">
                 {s.label}
               </p>
             </div>

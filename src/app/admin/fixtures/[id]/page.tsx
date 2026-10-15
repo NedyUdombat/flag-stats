@@ -14,8 +14,8 @@ import {
 import { FixtureForm } from "@/containers/Admin/Fixtures/fixture-form";
 import { ReasonButton } from "@/containers/Admin/Fixtures/reason-button";
 import { ResultForm } from "@/containers/Admin/Fixtures/result-form";
-import { ActionButton } from "@/containers/Teams/components/action-button";
-import { TeamLogo } from "@/containers/Teams/components/team-logo";
+import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
+import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
 import { ReviewButtons } from "@/containers/Tournaments/review-buttons";
 import {
   deleteFixtureAction,
