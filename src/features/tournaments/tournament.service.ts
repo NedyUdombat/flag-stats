@@ -2,6 +2,7 @@ import "server-only";
 
 import { withUniqueSlug } from "@/lib/slug/with-unique-slug";
 import { createServerClient } from "@/lib/supabase/server";
+import type { StructureInput } from "./structure/structure.schema";
 import { tournamentErrorMessage } from "./tournament.constants";
 import type {
   CreateTournamentInput,
@@ -26,12 +27,26 @@ const one = <T>(v: T | T[] | null | undefined): T | null =>
 
 export async function getTournament(id: string) {
   const supabase = await createServerClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tournaments")
-    .select("*, league:leagues(id, name, slug)")
+    .select("*, league:leagues(id, name, slug), stages:tournament_stages(*)")
     .eq("id", id)
     .maybeSingle();
-  return data;
+  if (error || !data) return null;
+
+  // Extract primary stage template if applicable
+  const primaryStage = data.stages?.[0];
+  const config = (primaryStage?.config as Record<string, any>) ?? {};
+
+  return {
+    ...data,
+    template: primaryStage?.stage_type ?? "round_robin",
+    legs: config.legs ?? 1,
+    tiebreakers: config.tiebreakers ?? [],
+    groups: config.groups ?? null,
+    // advancePerGroup: config.advancePerGroup ?? null,
+    advancePerGroup: config.advance_per_group ?? config.advancePerGroup ?? null,
+  };
 }
 
 export async function listAdminTournaments(args: {
@@ -270,3 +285,132 @@ export const withdrawTournamentRegistration = (registrationId: string) =>
   rpcVoid("withdraw_tournament_registration", {
     p_registration_id: registrationId,
   });
+
+export async function createTournamentWithStructure(
+  i: CreateTournamentInput & StructureInput,
+) {
+  const supabase = await createServerClient();
+  return withUniqueSlug(supabase, "tournaments", i.name, (slug) =>
+    supabase.rpc("create_tournament_with_structure", {
+      p_league_id: i.leagueId,
+      p_name: i.name,
+      p_slug: slug,
+      p_format: i.format,
+      p_gender_category: i.genderCategory,
+      p_age_group: i.ageGroup,
+      p_season: i.season,
+      p_start_date: i.startDate,
+      p_end_date: i.endDate,
+      p_description: i.description,
+      p_max_teams: i.maxTeams,
+      p_roster_limit: i.rosterLimit,
+      p_template: i.template,
+      p_visibility: i.visibility,
+      p_legs: i.legs,
+      p_tiebreakers: i.tiebreakers,
+      p_groups: i.groups ?? undefined,
+      p_advance_per_group: i.advancePerGroup ?? undefined,
+    }),
+  );
+}
+
+export async function getTournamentStages(tournamentId: string) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase
+    .from("tournament_stages")
+    .select("*, ref_stage_types(label)")
+    .eq("tournament_id", tournamentId)
+    .order("sequence_order");
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function generateStageFixturesService(
+  stageId: string,
+  startDate: string,
+) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.rpc("generate_stage_fixtures", {
+    p_stage_id: stageId,
+    p_start: startDate,
+  });
+  if (error) return fail(error);
+  return { ok: true, count: data };
+}
+
+export async function getTournamentJoinCode(tournamentId: string) {
+  const supabase = await createServerClient();
+  const { data } = await supabase
+    .from("tournament_join_codes")
+    .select("code")
+    .eq("tournament_id", tournamentId)
+    .maybeSingle();
+  return data?.code ?? null;
+}
+
+export async function rotateJoinCodeService(tournamentId: string) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.rpc("rotate_tournament_join_code", {
+    p_tournament_id: tournamentId,
+  });
+  if (error) return fail(error);
+  return { ok: true, code: data };
+}
+
+export async function lookupTournamentByCodeService(code: string) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.rpc("lookup_tournament_by_code", {
+    p_code: code.trim().toUpperCase(),
+  });
+  if (error || !data || data.length === 0) return null;
+  return data[0];
+}
+
+export async function requestRegistrationWithCodeService(
+  code: string,
+  teamId: string,
+) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase.rpc("request_registration_with_code", {
+    p_code: code.trim().toUpperCase(),
+    p_team_id: teamId,
+  });
+  if (error) return fail(error);
+  return { ok: true, registrationId: data };
+}
+
+export async function adminAddTeamToTournament({
+  tournamentId,
+  teamId,
+}: {
+  tournamentId: string;
+  teamId: string;
+}) {
+  const supabase = await createServerClient();
+
+  const { data, error } = await supabase
+    .from("tournament_registrations")
+    .insert({
+      tournament_id: tournamentId,
+      team_id: teamId,
+      status: "invited",
+    });
+
+  if (error) {
+    return { ok: false, message: error.message };
+  }
+
+  return { ok: true, data };
+}
+
+export async function listTeamTournamentInvitations(teamId: string) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase
+    .from("tournament_registrations")
+    .select("id, status, tournament:tournaments(id, name, season, start_date)")
+    .eq("team_id", teamId)
+    .eq("status", "invited");
+
+  if (error) throw error;
+  return data ?? [];
+}

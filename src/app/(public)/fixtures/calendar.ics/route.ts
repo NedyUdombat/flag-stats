@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
 function toICSDate(iso: string): string {
-  return new Date(iso).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  return `${new Date(iso).toISOString().replace(/[-:]/g, "").split(".")[0]}Z`;
 }
 
 export async function GET() {

@@ -1,8 +1,8 @@
 "use client";
 
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
+import { buttonDanger, fieldClass } from "@/containers/Admin/Teams/styles";
 import type { TournamentActionState } from "@/features/tournaments/tournament.types";
-import { buttonDanger, fieldClass } from "../../Admin/Teams/styles";
 import { useReviewButtons } from "./use-review-buttons";
 
 interface Props {

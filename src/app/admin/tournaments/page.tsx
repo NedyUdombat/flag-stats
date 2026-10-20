@@ -11,8 +11,8 @@ import { AdminPagination } from "@/containers/Admin/components/admin-pagination"
 import { StatTile } from "@/containers/Admin/components/dashboard-ui";
 import { EmptyState } from "@/containers/Admin/components/empty-state";
 import { ErrorState } from "@/containers/Admin/components/error-state";
-import { TournamentFilters } from "@/containers/Tournaments/tournament-filters";
-import { TournamentsTable } from "@/containers/Tournaments/tournaments-table";
+import { TournamentFilters } from "@/containers/Admin/Tournaments/tournament-filters";
+import { TournamentsTable } from "@/containers/Admin/Tournaments/tournaments-table";
 import {
   TOURNAMENT_LIST_STATUSES,
   type TournamentListStatus,

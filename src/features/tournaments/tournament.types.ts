@@ -23,8 +23,12 @@ export type LeagueOption = {
   rosterLimit: number | null;
 };
 
-type RegistrationStatus = "pending" | "approved" | "rejected" | "withdrawn";
-
+type RegistrationStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "withdrawn"
+  | "invited";
 export type RegistrationRow = {
   id: string;
   status: RegistrationStatus;

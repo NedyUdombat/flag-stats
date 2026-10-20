@@ -17,7 +17,7 @@ import { LeagueEditForm } from "@/containers/Admin/Leagues/edit-form/league-edit
 import { OrganizationLink } from "@/containers/Admin/Leagues/organization-link/organization-link";
 import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
-import { TournamentsTable } from "@/containers/Tournaments/tournaments-table";
+import { TournamentsTable } from "@/containers/Admin/Tournaments/tournaments-table";
 import { SOCIAL_LABELS, SOCIAL_PLATFORMS } from "@/features/entities/socials";
 import {
   setLeagueOrganizationAction,

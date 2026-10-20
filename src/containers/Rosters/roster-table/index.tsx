@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ReviewButtons } from "@/containers/Tournaments/review-buttons";
+import { ReviewButtons } from "@/containers/Admin/Tournaments/review-buttons";
 import { reviewRosterEntryAction } from "@/features/rosters/actions/roster-review.actions";
 import {
   updateRosterEntryAction,

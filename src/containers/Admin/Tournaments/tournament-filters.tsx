@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { buttonPrimary } from "@/containers/Account/styles";
+import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import {
   TOURNAMENT_LIST_STATUSES,
   TOURNAMENT_STATUS_LABELS,
   type TournamentListStatus,
   type TournamentStatus,
 } from "@/features/tournaments/tournament.constants";
-import { fieldClass, labelClass } from "../Admin/Teams/styles";
 
 const label = (s: TournamentListStatus) =>
   s === "all"

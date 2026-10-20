@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { blank, nameField } from "../entities/shared";
+import { structureSchema } from "./structure/structure.schema";
 
 const text = (max: number) =>
   z.preprocess(
@@ -89,3 +90,27 @@ export const readUpdateTournamentForm = (fd: FormData) => ({
   pointsDraw: fd.get("pointsDraw"),
   pointsLoss: fd.get("pointsLoss"),
 });
+
+const optionalNumber = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.coerce.number().int().positive().optional(),
+);
+export const CreateTournamentWithStructureSchema = z
+  .object({
+    leagueId: z.uuid(),
+    name: z.string().min(2),
+    description: z.string().optional(),
+    format: z.string().min(1, "Please select a tournament format."),
+    genderCategory: z.string(),
+    ageGroup: z.string(),
+    season: z.string(),
+    startDate: z.string(),
+    endDate: z.string(),
+    maxTeams: optionalNumber,
+    rosterLimit: optionalNumber,
+  })
+  .and(structureSchema);
+
+export type CreateTournamentWithStructureInput = z.infer<
+  typeof CreateTournamentWithStructureSchema
+>;

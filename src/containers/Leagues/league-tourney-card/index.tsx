@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from "lucide-react";
-import { getTournamentTint } from "@/containers/Tournaments/tints";
+import { getTournamentTint } from "@/containers/Admin/Tournaments/tints";
 import type { LeagueTournament } from "@/features/leagues/league-profile.service";
 import { cn } from "@/utils/cn";
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
 import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import {
+  acceptTournamentInvitationAction,
   requestTournamentRegistrationAction,
   withdrawTournamentRegistrationAction,
 } from "@/features/tournaments/actions/tournament-registration.actions";
@@ -10,7 +11,7 @@ import type {
   TeamRegistrationRow,
 } from "@/features/tournaments/tournament.types";
 import { fmtRange } from "@/utils/date";
-import { RegistrationStatusBadge } from "../components/badges";
+import { RegistrationStatusBadge } from "../../Tournaments/components/badges";
 
 interface Props {
   teamId: string;
@@ -19,8 +20,57 @@ interface Props {
 }
 
 export function TeamTournamentsPanel({ teamId, open, registrations }: Props) {
+  // Separate invited registrations from regular/active/pending ones
+  const invitations = registrations.filter((r) => r.status === "invited");
+  const activeRegistrations = registrations.filter(
+    (r) => r.status !== "invited",
+  );
+
   return (
     <div className="space-y-6">
+      {/* 1. Pending Invitations Section */}
+      {invitations.length > 0 && (
+        <Panel
+          title={`Tournament invitations (${invitations.length})`}
+          description="You have been invited by a league admin to join these tournaments."
+        >
+          <ul className="divide-y divide-zs-line border border-zs-line">
+            {invitations.map((r) => (
+              <li
+                key={r.id}
+                className="flex flex-wrap items-center justify-between gap-3 px-3 py-3 text-sm"
+              >
+                <div>
+                  <p className="font-display text-lg font-bold text-zs-ink uppercase">
+                    {r.tournament?.name ?? "Tournament"}
+                  </p>
+                  <p className="font-data text-xs text-zs-muted">
+                    {[r.tournament?.league_name, r.tournament?.season]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <RegistrationStatusBadge status={r.status} />
+                  <ActionButton
+                    action={acceptTournamentInvitationAction.bind(
+                      null,
+                      r.id,
+                      teamId,
+                      r.tournament_id,
+                    )}
+                    label="Accept invitation"
+                    pendingLabel="Accepting…"
+                    variant="primary"
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      )}
+
+      {/* 2. Open for Registration Section */}
       <Panel
         title="Open for registration"
         description="Request to join. The league approves or rejects your request."
@@ -65,14 +115,15 @@ export function TeamTournamentsPanel({ teamId, open, registrations }: Props) {
         )}
       </Panel>
 
+      {/* 3. Your Registrations Section (Excluding Invited status) */}
       <Panel title="Your registrations">
-        {registrations.length === 0 ? (
+        {activeRegistrations.length === 0 ? (
           <p className="text-sm text-zs-muted">
-            This team hasn&apos;t requested any tournaments yet.
+            This team hasn&apos;t requested or joined any tournaments yet.
           </p>
         ) : (
           <ul className="divide-y divide-zs-line border border-zs-line">
-            {registrations.map((r) => (
+            {activeRegistrations.map((r) => (
               <li
                 key={r.id}
                 className="flex flex-wrap items-center justify-between gap-3 px-3 py-3 text-sm"

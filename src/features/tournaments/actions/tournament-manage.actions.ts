@@ -3,23 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/features/users/user.service";
-import { logServerError } from "@/lib/errors";
-import { canManageTournament, canRestoreTournament } from "@/lib/permissions";
-import { rateKey, rateLimit } from "@/lib/rate-limit";
+import { canManageTeam, canRestoreTournament } from "@/lib/permissions";
 import { fieldErrorsFrom } from "../../entities/shared";
+import { TOURNAMENT_STATUSES } from "../tournament.constants";
 import {
-  TOURNAMENT_STATUSES,
-  tournamentErrorMessage,
-} from "../tournament.constants";
-import {
-  CreateTournamentSchema,
-  readCreateTournamentForm,
+  CreateTournamentWithStructureSchema,
   readUpdateTournamentForm,
   UpdateTournamentSchema,
 } from "../tournament.schema";
 import {
-  createTournament,
+  createTournamentWithStructure,
+  generateStageFixturesService,
+  requestRegistrationWithCodeService,
   restoreTournament,
+  rotateJoinCodeService,
   setTournamentStatus,
   softDeleteTournament,
   updateTournament,
@@ -41,26 +38,82 @@ export async function createTournamentAction(
   fd: FormData,
 ): Promise<TournamentActionState> {
   const user = await getCurrentUser();
-  if (!user) return tournamentError("Please sign in again.");
-  const parsed = CreateTournamentSchema.safeParse(readCreateTournamentForm(fd));
-  if (!parsed.success) return fieldErrorsFrom(parsed.error);
-  if (!canManageTournament(user, parsed.data.leagueId)) return denied;
-  if (!(await rateLimit(rateKey("tournament-create", user.id), 20, 86400))) {
-    return tournamentError(
-      "You've created several tournaments today. Please try again tomorrow.",
+  if (!user) return denied;
+
+  const raw = Object.fromEntries(fd.entries());
+  const tiebreakers = fd.getAll("tiebreakers");
+  // Parse fields including structure template, legs, visibility, etc.
+  const parsed = CreateTournamentWithStructureSchema.safeParse({
+    ...raw,
+    tiebreakers,
+  });
+  if (!parsed.success) {
+    const flattened = parsed.error.flatten().fieldErrors;
+    const fieldErrors: Record<string, string> = Object.fromEntries(
+      Object.entries(flattened)
+        .filter(([_, errs]) => errs && errs.length > 0)
+        .map(([key, errs]) => [key, errs?.[0]]), // Takes the first error message per field
     );
+
+    return {
+      status: "error",
+      message: "Please fix the validation errors below.",
+      fieldErrors,
+    };
   }
-  const created = await createTournament(parsed.data);
-  if (!created.ok) {
-    logServerError("tournament.create", created.error);
-    return tournamentError(
-      created.error
-        ? tournamentErrorMessage(created.error.message, created.error.code)
-        : "Could not create the tournament.",
-    );
-  }
+
+  const res = await createTournamentWithStructure(parsed.data);
+
+  if (!res.ok)
+    return tournamentError(res.error?.message || "Error creating tournament.");
+
+  const newTournamentId = res.data;
+
   revalidatePath("/admin/tournaments");
-  redirect(`/admin/tournaments/${created.data}?created=1`);
+  tournamentOk("Tournament created successfully.");
+  redirect(`/admin/tournaments/${newTournamentId}/structure`);
+}
+
+export async function generateFixturesAction(
+  tournamentId: string,
+  stageId: string,
+  startDate: string,
+): Promise<TournamentActionState> {
+  const user = await getCurrentUser();
+  if (!user) return denied;
+
+  const res = await generateStageFixturesService(stageId, startDate);
+  if (!res.ok) return tournamentError("Error generating fixtures.");
+
+  revalidatePath(`/admin/tournaments/${tournamentId}`);
+  return tournamentOk("Fixtures generated successfully.");
+}
+
+export async function rotateJoinCodeAction(
+  tournamentId: string,
+): Promise<TournamentActionState> {
+  const user = await getCurrentUser();
+  if (!user) return denied;
+
+  const res = await rotateJoinCodeService(tournamentId);
+  if (!res.ok) return tournamentError("Error rotating join code.");
+
+  revalidatePath(`/admin/tournaments/${tournamentId}`);
+  return tournamentOk("Join code rotated.");
+}
+
+export async function joinTournamentWithCodeAction(
+  teamId: string,
+  code: string,
+): Promise<TournamentActionState> {
+  const user = await getCurrentUser();
+  if (!user || !canManageTeam(user, teamId)) return denied;
+
+  const res = await requestRegistrationWithCodeService(code, teamId);
+  if (!res.ok) return tournamentError("Error requesting tournament entry.");
+
+  revalidatePath(`/admin/teams/${teamId}`);
+  return tournamentOk("Successfully requested tournament entry!");
 }
 
 export async function updateTournamentAction(

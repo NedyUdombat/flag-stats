@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUser } from "@/features/users/user.service";
-import { canManageTeam } from "@/lib/permissions";
+import { canManageTeam, canManageTournament } from "@/lib/permissions";
 import { rateKey, rateLimit } from "@/lib/rate-limit";
+import { createServerClient } from "@/lib/supabase/server";
 import {
+  adminAddTeamToTournament,
   requestTournamentRegistration,
   reviewTournamentRegistration,
   withdrawTournamentRegistration,
@@ -77,4 +79,73 @@ export async function reviewTournamentRegistrationAction(
   if (!res.ok) return tournamentError(res.message);
   revalidatePath(`/admin/tournaments/${tournamentId}`);
   return tournamentOk();
+}
+
+export async function adminAddTeamToTournamentAction(
+  tournamentId: string,
+  teamId: string,
+) {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, message: "Unauthorized" };
+
+  const res = await adminAddTeamToTournament({
+    tournamentId,
+    teamId,
+  });
+  if (!res.ok) return tournamentError(res.message || "Error adding team.");
+
+  revalidatePath(`/admin/tournaments/${tournamentId}?tab=registrations`);
+  return tournamentOk("Team added successfully.");
+}
+
+// 1. Admin invites a team
+export async function inviteTeamToTournamentAction(
+  tournamentId: string,
+  teamId: string,
+) {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, message: "Unauthorized" };
+
+  const supabase = await createServerClient();
+
+  // Insert with status 'invited'
+  const { error } = await supabase.from("tournament_registrations").insert({
+    tournament_id: tournamentId,
+    team_id: teamId,
+    status: "invited",
+  });
+
+  if (error) return { ok: false, message: error.message };
+
+  revalidatePath(`/admin/tournaments/${tournamentId}`);
+  return { ok: true, message: "Invitation sent to team." };
+}
+
+// 2. Team accepts the tournament invitation
+export async function acceptTournamentInvitationAction(
+  registrationId: string,
+  teamId: string,
+  tournamentId: string,
+) {
+  const user = await getCurrentUser();
+  if (!user || !canManageTeam(user, teamId))
+    return { ok: false, message: "Unauthorized" };
+
+  const supabase = await createServerClient();
+
+  const { error } = await supabase
+    .from("tournament_registrations")
+    .update({ status: "approved" })
+    .eq("id", registrationId)
+    .eq("team_id", teamId)
+    .eq("status", "invited");
+
+  if (error) return { ok: false, message: error.message };
+
+  revalidatePath(`/admin/teams/${teamId}`);
+  revalidatePath(`/admin/tournaments/${tournamentId}`);
+  return {
+    ok: true,
+    message: "Invitation accepted! You have joined the tournament.",
+  };
 }

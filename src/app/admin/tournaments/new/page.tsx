@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/containers/Admin/components/empty-state";
-import { TournamentForm } from "@/containers/Tournaments/tournament-form";
+import { TournamentForm } from "@/containers/Admin/Tournaments/tournament-form";
 import { createTournamentAction } from "@/features/tournaments/actions/tournament-manage.actions";
 import {
   listLeagueOptions,
@@ -76,6 +76,13 @@ export default async function NewTournamentPage({
             pointsWin: "3",
             pointsDraw: "1",
             pointsLoss: "0",
+            // whats should be deafults below
+            template: "",
+            visibility: "private",
+            legs: "1",
+            tiebreakers: [],
+            groups: "",
+            advancePerGroup: "",
           }}
         />
       )}

@@ -1,28 +1,33 @@
 import { ArrowLeftIcon, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { JoinCodeDisplay } from "@/components/join-code-display";
 import { Panel } from "@/containers/Account/shared/panel";
-import { buttonPrimary } from "@/containers/Account/styles";
+import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
 import { Banner } from "@/containers/Admin/components/banner";
 import { ErrorState } from "@/containers/Admin/components/error-state";
 import { FixturesTable } from "@/containers/Admin/Fixtures/fixtures-table";
+import { TournamentStatusBadge } from "@/containers/Admin/Tournaments/components/badges";
+import { StatusControls } from "@/containers/Admin/Tournaments/components/status-controls";
+import { TournamentDangerZone } from "@/containers/Admin/Tournaments/danger-zone";
+import { RegistrationsPanel } from "@/containers/Admin/Tournaments/registrations-panel";
+import { TournamentForm } from "@/containers/Admin/Tournaments/tournament-form";
 import { RostersPanel } from "@/containers/Rosters/rosters-panel";
-import { TournamentStatusBadge } from "@/containers/Tournaments/components/badges";
-import { StatusControls } from "@/containers/Tournaments/components/status-controls";
-import { TournamentDangerZone } from "@/containers/Tournaments/danger-zone";
-import { RegistrationsPanel } from "@/containers/Tournaments/registrations-panel";
-import { TournamentForm } from "@/containers/Tournaments/tournament-form";
 import { listAdminFixtures } from "@/features/fixtures/fixture.service";
 import type { AdminFixtureRow } from "@/features/fixtures/fixture.types";
 import { listRosterSummary } from "@/features/rosters/roster.service";
 import type { RosterSummaryRow } from "@/features/rosters/roster.types";
+import { listAdminTeams } from "@/features/teams/team.service";
+// import { listLeagueTeams } from "@/features/teams/team.service"; // or listTeams
 import { updateTournamentAction } from "@/features/tournaments/actions/tournament-manage.actions";
+import { adminAddTeamToTournamentAction } from "@/features/tournaments/actions/tournament-registration.actions";
 import {
   isStarted,
   type TournamentStatus,
 } from "@/features/tournaments/tournament.constants";
 import {
   getTournament,
+  getTournamentJoinCode,
   listTournamentOptions,
   listTournamentRegistrations,
   tournamentHasVerifiedResults,
@@ -81,11 +86,17 @@ export default async function AdminTournamentDetailPage({
   const user = await getCurrentUser();
   if (!user) redirect(`/login?next=/admin/tournaments/${id}`);
 
-  const t = await getTournament(id);
-  if (!t || !canManageTournament(user, t.league_id)) notFound();
+  const tournament = await getTournament(id);
+  if (!tournament || !canManageTournament(user, tournament.league_id))
+    notFound();
 
-  const status = t.status as TournamentStatus;
-  const deleted = t.deleted_at !== null;
+  const joinCode =
+    tournament.visibility === "private"
+      ? await getTournamentJoinCode(id)
+      : null;
+
+  const status = tournament.status as TournamentStatus;
+  const deleted = tournament.deleted_at !== null;
   const tab: TabId = TABS.some((x) => x.id === sp.tab)
     ? (sp.tab as TabId)
     : "overview";
@@ -95,6 +106,8 @@ export default async function AdminTournamentDetailPage({
   let hasVerifiedResults = false;
   let rosterSummary: RosterSummaryRow[] = [];
   let fixtures: AdminFixtureRow[] = [];
+  let availableTeams: { id: string; name: string; logoUrl?: string | null }[] =
+    [];
 
   if (tab === "rosters") rosterSummary = await listRosterSummary(id);
   if (tab === "fixtures")
@@ -102,10 +115,22 @@ export default async function AdminTournamentDetailPage({
       .rows;
 
   try {
-    [registrations, options] = await Promise.all([
+    const [regRes, optsRes, adminTeamsRes] = await Promise.all([
       listTournamentRegistrations(id),
       listTournamentOptions(),
+      listAdminTeams({ status: "active" }),
     ]);
+    registrations = regRes;
+    options = optsRes;
+
+    const registeredTeamIds = new Set(registrations.map((r) => r.team?.id));
+    availableTeams = adminTeamsRes.rows
+      .filter((t: any) => !registeredTeamIds.has(t.id))
+      .map((t: any) => ({
+        id: t.id,
+        name: t.name,
+        logoUrl: t.logo_url ?? null,
+      }));
     if (tab === "settings")
       hasVerifiedResults = await tournamentHasVerifiedResults(id);
   } catch {
@@ -113,6 +138,8 @@ export default async function AdminTournamentDetailPage({
       <ErrorState description="Couldn't load this tournament. Refresh the page to try again." />
     );
   }
+
+  const handleInviteTeam = adminAddTeamToTournamentAction.bind(null, id);
 
   if (sp.mode === "edit" && !deleted) {
     return (
@@ -129,7 +156,7 @@ export default async function AdminTournamentDetailPage({
               href={`/admin/tournaments/${id}`}
               className="hover:text-zs-ink"
             >
-              {t.name}
+              {tournament.name}
             </Link>
             <span className="mx-2" aria-hidden>
               /
@@ -147,20 +174,26 @@ export default async function AdminTournamentDetailPage({
           locked={isStarted(status) && !isPlatformAdmin(user)}
           cancelHref={`/admin/tournaments/${id}`}
           initial={{
-            leagueId: t.league_id,
-            name: t.name,
-            description: t.description ?? "",
-            format: t.format,
-            genderCategory: t.gender_category,
-            ageGroup: t.age_group,
-            season: t.season,
-            startDate: t.start_date,
-            endDate: t.end_date,
-            maxTeams: t.max_teams?.toString() ?? "",
-            rosterLimit: t.roster_limit?.toString() ?? "",
-            pointsWin: String(t.points_win),
-            pointsDraw: String(t.points_draw),
-            pointsLoss: String(t.points_loss),
+            leagueId: tournament.league_id,
+            name: tournament.name,
+            description: tournament.description ?? "",
+            format: tournament.format,
+            genderCategory: tournament.gender_category,
+            ageGroup: tournament.age_group,
+            season: tournament.season,
+            startDate: tournament.start_date,
+            endDate: tournament.end_date,
+            maxTeams: tournament.max_teams?.toString() ?? "",
+            rosterLimit: tournament.roster_limit?.toString() ?? "",
+            pointsWin: String(tournament.points_win),
+            pointsDraw: String(tournament.points_draw),
+            pointsLoss: String(tournament.points_loss),
+            visibility: tournament.visibility,
+            template: tournament.template,
+            legs: String(tournament.legs),
+            tiebreakers: tournament.tiebreakers,
+            groups: String(tournament.groups),
+            advancePerGroup: String(tournament.advancePerGroup),
           }}
         />
       </div>
@@ -189,7 +222,7 @@ export default async function AdminTournamentDetailPage({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="font-display text-4xl leading-none font-bold tracking-wide text-zs-ink uppercase">
-                {t.name}
+                {tournament.name}
               </h1>
               {deleted ? (
                 <span className="font-data text-xs text-zs-coral uppercase">
@@ -200,28 +233,38 @@ export default async function AdminTournamentDetailPage({
               )}
             </div>
             <p className="mt-2 font-data text-xs text-zs-muted">
-              {t.league ? (
+              {tournament.league ? (
                 <Link
-                  href={`/admin/leagues/${t.league.id}`}
+                  href={`/admin/leagues/${tournament.league.id}`}
                   className="hover:text-zs-ink"
                 >
-                  {t.league.name}
+                  {tournament.league.name}
                 </Link>
               ) : null}
               {" · "}
-              {t.season}
+              {tournament.season}
               {" · "}
-              {fmtRange(t.start_date, t.end_date)}
+              {fmtRange(tournament.start_date, tournament.end_date)}
             </p>
           </div>
-          {!deleted && (
-            <Link
-              href={`/admin/tournaments/${id}?mode=edit`}
-              className={buttonPrimary}
-            >
-              <PencilIcon className="size-4" aria-hidden /> Edit
-            </Link>
-          )}
+          <div className="flex items-center gap-3">
+            {!deleted && (
+              <Link
+                href={`/admin/tournaments/${id}/structure`}
+                className={buttonSecondary}
+              >
+                Structure & Fixtures
+              </Link>
+            )}
+            {!deleted && (
+              <Link
+                href={`/admin/tournaments/${id}?mode=edit`}
+                className={buttonPrimary}
+              >
+                <PencilIcon className="size-4" aria-hidden /> Edit
+              </Link>
+            )}
+          </div>
         </div>
         {!deleted && (
           <StatusControls
@@ -271,28 +314,60 @@ export default async function AdminTournamentDetailPage({
       {tab === "overview" && (
         <Panel title="Details">
           <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Row label="Format">{label(options.formats, t.format)}</Row>
-            <Row label="Gender category">
-              {label(options.genderCategories, t.gender_category)}
+            <Row label="Format">
+              {label(options.formats, tournament.format)}
             </Row>
-            <Row label="Age group">{label(options.ageGroups, t.age_group)}</Row>
-            <Row label="Season">{t.season}</Row>
+            <Row label="Gender category">
+              {label(options.genderCategories, tournament.gender_category)}
+            </Row>
+            <Row label="Age group">
+              {label(options.ageGroups, tournament.age_group)}
+            </Row>
+            <Row label="Season">{tournament.season}</Row>
             <Row label="Dates">
-              {fmtRange(t.start_date, t.end_date)}
-              {t.is_one_day ? " (one day)" : ""}
+              {fmtRange(tournament.start_date, tournament.end_date)}
+              {tournament.is_one_day ? " (one day)" : ""}
             </Row>
             <Row label="Teams">
               {approved}
-              {t.max_teams ? ` of ${t.max_teams}` : ""} approved
+              {tournament.max_teams ? ` of ${tournament.max_teams}` : ""}{" "}
+              approved
             </Row>
-            <Row label="Roster limit">{t.roster_limit}</Row>
+            <Row label="Roster limit">{tournament.roster_limit}</Row>
             <Row label="Points (win, draw, loss)">
-              {t.points_win}, {t.points_draw}, {t.points_loss}
+              {tournament.points_win}, {tournament.points_draw},{" "}
+              {tournament.points_loss}
             </Row>
+            <Row label="Visibility">
+              {tournament.visibility === "private"
+                ? "Private (Join code required)"
+                : "Public"}
+            </Row>
+            <Row label="Structure template">
+              {tournament.template === "league" ||
+              tournament.template === "round_robin"
+                ? "League (Round Robin)"
+                : tournament.template === "groups_knockout"
+                  ? "Groups then knockout"
+                  : "Knockout"}
+            </Row>
+            <Row label="Legs">
+              {tournament.legs === 2 ? "Home & Away (2 Legs)" : "Single Leg"}
+            </Row>
+            {tournament.visibility === "private" && (
+              <Row label="Tournament Join Code">
+                {joinCode ? (
+                  <JoinCodeDisplay code={joinCode} />
+                ) : (
+                  <span className="text-zs-muted">Generating...</span>
+                )}
+              </Row>
+            )}
           </dl>
-          {t.description && (
+
+          {tournament.description && (
             <p className="mt-4 text-sm whitespace-pre-line text-zs-ink">
-              {t.description}
+              {tournament.description}
             </p>
           )}
         </Panel>
@@ -306,6 +381,10 @@ export default async function AdminTournamentDetailPage({
           canRemove={
             !deleted && status !== "completed" && status !== "cancelled"
           }
+          joinCode={joinCode}
+          visibility={tournament.visibility}
+          availableTeams={availableTeams}
+          onInviteTeam={handleInviteTeam}
         />
       )}
       {tab === "fixtures" && (
@@ -336,8 +415,8 @@ export default async function AdminTournamentDetailPage({
       {tab === "settings" && (
         <TournamentDangerZone
           tournamentId={id}
-          leagueId={t.league_id}
-          name={t.name}
+          leagueId={tournament.league_id}
+          name={tournament.name}
           deleted={deleted}
           hasVerifiedResults={hasVerifiedResults}
           user={user}

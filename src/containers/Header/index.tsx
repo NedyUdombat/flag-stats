@@ -49,7 +49,7 @@ export async function SiteHeader() {
               fullName={user.fullName}
               email={user.email}
               showAdminLink={showAdminLink}
-              showAccountLink={false}
+              showAccountLink={!showAdminLink}
             />
           ) : (
             <>

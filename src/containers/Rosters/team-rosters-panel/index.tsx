@@ -5,7 +5,7 @@ import { ActionButton } from "@/containers/Admin/Teams/components/action-button"
 import {
   RegistrationStatusBadge,
   TournamentStatusBadge,
-} from "@/containers/Tournaments/components/badges";
+} from "@/containers/Admin/Tournaments/components/badges";
 import { deleteTeamRosterAction } from "@/features/rosters/actions/roster-team.actions";
 import type { TeamRosterRow } from "@/features/rosters/roster.types";
 import { requestTournamentRegistrationAction } from "@/features/tournaments/actions/tournament-registration.actions";
