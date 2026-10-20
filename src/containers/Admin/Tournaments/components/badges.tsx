@@ -40,7 +40,7 @@ export function TournamentStatusBadge({
   );
 }
 
-const REG_TONE = {
+export const REG_TONE = {
   pending: "amber",
   approved: "lime",
   rejected: "coral",

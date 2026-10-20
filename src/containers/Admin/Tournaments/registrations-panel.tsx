@@ -4,9 +4,10 @@ import { useState } from "react";
 import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary } from "@/containers/Account/styles";
 import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
+import type { TeamActionState } from "@/features/teams/team.types";
 import { reviewTournamentRegistrationAction } from "@/features/tournaments/actions/tournament-registration.actions";
 import type { RegistrationRow } from "@/features/tournaments/tournament.types";
-import { RegistrationStatusBadge } from "./components/badges";
+import { type REG_TONE, RegistrationStatusBadge } from "./components/badges";
 import { ReviewButtons } from "./review-buttons";
 
 interface Props {
@@ -17,7 +18,16 @@ interface Props {
   joinCode?: string | null;
   visibility?: string;
   availableTeams?: { id: string; name: string; logoUrl?: string | null }[];
-  onInviteTeam?: (tournamentId: string, teamId: string) => Promise<any>;
+  onInviteTeam?: (
+    tournamentId: string,
+    teamId: string,
+  ) => Promise<
+    | TeamActionState
+    | {
+        ok: boolean;
+        message: string;
+      }
+  >;
 }
 
 function Row({
@@ -46,7 +56,9 @@ function Row({
         </div>
       </div>
       <div className="flex items-center gap-3">
-        {!children && <RegistrationStatusBadge status={r.status} />}
+        {!children && (
+          <RegistrationStatusBadge status={r.status as keyof typeof REG_TONE} />
+        )}
         {children}
       </div>
     </li>
@@ -132,7 +144,7 @@ export function RegistrationsPanel({
             <select
               value={selectedTeamId}
               onChange={(e) => setSelectedTeamId(e.target.value)}
-              className="flex-1 min-w-[220px] bg-zs-raised border border-zs-line px-3 py-2 text-sm text-zs-ink focus:outline-2 focus:outline-zs-lime"
+              className="flex-1 min-w-55 bg-zs-raised border border-zs-line px-3 py-2 text-sm text-zs-ink focus:outline-2 focus:outline-zs-lime"
             >
               <option value="">Select a team to invite…</option>
               {availableTeams.map((t) => (
@@ -216,7 +228,9 @@ export function RegistrationsPanel({
                     canApprove={false}
                   />
                 ) : (
-                  <RegistrationStatusBadge status={r.status} />
+                  <RegistrationStatusBadge
+                    status={r.status as keyof typeof REG_TONE}
+                  />
                 )}
               </Row>
             ))}

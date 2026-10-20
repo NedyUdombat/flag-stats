@@ -7,14 +7,17 @@ import {
   generateFixturesAction,
   rotateJoinCodeAction,
 } from "@/features/tournaments/actions/tournament-manage.actions";
+import type { Database } from "@/types/database/types";
 
+type Stage = Database["public"]["Tables"]["tournament_stages"]["Row"];
+type Tournament = Database["public"]["Tables"]["tournaments"]["Row"];
 export function StructureManagementContainer({
   tournament,
   stages,
   initialJoinCode,
 }: {
-  tournament: any;
-  stages: any[];
+  tournament: Tournament;
+  stages: Stage[];
   initialJoinCode: string | null;
 }) {
   const [loading, setLoading] = useState(false);

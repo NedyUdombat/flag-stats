@@ -36,6 +36,7 @@ export async function getTournament(id: string) {
 
   // Extract primary stage template if applicable
   const primaryStage = data.stages?.[0];
+  // biome-ignore lint/suspicious/noExplicitAny: temporary
   const config = (primaryStage?.config as Record<string, any>) ?? {};
 
   return {

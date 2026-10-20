@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noExplicitAny: temporary
 export function TournamentBracket({ bracketRows }: { bracketRows: any[] }) {
   return (
     <div className="space-y-4">

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentUser } from "@/features/users/user.service";
-import { canManageTeam, canManageTournament } from "@/lib/permissions";
+import { canManageTeam } from "@/lib/permissions";
 import { rateKey, rateLimit } from "@/lib/rate-limit";
 import { createServerClient } from "@/lib/supabase/server";
 import {
@@ -129,7 +129,7 @@ export async function acceptTournamentInvitationAction(
 ) {
   const user = await getCurrentUser();
   if (!user || !canManageTeam(user, teamId))
-    return { ok: false, message: "Unauthorized" };
+    return { ok: false, message: "Unauthorized", status: "error" };
 
   const supabase = await createServerClient();
 
@@ -140,12 +140,13 @@ export async function acceptTournamentInvitationAction(
     .eq("team_id", teamId)
     .eq("status", "invited");
 
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: error.message, status: "error" };
 
   revalidatePath(`/admin/teams/${teamId}`);
   revalidatePath(`/admin/tournaments/${tournamentId}`);
   return {
     ok: true,
+    status: "success",
     message: "Invitation accepted! You have joined the tournament.",
   };
 }

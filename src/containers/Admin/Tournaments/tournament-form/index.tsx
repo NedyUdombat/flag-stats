@@ -6,7 +6,6 @@ import { Panel } from "@/containers/Account/shared/panel";
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
 import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import {
-  DEFAULT_TIEBREAKERS,
   TIEBREAKER_LABEL,
   TIEBREAKERS,
   type Tiebreaker,
@@ -123,7 +122,9 @@ export function TournamentForm({
           aria-invalid={err[name] ? true : undefined}
           className={fieldClass}
         />
-        {isLocked && <input type="hidden" name={name} value={currentInitial[name]} />}
+        {isLocked && (
+          <input type="hidden" name={name} value={currentInitial[name]} />
+        )}
       </Field>
     );
   };

@@ -11,7 +11,10 @@ import type {
   TeamRegistrationRow,
 } from "@/features/tournaments/tournament.types";
 import { fmtRange } from "@/utils/date";
-import { RegistrationStatusBadge } from "../../Tournaments/components/badges";
+import {
+  type REG_TONE,
+  RegistrationStatusBadge,
+} from "../../Tournaments/components/badges";
 
 interface Props {
   teamId: string;
@@ -51,13 +54,16 @@ export function TeamTournamentsPanel({ teamId, open, registrations }: Props) {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <RegistrationStatusBadge status={r.status} />
+                  <RegistrationStatusBadge
+                    status={r.status as keyof typeof REG_TONE}
+                  />
                   <ActionButton
+                    //@ts-expect-error
                     action={acceptTournamentInvitationAction.bind(
                       null,
                       r.id,
                       teamId,
-                      r.tournament_id,
+                      r.tournament?.id ?? "",
                     )}
                     label="Accept invitation"
                     pendingLabel="Accepting…"
@@ -140,7 +146,9 @@ export function TeamTournamentsPanel({ teamId, open, registrations }: Props) {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <RegistrationStatusBadge status={r.status} />
+                  <RegistrationStatusBadge
+                    status={r.status as keyof typeof REG_TONE}
+                  />
                   {r.status === "approved" &&
                     r.tournament?.status !== "completed" &&
                     r.tournament?.status !== "cancelled" && (

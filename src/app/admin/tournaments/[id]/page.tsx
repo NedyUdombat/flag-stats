@@ -125,8 +125,8 @@ export default async function AdminTournamentDetailPage({
 
     const registeredTeamIds = new Set(registrations.map((r) => r.team?.id));
     availableTeams = adminTeamsRes.rows
-      .filter((t: any) => !registeredTeamIds.has(t.id))
-      .map((t: any) => ({
+      .filter((t) => !registeredTeamIds.has(t.id))
+      .map((t) => ({
         id: t.id,
         name: t.name,
         logoUrl: t.logo_url ?? null,

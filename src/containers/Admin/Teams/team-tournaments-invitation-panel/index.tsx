@@ -33,7 +33,7 @@ export function TeamInvitationsPanel({
     const res = await acceptTournamentInvitationAction(
       registrationId,
       teamId,
-      tournamentId
+      tournamentId,
     );
 
     setMessage(res.message);
@@ -62,13 +62,16 @@ export function TeamInvitationsPanel({
                   {inv.tournament.name}
                 </p>
                 <p className="font-data text-xs text-zs-muted">
-                  Season: {inv.tournament.season} · Starts: {inv.tournament.start_date}
+                  Season: {inv.tournament.season} · Starts:{" "}
+                  {inv.tournament.start_date}
                 </p>
               </div>
               <button
                 type="button"
                 disabled={isHandling}
-                onClick={() => handleAccept(inv.id, inv.tournament!.id)}
+                onClick={() =>
+                  inv.tournament?.id && handleAccept(inv.id, inv.tournament.id)
+                }
                 className={buttonPrimary}
               >
                 {isHandling ? "Accepting…" : "Accept Invitation"}
