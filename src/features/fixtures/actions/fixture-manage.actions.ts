@@ -33,7 +33,7 @@ const isUuid = (v: string) => z.uuid().safeParse(v).success;
 const refresh = (id: string, tournamentId?: string) => {
   revalidatePath(`/admin/fixtures/${id}`);
   revalidatePath("/admin/fixtures");
-  revalidatePath("/admin/verification");
+  revalidatePath("/admin/verifications");
   if (tournamentId) revalidatePath(`/admin/tournaments/${tournamentId}`);
 };
 

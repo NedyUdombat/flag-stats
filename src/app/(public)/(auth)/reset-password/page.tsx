@@ -1,7 +1,6 @@
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/primitives/button";
-// import { Button } from "@/components/ui/button"; // adjust path to your Button component
 import { AuthShell } from "@/containers/Auth/shell";
 import { ResetPasswordForm } from "@/containers/Forms/reset-password";
 

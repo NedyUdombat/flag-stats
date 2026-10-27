@@ -69,21 +69,168 @@ export type Database = {
         };
         Relationships: [];
       };
-      athlete_game_stats: {
+      athlete_game_stat_exclusions: {
         Row: {
           athlete_id: string;
           created_at: string;
+          excluded: boolean;
+          fixture_id: string;
+          id: string;
+          reason: string;
+          ruled_at: string;
+          ruled_by: string;
+        };
+        Insert: {
+          athlete_id: string;
+          created_at?: string;
+          excluded?: boolean;
+          fixture_id: string;
+          id?: string;
+          reason: string;
+          ruled_at?: string;
+          ruled_by: string;
+        };
+        Update: {
+          athlete_id?: string;
+          created_at?: string;
+          excluded?: boolean;
+          fixture_id?: string;
+          id?: string;
+          reason?: string;
+          ruled_at?: string;
+          ruled_by?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "athlete_game_stat_exclusions_athlete_id_fkey";
+            columns: ["athlete_id"];
+            isOneToOne: false;
+            referencedRelation: "athletes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stat_exclusions_fixture_id_fkey";
+            columns: ["fixture_id"];
+            isOneToOne: false;
+            referencedRelation: "fixtures";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stat_exclusions_fixture_id_fkey";
+            columns: ["fixture_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_bracket";
+            referencedColumns: ["fixture_id"];
+          },
+        ];
+      };
+      athlete_game_stat_revisions: {
+        Row: {
+          athlete_game_stat_id: string;
+          created_at: string;
+          id: string;
+          is_initial: boolean;
+          participation_status: string;
+          rejection_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          revision_number: number;
+          stat_values: Json;
+          status: string;
+          submitted_at: string | null;
+          submitted_by: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          athlete_game_stat_id: string;
+          created_at?: string;
+          id?: string;
+          is_initial?: boolean;
+          participation_status?: string;
+          rejection_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          revision_number: number;
+          stat_values?: Json;
+          status?: string;
+          submitted_at?: string | null;
+          submitted_by?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          athlete_game_stat_id?: string;
+          created_at?: string;
+          id?: string;
+          is_initial?: boolean;
+          participation_status?: string;
+          rejection_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          revision_number?: number;
+          stat_values?: Json;
+          status?: string;
+          submitted_at?: string | null;
+          submitted_by?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "athlete_game_stat_revisions_athlete_game_stat_id_fkey";
+            columns: ["athlete_game_stat_id"];
+            isOneToOne: false;
+            referencedRelation: "athlete_game_stats";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stat_revisions_athlete_game_stat_id_fkey";
+            columns: ["athlete_game_stat_id"];
+            isOneToOne: false;
+            referencedRelation: "official_athlete_game_stats";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      athlete_game_stats: {
+        Row: {
+          athlete_id: string;
+          catches: number;
+          created_at: string;
+          drops: number;
           fixture_id: string;
           flags_pulled: number;
           id: string;
+          Int_caught: number;
+          Int_returned: number;
+          Int_thrown: number;
           interceptions: number;
+          participation_status: string;
+          pass_1PAT: number;
+          pass_2PAT: number;
+          pass_attempts: number;
+          pass_breakups: number;
+          pass_completions: number;
           passing_touchdowns: number;
+          passing_yards: number;
+          pat_interception_returns: number;
+          rec_yards: number;
+          receiving_1PATs: number;
+          receiving_2PATs: number;
+          receiving_touchdowns: number;
           receptions: number;
           rejection_reason: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
+          rush_attempts: number;
+          rushing_1PATs: number;
+          rushing_2PATs: number;
+          rushing_touchdowns: number;
+          rushing_yards: number;
+          Sacks: number;
+          safeties: number;
+          submission_id: string;
           submitted_at: string;
           submitted_by: string | null;
+          targets: number;
           team_id: string;
           touchdowns: number;
           updated_at: string;
@@ -91,18 +238,44 @@ export type Database = {
         };
         Insert: {
           athlete_id: string;
+          catches?: number;
           created_at?: string;
+          drops?: number;
           fixture_id: string;
           flags_pulled?: number;
           id?: string;
+          Int_caught?: number;
+          Int_returned?: number;
+          Int_thrown?: number;
           interceptions?: number;
+          participation_status?: string;
+          pass_1PAT?: number;
+          pass_2PAT?: number;
+          pass_attempts?: number;
+          pass_breakups?: number;
+          pass_completions?: number;
           passing_touchdowns?: number;
+          passing_yards?: number;
+          pat_interception_returns?: number;
+          rec_yards?: number;
+          receiving_1PATs?: number;
+          receiving_2PATs?: number;
+          receiving_touchdowns?: number;
           receptions?: number;
           rejection_reason?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          rush_attempts?: number;
+          rushing_1PATs?: number;
+          rushing_2PATs?: number;
+          rushing_touchdowns?: number;
+          rushing_yards?: number;
+          Sacks?: number;
+          safeties?: number;
+          submission_id: string;
           submitted_at?: string;
           submitted_by?: string | null;
+          targets?: number;
           team_id: string;
           touchdowns?: number;
           updated_at?: string;
@@ -110,18 +283,44 @@ export type Database = {
         };
         Update: {
           athlete_id?: string;
+          catches?: number;
           created_at?: string;
+          drops?: number;
           fixture_id?: string;
           flags_pulled?: number;
           id?: string;
+          Int_caught?: number;
+          Int_returned?: number;
+          Int_thrown?: number;
           interceptions?: number;
+          participation_status?: string;
+          pass_1PAT?: number;
+          pass_2PAT?: number;
+          pass_attempts?: number;
+          pass_breakups?: number;
+          pass_completions?: number;
           passing_touchdowns?: number;
+          passing_yards?: number;
+          pat_interception_returns?: number;
+          rec_yards?: number;
+          receiving_1PATs?: number;
+          receiving_2PATs?: number;
+          receiving_touchdowns?: number;
           receptions?: number;
           rejection_reason?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          rush_attempts?: number;
+          rushing_1PATs?: number;
+          rushing_2PATs?: number;
+          rushing_touchdowns?: number;
+          rushing_yards?: number;
+          Sacks?: number;
+          safeties?: number;
+          submission_id?: string;
           submitted_at?: string;
           submitted_by?: string | null;
+          targets?: number;
           team_id?: string;
           touchdowns?: number;
           updated_at?: string;
@@ -148,6 +347,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "tournament_bracket";
             referencedColumns: ["fixture_id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stats_submission_id_fkey";
+            columns: ["submission_id"];
+            isOneToOne: false;
+            referencedRelation: "fixture_stat_submissions";
+            referencedColumns: ["id"];
           },
           {
             foreignKeyName: "athlete_game_stats_team_id_fkey";
@@ -397,6 +603,125 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "teams";
             referencedColumns: ["id"];
+          },
+        ];
+      };
+      fixture_stat_roster_snapshot: {
+        Row: {
+          athlete_id: string;
+          created_at: string;
+          jersey_number: number;
+          position: string;
+          roster_entry_id: string;
+          submission_id: string;
+          team_id: string;
+        };
+        Insert: {
+          athlete_id: string;
+          created_at?: string;
+          jersey_number: number;
+          position: string;
+          roster_entry_id: string;
+          submission_id: string;
+          team_id: string;
+        };
+        Update: {
+          athlete_id?: string;
+          created_at?: string;
+          jersey_number?: number;
+          position?: string;
+          roster_entry_id?: string;
+          submission_id?: string;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fixture_stat_roster_snapshot_athlete_id_fkey";
+            columns: ["athlete_id"];
+            isOneToOne: false;
+            referencedRelation: "athletes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fixture_stat_roster_snapshot_roster_entry_id_fkey";
+            columns: ["roster_entry_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_roster_entries";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fixture_stat_roster_snapshot_submission_id_fkey";
+            columns: ["submission_id"];
+            isOneToOne: false;
+            referencedRelation: "fixture_stat_submissions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fixture_stat_roster_snapshot_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      fixture_stat_submissions: {
+        Row: {
+          away_unattributed_safeties: number;
+          created_at: string;
+          fixture_id: string;
+          home_unattributed_safeties: number;
+          id: string;
+          roster_snapshot_at: string;
+          started_at: string;
+          started_by: string;
+          status: string;
+          submitted_at: string | null;
+          submitted_by: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          away_unattributed_safeties?: number;
+          created_at?: string;
+          fixture_id: string;
+          home_unattributed_safeties?: number;
+          id?: string;
+          roster_snapshot_at?: string;
+          started_at?: string;
+          started_by: string;
+          status?: string;
+          submitted_at?: string | null;
+          submitted_by?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          away_unattributed_safeties?: number;
+          created_at?: string;
+          fixture_id?: string;
+          home_unattributed_safeties?: number;
+          id?: string;
+          roster_snapshot_at?: string;
+          started_at?: string;
+          started_by?: string;
+          status?: string;
+          submitted_at?: string | null;
+          submitted_by?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fixture_stat_submissions_fixture_id_fkey";
+            columns: ["fixture_id"];
+            isOneToOne: true;
+            referencedRelation: "fixtures";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fixture_stat_submissions_fixture_id_fkey";
+            columns: ["fixture_id"];
+            isOneToOne: true;
+            referencedRelation: "tournament_bracket";
+            referencedColumns: ["fixture_id"];
           },
         ];
       };
@@ -1534,6 +1859,101 @@ export type Database = {
         };
         Relationships: [];
       };
+      official_athlete_game_stats: {
+        Row: {
+          athlete_id: string | null;
+          catches: number | null;
+          created_at: string | null;
+          drops: number | null;
+          fixture_id: string | null;
+          flags_pulled: number | null;
+          id: string | null;
+          Int_caught: number | null;
+          Int_returned: number | null;
+          Int_thrown: number | null;
+          interceptions: number | null;
+          participation_status: string | null;
+          pass_1PAT: number | null;
+          pass_2PAT: number | null;
+          pass_attempts: number | null;
+          pass_breakups: number | null;
+          pass_completions: number | null;
+          passing_touchdowns: number | null;
+          passing_yards: number | null;
+          pat_interception_returns: number | null;
+          rec_yards: number | null;
+          receiving_1PATs: number | null;
+          receiving_2PATs: number | null;
+          receiving_touchdowns: number | null;
+          receptions: number | null;
+          rejection_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          rush_attempts: number | null;
+          rushing_1PATs: number | null;
+          rushing_2PATs: number | null;
+          rushing_touchdowns: number | null;
+          rushing_yards: number | null;
+          Sacks: number | null;
+          safeties: number | null;
+          season: string | null;
+          submission_id: string | null;
+          submitted_at: string | null;
+          submitted_by: string | null;
+          targets: number | null;
+          team_id: string | null;
+          touchdowns: number | null;
+          tournament_id: string | null;
+          updated_at: string | null;
+          verification_status:
+            | Database["public"]["Enums"]["verification_status"]
+            | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "athlete_game_stats_athlete_id_fkey";
+            columns: ["athlete_id"];
+            isOneToOne: false;
+            referencedRelation: "athletes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stats_fixture_id_fkey";
+            columns: ["fixture_id"];
+            isOneToOne: false;
+            referencedRelation: "fixtures";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stats_fixture_id_fkey";
+            columns: ["fixture_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_bracket";
+            referencedColumns: ["fixture_id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stats_submission_id_fkey";
+            columns: ["submission_id"];
+            isOneToOne: false;
+            referencedRelation: "fixture_stat_submissions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "athlete_game_stats_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fixtures_tournament_id_fkey";
+            columns: ["tournament_id"];
+            isOneToOne: false;
+            referencedRelation: "tournaments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       tournament_bracket: {
         Row: {
           away_logo_url: string | null;
@@ -1646,6 +2066,11 @@ export type Database = {
       };
       _is_any_admin: { Args: never; Returns: boolean };
       _next_pow2: { Args: { n: number }; Returns: number };
+      _normalize_game_stat_values: { Args: { p_values: Json }; Returns: Json };
+      _refresh_approved_fixture_score: {
+        Args: { p_fixture_id: string };
+        Returns: undefined;
+      };
       _roster_editable: {
         Args: { p_registration_id: string };
         Returns: boolean;
@@ -1807,6 +2232,14 @@ export type Database = {
         Args: { p_stage_id: string; p_team_ids: string[] };
         Returns: undefined;
       };
+      approve_pending_player_stat_lines: {
+        Args: { p_submission_id: string };
+        Returns: Json;
+      };
+      approve_player_stat_line: {
+        Args: { p_revision_id: string };
+        Returns: Json;
+      };
       assert_valid_slug: { Args: { p_slug: string }; Returns: undefined };
       assign_stage_teams: {
         Args: { p_assignments: Json; p_stage_id: string };
@@ -1850,6 +2283,10 @@ export type Database = {
           team_name: string;
           team_slug: string;
         }[];
+      };
+      begin_fixture_stats_submission: {
+        Args: { p_fixture_id: string };
+        Returns: string;
       };
       can_access_athlete_private: {
         Args: { p_athlete_id: string };
@@ -2060,6 +2497,10 @@ export type Database = {
           metadata: Json;
         }[];
       };
+      fixture_stats_warnings: {
+        Args: { p_submission_id: string };
+        Returns: Json;
+      };
       generate_next_round: {
         Args: { p_stage_id: string; p_start: string };
         Returns: number;
@@ -2109,6 +2550,23 @@ export type Database = {
           _team_id?: string;
         };
         Returns: boolean;
+      };
+      internal_stats_leaderboard: {
+        Args: {
+          p_limit?: number;
+          p_metric: string;
+          p_scope_id: string;
+          p_scope_type: string;
+          p_season?: string;
+          p_tournament_id?: string;
+        };
+        Returns: {
+          athlete_id: string;
+          full_name: string;
+          metric: string;
+          metric_value: number;
+          rank: number;
+        }[];
       };
       invitation_recipient: {
         Args: { p_invitation_id: string };
@@ -2178,6 +2636,21 @@ export type Database = {
           team_id: string;
           team_name: string;
           team_slug: string;
+        }[];
+      };
+      official_stats_leaderboard: {
+        Args: {
+          p_limit?: number;
+          p_metric: string;
+          p_season?: string;
+          p_tournament_id?: string;
+        };
+        Returns: {
+          athlete_id: string;
+          full_name: string;
+          metric: string;
+          metric_value: number;
+          rank: number;
         }[];
       };
       preview_invitation: { Args: { p_token_hash: string }; Returns: Json };
@@ -2273,6 +2746,10 @@ export type Database = {
         Args: { p_fixture_id: string; p_reason: string; p_team_id: string };
         Returns: string;
       };
+      reject_player_stat_line: {
+        Args: { p_reason?: string; p_revision_id: string };
+        Returns: Json;
+      };
       release_my_athlete_profile: { Args: never; Returns: undefined };
       remove_league_admin: {
         Args: { p_league_id: string; p_user_id: string };
@@ -2309,6 +2786,10 @@ export type Database = {
         Args: { p_fixture_id: string; p_reason: string };
         Returns: undefined;
       };
+      review_athlete_game_stat_revision: {
+        Args: { p_approve: boolean; p_reason?: string; p_revision_id: string };
+        Returns: undefined;
+      };
       review_roster_entry: {
         Args: { p_accept: boolean; p_entry_id: string; p_reason?: string };
         Returns: undefined;
@@ -2336,6 +2817,23 @@ export type Database = {
       rotate_tournament_join_code: {
         Args: { p_tournament_id: string };
         Returns: string;
+      };
+      save_athlete_game_stat_draft: {
+        Args: {
+          p_participation_status: string;
+          p_stat_line_id: string;
+          p_stat_values: Json;
+        };
+        Returns: string;
+      };
+      set_athlete_game_stat_exclusion: {
+        Args: {
+          p_athlete_id: string;
+          p_excluded: boolean;
+          p_fixture_id: string;
+          p_reason: string;
+        };
+        Returns: undefined;
       };
       set_fixture_status: {
         Args: {
@@ -2390,6 +2888,47 @@ export type Database = {
       soft_delete_tournament: {
         Args: { p_tournament_id: string };
         Returns: undefined;
+      };
+      stats_verification_queue: {
+        Args: { p_limit?: number; p_offset?: number };
+        Returns: {
+          away_team_name: string;
+          fixture_id: string;
+          home_team_name: string;
+          league_name: string;
+          pending_stat_lines: number;
+          scheduled_at: string;
+          submission_id: string;
+          submitted_at: string;
+          total_count: number;
+          tournament_id: string;
+          tournament_name: string;
+        }[];
+      };
+      submit_athlete_game_stat_revision: {
+        Args: {
+          p_participation_status: string;
+          p_stat_line_id: string;
+          p_stat_values: Json;
+        };
+        Returns: string;
+      };
+      submit_fixture_stats: {
+        Args: {
+          p_away_unattributed_safeties?: number;
+          p_home_unattributed_safeties?: number;
+          p_lines: Json;
+          p_submission_id: string;
+        };
+        Returns: undefined;
+      };
+      submit_fixture_stats_drafts: {
+        Args: {
+          p_away_unattributed_safeties?: number;
+          p_home_unattributed_safeties?: number;
+          p_submission_id: string;
+        };
+        Returns: number;
       };
       submit_result: {
         Args: {

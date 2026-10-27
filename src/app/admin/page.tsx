@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
           footer={
             stats.pendingVerification > 0 ? (
               canVerify ? (
-                <TileLink href="/admin/verification">Review queue</TileLink>
+                <TileLink href="/admin/verifications">Review queue</TileLink>
               ) : (
                 <span className="text-zs-lime">Awaiting a league admin</span>
               )
