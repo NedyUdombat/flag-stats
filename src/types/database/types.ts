@@ -2581,6 +2581,10 @@ export type Database = {
       }
       invite_email_has_account: { Args: { p_email: string }; Returns: boolean }
       invite_signup_details: { Args: { p_token_hash: string }; Returns: Json }
+      is_athlete_stat_excluded: {
+        Args: { p_athlete_id: string; p_fixture_id: string }
+        Returns: boolean
+      }
       is_platform_admin: { Args: never; Returns: boolean }
       is_valid_social_links: { Args: { p: Json }; Returns: boolean }
       is_valid_team_social_links: { Args: { p: Json }; Returns: boolean }

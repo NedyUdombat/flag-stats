@@ -40,6 +40,8 @@ export function ImageUpload({
               src={u.previewSrc}
               alt=""
               className="size-full object-cover"
+              width={20}
+              height={20}
             />
             // <img src={u.previewSrc} alt="" className="size-full object-cover" />
           ) : (
