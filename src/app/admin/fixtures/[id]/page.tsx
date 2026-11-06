@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, PencilIcon } from "lucide-react";
+import { ArrowLeftIcon, BarChart3Icon, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Panel } from "@/containers/Account/shared/panel";
@@ -195,14 +195,29 @@ export default async function FixturePage({
               {result && <ResultStatusBadge status={result.status} />}
             </div>
           </div>
-          {canReview && !voided && (
-            <Link
-              href={`/admin/fixtures/${id}?mode=edit`}
-              className={buttonPrimary}
-            >
-              <PencilIcon className="size-4" aria-hidden /> Edit
-            </Link>
-          )}
+          {(canSubmit && open) || (canReview && !voided) ? (
+            <div className="flex flex-wrap items-center gap-2">
+              {canSubmit && open && (
+                <Link
+                  href={`/admin/fixtures/${id}/stats`}
+                  className={buttonPrimary}
+                >
+                  <BarChart3Icon className="size-4" aria-hidden />
+                  Enter stats
+                </Link>
+              )}
+
+              {canReview && !voided && (
+                <Link
+                  href={`/admin/fixtures/${id}?mode=edit`}
+                  className={buttonPrimary}
+                >
+                  <PencilIcon className="size-4" aria-hidden />
+                  Edit
+                </Link>
+              )}
+            </div>
+          ) : null}
         </div>
         {voided && (
           <p className="text-sm text-zs-coral">

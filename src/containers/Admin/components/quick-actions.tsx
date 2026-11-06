@@ -36,7 +36,7 @@ const ACTIONS = [
   {
     title: "Verification queue",
     body: "Approve results and player stats",
-    href: "/admin/verification",
+    href: "/admin/verifications",
     icon: BadgeCheckIcon,
     leagueOnly: true,
   },

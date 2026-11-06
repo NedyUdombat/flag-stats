@@ -7,7 +7,6 @@ import type {
   AuditRow,
   DisputeRow,
   FixtureDetail,
-  QueueRow,
   TeamOption,
   TeamRef,
 } from "./fixture.types";
@@ -101,17 +100,6 @@ export async function listAdminFixtures(args: {
   });
   if (error) throw error;
   const rows: AdminFixtureRow[] = data ?? [];
-  return { rows, total: Number(rows[0]?.total_count ?? 0), page, pageSize };
-}
-
-export async function listVerificationQueue(page = 1, pageSize = 20) {
-  const supabase = await createServerClient();
-  const { data, error } = await supabase.rpc("verification_queue", {
-    p_limit: pageSize,
-    p_offset: (Math.max(1, page) - 1) * pageSize,
-  });
-  if (error) throw error;
-  const rows: QueueRow[] = data ?? [];
   return { rows, total: Number(rows[0]?.total_count ?? 0), page, pageSize };
 }
 

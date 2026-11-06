@@ -311,7 +311,7 @@ const _btnBase =
 //         </Link>
 //         {match.state === "pending" && canVerify && (
 //           <Link
-//             href="/admin/verification"
+//             href="/admin/verifications"
 //             className={cn(
 //               btnBase,
 //               "bg-zs-lime text-zs-lime-ink hover:brightness-110",
@@ -383,7 +383,7 @@ const ACTIONS = [
   {
     title: "Verification queue",
     body: "Approve results and player stats",
-    href: "/admin/verification",
+    href: "/admin/verifications",
     icon: BadgeCheckIcon,
     leagueOnly: true,
   },

@@ -60,7 +60,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     show: teamOrLeagueOrFederation,
   },
   {
-    href: "/admin/verification",
+    href: "/admin/verifications",
     label: "Verification",
     icon: BadgeCheckIcon,
     show: isLeagueMember,

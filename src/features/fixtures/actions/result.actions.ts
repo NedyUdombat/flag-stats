@@ -24,7 +24,7 @@ const isUuid = (v: string) => z.uuid().safeParse(v).success;
 const refresh = (id: string) => {
   revalidatePath(`/admin/fixtures/${id}`);
   revalidatePath("/admin/fixtures");
-  revalidatePath("/admin/verification");
+  revalidatePath("/admin/verifications");
   revalidatePath("/admin/tournaments", "layout");
 };
 const scoreIssue = (e: z.ZodError) =>
