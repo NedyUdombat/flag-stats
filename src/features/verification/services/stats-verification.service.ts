@@ -8,8 +8,6 @@ import type {
 export async function getStatsVerificationReview(fixtureId: string) {
   const workspace = await getFixtureStatsWorkspace(fixtureId);
 
-  console.log({ workspace });
-
   if (!workspace) {
     return null;
   }

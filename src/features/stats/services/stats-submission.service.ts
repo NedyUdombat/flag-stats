@@ -25,8 +25,18 @@ const asRecord = (value: unknown): UnknownRecord =>
     ? (value as UnknownRecord)
     : {};
 
-const relationOne = <T>(value: T | T[] | null | undefined): T | null =>
-  Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
+// const relationOne = <T>(value: T | T[] | null | undefined): T | null =>
+//   Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
+
+function relationOne(
+  relation: UnknownRecord | UnknownRecord[] | null | undefined,
+): UnknownRecord | null {
+  if (Array.isArray(relation)) {
+    return relation[0] ?? null;
+  }
+
+  return relation ?? null;
+}
 
 const zeroStats = (): StatValues =>
   Object.fromEntries(STAT_KEYS.map((key) => [key, 0])) as StatValues;
@@ -132,7 +142,9 @@ export async function getStatsRoster(
   if (error) throw error;
 
   return (data ?? []).map((row) => {
-    const athlete = relationOne(row.athlete);
+    const athlete = relationOne(
+      row.athlete as UnknownRecord | UnknownRecord[] | null,
+    );
 
     return {
       athleteId: row.athlete_id,
@@ -140,7 +152,10 @@ export async function getStatsRoster(
       rosterEntryId: row.roster_entry_id,
       jerseyNumber: row.jersey_number,
       position: row.position,
-      athleteName: athlete?.full_name ?? "Unknown athlete",
+      athleteName:
+        typeof athlete?.full_name === "string"
+          ? athlete.full_name
+          : "Unknown athlete",
     };
   });
 }
@@ -156,15 +171,13 @@ export async function getFixtureStatsWarnings(
 
   if (error) throw error;
 
-  return normalizeStatsWarnings(data);
+  return normalizeStatsWarnings(data as StatsWarning[]);
 }
 
 export async function getFixtureStatsWorkspace(
   fixtureId: string,
 ): Promise<FixtureStatsWorkspace | null> {
   const supabase = await createServerClient();
-
-  console.log({ fixtureId });
 
   const { data: fixtureData, error: fixtureError } = await supabase
     .from("fixtures")
@@ -179,7 +192,13 @@ export async function getFixtureStatsWorkspace(
         name,
         status,
         league_id,
-        season
+        season,
+        league:leagues (
+          id,
+          name,
+          slug,
+          logo_url
+        )
       ),
       home:teams!fixtures_home_team_id_fkey (
         id,
@@ -215,6 +234,10 @@ export async function getFixtureStatsWorkspace(
     fixtureRaw.tournament as UnknownRecord | UnknownRecord[] | null,
   );
 
+  const leagueRaw = relationOne(
+    tournamentRaw?.league as UnknownRecord | UnknownRecord[] | null,
+  );
+
   const homeRaw = relationOne(
     fixtureRaw.home as UnknownRecord | UnknownRecord[] | null,
   );
@@ -242,6 +265,14 @@ export async function getFixtureStatsWorkspace(
           league_id: String(tournamentRaw.league_id),
           season:
             tournamentRaw.season == null ? null : String(tournamentRaw.season),
+          league: leagueRaw
+            ? {
+                id: String(leagueRaw.id),
+                name: String(leagueRaw.name),
+                slug: String(leagueRaw.slug ?? ""),
+                logo_url: (leagueRaw.logo_url as string | null) ?? "",
+              }
+            : null,
         }
       : null,
 
@@ -400,8 +431,6 @@ export async function getFixtureStatsWorkspace(
     const rawRevisions = Array.isArray(statLine.athlete_game_stat_revisions)
       ? (statLine.athlete_game_stat_revisions as UnknownRecord[])
       : [];
-
-    console.log({ rawRevisions });
 
     // Sort revisions from newest to oldest.
     const sortedRevisions = [...rawRevisions].sort(

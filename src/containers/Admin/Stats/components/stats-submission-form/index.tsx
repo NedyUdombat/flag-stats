@@ -69,12 +69,6 @@ const zeroStats = (): StatValues =>
   Object.fromEntries(STAT_KEYS.map((key) => [key, 0])) as StatValues;
 
 function toEditableLine(line: StatsWorkspaceLine): EditableLine {
-  // console.log({
-  //   name: line.athleteName,
-  //   stat: line.stats,
-  //   stats: { ...zeroStats(), ...line.stats },
-  //   zeroStats: zeroStats(),
-  // });
   return {
     athleteId: line.athleteId,
     teamId: line.teamId,
@@ -175,7 +169,6 @@ export function StatsSubmissionForm({
     setAwaySafeties(initialSubmission?.awayUnattributedSafeties ?? 0);
     setDirtyAthleteIds(new Set());
   }, [initialSubmission, initialLines]);
-  console.log({ initialLines, lines });
 
   function updateParticipation(
     athleteId: string,

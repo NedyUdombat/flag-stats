@@ -119,6 +119,12 @@ export type StatsFixtureInfo = {
     status: string;
     league_id: string;
     season: string | null;
+    league: {
+      id: string;
+      name: string;
+      slug: string;
+      logo_url: string;
+    } | null;
   } | null;
   home: StatsTeam | null;
   away: StatsTeam | null;
@@ -126,13 +132,19 @@ export type StatsFixtureInfo = {
 };
 
 export type StatsWorkspaceLine = StatsRosterPlayer & {
-  teamName: string;
-  photoUrl: string | null;
-  statLineId: string;
+  athleteId: string;
+  athleteName: string;
+  jerseyNumber: number;
   participationStatus: ParticipationStatus;
-  stats: StatValues;
-  verificationStatus: string;
+  photoUrl: string | null;
+  position: string | null;
   revisionStatus: string;
+  rosterEntryId: string;
+  statLineId: string;
+  stats: StatValues;
+  teamId: string;
+  teamName: string;
+  verificationStatus: string;
 };
 
 export type FixtureStatsWorkspace = {

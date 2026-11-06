@@ -27,7 +27,6 @@ const ALLOWED_METRICS = new Set<StatKey>([
   "Int_caught",
   "Int_returned",
   "pass_breakups",
-  "flags_pulled",
   "flag_pulls",
   "safeties",
   "pat_interception_returns",

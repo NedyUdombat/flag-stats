@@ -27,7 +27,7 @@ export const STAT_LABELS: Record<StatKey, string> = {
   Int_caught: "Interceptions caught",
   Int_returned: "Pick-sixes",
   pass_breakups: "Pass breakups",
-  flags_pulled: "Flag pulls",
+  // flags_pulled: "Flag pulls",
   flag_pulls: "Flag pulls",
 
   safeties: "Player-attributed safeties",
@@ -80,7 +80,7 @@ export const STAT_GROUPS: {
       "Int_returned",
       "pass_breakups",
       "flag_pulls",
-      "flags_pulled",
+      // "flags_pulled",
     ],
   },
   {
@@ -128,7 +128,7 @@ export const STAT_ABBRV: Record<StatKey, string> = {
   Int_caught: "INT",
   Int_returned: "INT-6",
   pass_breakups: "PBU",
-  flags_pulled: "FP",
+  // flags_pulled: "FP",
   flag_pulls: "FP",
 
   safeties: "SF",

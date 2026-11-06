@@ -1,487 +1,539 @@
-"use client";
+// "use client";
 
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Check,
-  CheckCheck,
-  ChevronDown,
-  ChevronUp,
-  Clock3,
-  X,
-} from "lucide-react";
-import Link from "next/link";
-import { useMemo, useState, useTransition } from "react";
-import type {
-  StatsActionState,
-  StatsFixtureInfo,
-} from "@/features/stats/stats.types";
-import type { PlayerStatReviewLine } from "@/types/stats/review.types";
+// import {
+//   AlertTriangle,
+//   ArrowLeft,
+//   Check,
+//   CheckCheck,
+//   ChevronDown,
+//   ChevronUp,
+//   Clock3,
+//   X,
+// } from "lucide-react";
+// import Link from "next/link";
+// import { useMemo, useState, useTransition } from "react";
 
-// Connect these callbacks to your real server actions in page.tsx.
-type Props = {
-  fixture: StatsFixtureInfo;
-  approveLine: (revisionId: string) => Promise<StatsActionState>;
-  rejectLine: (revisionId: string, reason: string) => Promise<StatsActionState>;
-  approveAllPending: (submissionId: string) => Promise<StatsActionState>;
-};
+// import type {
+//   StatsActionState,
+//   StatsFixtureInfo,
+//   StatsSubmission,
+//   StatsWorkspaceLine,
+// } from "@/features/stats/stats.types";
 
-const panel = "border border-zs-line bg-zs-panel";
-const muted = "text-zs-muted";
-const buttonBase =
-  "inline-flex items-center justify-center gap-2 border px-3 py-2 font-data text-xs font-bold uppercase tracking-wide transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+// /**
+//  * This is the review-ready shape returned by getStatsVerificationReview().
+//  *
+//  * revisionId is the primary key from athlete_game_stat_revisions.id.
+//  * statLineId is the parent athlete_game_stats.id.
+//  * statValues comes from athlete_game_stat_revisions.stat_values.
+//  */
+// // type ReviewWorkspaceLine = {
+// //   athleteId: string;
+// //   revisionId: string;
+// //   statLineId: string;
+// //   playerName: string;
+// //   teamId: string;
+// //   teamName: string;
+// //   jerseyNumber: number | null;
+// //   position: string | null;
+// //   participationStatus: string;
+// //   status: string;
+// //   statValues: Record<string, unknown>;
+// //   submittedAt: string | null;
+// //   rejectionReason: string | null;
+// // };
 
-function formatDate(value: string | null) {
-  if (!value) return "Date not available";
+// type ReviewWorkspaceLine = StatsWorkspaceLine & {
+//   revisionId: string;
+//   submittedAt: string | null;
+//   rejectionReason: string | null;
+//   status: string;
+//   statValues: Record<string, unknown>;
+//   playerName: string;
+// };
 
-  const date = new Date(value);
+// type Props = {
+//   fixture: StatsFixtureInfo;
+//   lines: ReviewWorkspaceLine[];
+//   submission: StatsSubmission | null;
+//   approveLine: (revisionId: string) => Promise<StatsActionState>;
+//   rejectLine: (revisionId: string, reason: string) => Promise<StatsActionState>;
+//   approveAllPending: (submissionId: string) => Promise<StatsActionState>;
+// };
 
-  if (Number.isNaN(date.getTime())) return "Date not available";
+// const panel = "border border-zs-line bg-zs-panel";
+// const muted = "text-zs-muted";
+// const buttonBase =
+//   "inline-flex items-center justify-center gap-2 border px-3 py-2 font-data text-xs font-bold uppercase tracking-wide transition-colors disabled:cursor-not-allowed disabled:opacity-50";
 
-  return new Intl.DateTimeFormat("en", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(date);
-}
+// function formatDate(value: string | null | undefined) {
+//   if (!value) return "Date not available";
 
-function formatMetricName(key: string) {
-  return key
-    .replaceAll("_", " ")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, (character) => character.toUpperCase());
-}
+//   const date = new Date(value);
+//   if (Number.isNaN(date.getTime())) return "Date not available";
 
-function formatMetricValue(value: unknown) {
-  if (value === null || value === undefined || value === "") return "—";
-  if (typeof value === "boolean") return value ? "Yes" : "No";
-  return String(value);
-}
+//   return new Intl.DateTimeFormat("en", {
+//     dateStyle: "medium",
+//     timeStyle: "short",
+//   }).format(date);
+// }
 
-function StatusLabel({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    pending: "border-amber-500/50 text-amber-500",
-    approved: "border-emerald-500/50 text-emerald-500",
-    rejected: "border-red-500/50 text-red-500",
-  };
+// function formatMetricName(key: string) {
+//   return key
+//     .replaceAll("_", " ")
+//     .replace(/([a-z])([A-Z])/g, "$1 $2")
+//     .replace(/\b\w/g, (character) => character.toUpperCase());
+// }
 
-  return (
-    <span
-      className={`inline-flex border px-2 py-1 font-data text-[10px] uppercase tracking-wider ${
-        styles[status] ?? "border-zs-line"
-      }`}
-    >
-      {status}
-    </span>
-  );
-}
+// function formatMetricValue(value: unknown) {
+//   if (value === null || value === undefined || value === "") return "—";
+//   if (typeof value === "boolean") return value ? "Yes" : "No";
+//   return String(value);
+// }
 
-function StatLine({
-  line,
-  approveLine,
-  rejectLine,
-}: {
-  line: PlayerStatReviewLine;
-  approveLine: Props["approveLine"];
-  rejectLine: Props["rejectLine"];
-}) {
-  const [expanded, setExpanded] = useState(line.status === "pending");
-  const [rejecting, setRejecting] = useState(false);
-  const [reason, setReason] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
+// function StatusLabel({ status }: { status: string }) {
+//   const styles: Record<string, string> = {
+//     pending: "border-amber-500/50 text-amber-500",
+//     approved: "border-emerald-500/50 text-emerald-500",
+//     rejected: "border-red-500/50 text-red-500",
+//   };
 
-  const metrics = Object.entries(line.statValues);
+//   return (
+//     <span
+//       className={`inline-flex border px-2 py-1 font-data text-[10px] uppercase tracking-wider ${
+//         styles[status] ?? "border-zs-line"
+//       }`}
+//     >
+//       {status}
+//     </span>
+//   );
+// }
 
-  function approve() {
-    setError(null);
+// function StatLine({
+//   line,
+//   approveLine,
+//   rejectLine,
+// }: {
+//   line: ReviewWorkspaceLine;
+//   approveLine: Props["approveLine"];
+//   rejectLine: Props["rejectLine"];
+// }) {
+//   const [expanded, setExpanded] = useState(line.status === "pending");
+//   const [rejecting, setRejecting] = useState(false);
+//   const [reason, setReason] = useState("");
+//   const [error, setError] = useState<string | null>(null);
+//   const [pending, startTransition] = useTransition();
 
-    startTransition(async () => {
-      const result = await approveLine(line.revisionId);
+//   const metrics = Object.entries(line.statValues ?? {});
 
-      if (result.ok === false) {
-        setError(result.message ?? "Could not approve this player line.");
-      }
-    });
-  }
+//   function approve() {
+//     setError(null);
 
-  function reject() {
-    setError(null);
+//     startTransition(async () => {
+//       const result = await approveLine(line.revisionId);
+//       if (result.ok === false) {
+//         setError(result.message ?? "Could not approve this player line.");
+//       }
+//     });
+//   }
 
-    startTransition(async () => {
-      const result = await rejectLine(line.revisionId, reason.trim());
+//   function reject() {
+//     setError(null);
 
-      if (result.ok === false) {
-        setError(result.message ?? "Could not reject this player line.");
-        return;
-      }
+//     startTransition(async () => {
+//       const result = await rejectLine(line.revisionId, reason.trim());
 
-      setRejecting(false);
-      setReason("");
-    });
-  }
+//       if (result.ok === false) {
+//         setError(result.message ?? "Could not reject this player line.");
+//         return;
+//       }
 
-  return (
-    <div className="border-t border-zs-line first:border-t-0">
-      <div className="flex flex-col gap-3 p-4 lg:flex-row lg:items-center lg:justify-between">
-        <button
-          type="button"
-          onClick={() => setExpanded((value) => !value)}
-          className="flex min-w-0 items-center gap-3 text-left"
-          aria-expanded={expanded}
-        >
-          <span className="flex size-10 shrink-0 items-center justify-center border border-zs-line font-data text-sm">
-            {line.jerseyNumber ?? "—"}
-          </span>
+//       setRejecting(false);
+//       setReason("");
+//     });
+//   }
 
-          <span className="min-w-0">
-            <span className="block truncate font-display font-bold uppercase">
-              {line.playerName}
-            </span>
-            <span className={`block text-xs ${muted}`}>
-              {line.participationStatus === "played"
-                ? "Played"
-                : "Did not play"}
-              {" · "}
-              {metrics.length} recorded metrics
-            </span>
-          </span>
+//   return (
+//     <div className="border-t border-zs-line first:border-t-0">
+//       <div className="flex flex-col gap-3 p-4 lg:flex-row lg:items-center lg:justify-between">
+//         <button
+//           type="button"
+//           onClick={() => setExpanded((value) => !value)}
+//           className="flex min-w-0 items-center gap-3 text-left"
+//           aria-expanded={expanded}
+//         >
+//           <span className="flex size-10 shrink-0 items-center justify-center border border-zs-line font-data text-sm">
+//             {line.jerseyNumber ?? "—"}
+//           </span>
 
-          {expanded ? (
-            <ChevronUp className="size-4 shrink-0" />
-          ) : (
-            <ChevronDown className="size-4 shrink-0" />
-          )}
-        </button>
+//           <span className="min-w-0">
+//             <span className="block truncate font-display font-bold uppercase">
+//               {line.playerName}
+//             </span>
+//             <span className={`block text-xs ${muted}`}>
+//               {line.participationStatus === "played"
+//                 ? "Played"
+//                 : "Did not play"}
+//               {" · "}
+//               {metrics.length} recorded metrics
+//             </span>
+//           </span>
 
-        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-          <StatusLabel status={line.status} />
+//           {expanded ? (
+//             <ChevronUp className="size-4 shrink-0" />
+//           ) : (
+//             <ChevronDown className="size-4 shrink-0" />
+//           )}
+//         </button>
 
-          {line.status === "pending" && (
-            <>
-              <button
-                type="button"
-                onClick={approve}
-                disabled={pending}
-                className={`${buttonBase} border-zs-lime text-zs-lime hover:bg-zs-lime hover:text-zs-ink`}
-              >
-                <Check className="size-4" />
-                {pending ? "Processing" : "Approve"}
-              </button>
+//         <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+//           <StatusLabel status={line.status} />
 
-              <button
-                type="button"
-                onClick={() => {
-                  setRejecting((value) => !value);
-                  setError(null);
-                }}
-                disabled={pending}
-                className={`${buttonBase} border-red-500/60 text-red-500 hover:bg-red-500 hover:text-white`}
-              >
-                <X className="size-4" />
-                Reject
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+//           {line.status === "pending" && (
+//             <>
+//               <button
+//                 type="button"
+//                 onClick={approve}
+//                 disabled={pending}
+//                 className={`${buttonBase} border-zs-lime text-zs-lime hover:bg-zs-lime hover:text-zs-ink`}
+//               >
+//                 <Check className="size-4" />
+//                 {pending ? "Processing" : "Approve"}
+//               </button>
 
-      {expanded && (
-        <div className="space-y-4 border-t border-zs-line bg-zs-raised/30 p-4">
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs">
-            <span className={muted}>
-              Participation:{" "}
-              <strong className="text-zs-ink">
-                {line.participationStatus === "played"
-                  ? "Played"
-                  : "Did not play"}
-              </strong>
-            </span>
+//               <button
+//                 type="button"
+//                 onClick={() => {
+//                   setRejecting((value) => !value);
+//                   setError(null);
+//                 }}
+//                 disabled={pending}
+//                 className={`${buttonBase} border-red-500/60 text-red-500 hover:bg-red-500 hover:text-white`}
+//               >
+//                 <X className="size-4" />
+//                 Reject
+//               </button>
+//             </>
+//           )}
+//         </div>
+//       </div>
 
-            <span className={muted}>
-              Submitted:{" "}
-              <strong className="text-zs-ink">
-                {formatDate(line.submittedAt)}
-              </strong>
-            </span>
-          </div>
+//       {expanded && (
+//         <div className="space-y-4 border-t border-zs-line bg-zs-raised/30 p-4">
+//           <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs">
+//             <span className={muted}>
+//               Participation:{" "}
+//               <strong className="text-zs-ink">
+//                 {line.participationStatus === "played"
+//                   ? "Played"
+//                   : "Did not play"}
+//               </strong>
+//             </span>
 
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-            {metrics.map(([key, value]) => (
-              <div key={key} className="border border-zs-line bg-zs-panel p-3">
-                <p className={`text-xs ${muted}`}>{formatMetricName(key)}</p>
-                <p className="mt-1 font-data text-lg font-bold tabular-nums">
-                  {formatMetricValue(value)}
-                </p>
-              </div>
-            ))}
-          </div>
+//             <span className={muted}>
+//               Submitted:{" "}
+//               <strong className="text-zs-ink">
+//                 {formatDate(line.submittedAt)}
+//               </strong>
+//             </span>
 
-          {line.status === "rejected" && line.rejectionReason && (
-            <div className="border border-red-500/30 p-3 text-sm">
-              <p className="font-bold text-red-500">
-                Previous rejection reason
-              </p>
-              <p className="mt-1">{line.rejectionReason}</p>
-            </div>
-          )}
+//             {line.position && (
+//               <span className={muted}>
+//                 Position:{" "}
+//                 <strong className="text-zs-ink">{line.position}</strong>
+//               </span>
+//             )}
+//           </div>
 
-          {rejecting && line.status === "pending" && (
-            <div className="space-y-3 border border-red-500/40 p-4">
-              <label
-                htmlFor={`reject-reason-${line.revisionId}`}
-                className="block font-display text-sm font-bold uppercase"
-              >
-                Rejection reason
-                <span className={`ml-2 font-normal normal-case ${muted}`}>
-                  Optional
-                </span>
-              </label>
+//           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+//             {metrics.map(([key, value]) => (
+//               <div
+//                 key={`${line.revisionId}:${key}`}
+//                 className="border border-zs-line bg-zs-panel p-3"
+//               >
+//                 <p className={`text-xs ${muted}`}>{formatMetricName(key)}</p>
+//                 <p className="mt-1 font-data text-lg font-bold tabular-nums">
+//                   {formatMetricValue(value)}
+//                 </p>
+//               </div>
+//             ))}
+//           </div>
 
-              <textarea
-                id={`reject-reason-${line.revisionId}`}
-                value={reason}
-                onChange={(event) => setReason(event.target.value)}
-                maxLength={300}
-                rows={3}
-                placeholder="Explain what needs to be corrected..."
-                className="w-full border border-zs-line bg-zs-panel p-3 text-sm outline-none focus:border-red-500"
-              />
+//           {line.status === "rejected" && line.rejectionReason && (
+//             <div className="border border-red-500/30 p-3 text-sm">
+//               <p className="font-bold text-red-500">
+//                 Previous rejection reason
+//               </p>
+//               <p className="mt-1">{line.rejectionReason}</p>
+//             </div>
+//           )}
 
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={reject}
-                  disabled={pending}
-                  className={`${buttonBase} border-red-500 bg-red-500 text-white hover:bg-red-600`}
-                >
-                  {pending ? "Processing..." : "Confirm rejection"}
-                </button>
+//           {rejecting && line.status === "pending" && (
+//             <div className="space-y-3 border border-red-500/40 p-4">
+//               <label
+//                 htmlFor={`reject-reason-${line.revisionId}`}
+//                 className="block font-display text-sm font-bold uppercase"
+//               >
+//                 Rejection reason
+//                 <span className={`ml-2 font-normal normal-case ${muted}`}>
+//                   Optional
+//                 </span>
+//               </label>
 
-                <button
-                  type="button"
-                  onClick={() => setRejecting(false)}
-                  disabled={pending}
-                  className={`${buttonBase} border-zs-line`}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
+//               <textarea
+//                 id={`reject-reason-${line.revisionId}`}
+//                 value={reason}
+//                 onChange={(event) => setReason(event.target.value)}
+//                 maxLength={300}
+//                 rows={3}
+//                 placeholder="Explain what needs to be corrected..."
+//                 className="w-full border border-zs-line bg-zs-panel p-3 text-sm outline-none focus:border-red-500"
+//               />
 
-          {error && (
-            <p role="alert" className="text-sm text-red-500">
-              {error}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+//               <div className="flex flex-wrap gap-2">
+//                 <button
+//                   type="button"
+//                   onClick={reject}
+//                   disabled={pending}
+//                   className={`${buttonBase} border-red-500 bg-red-500 text-white hover:bg-red-600`}
+//                 >
+//                   {pending ? "Processing..." : "Confirm rejection"}
+//                 </button>
 
-export function StatsReviewWorkspace({
-  fixture,
-  approveLine,
-  rejectLine,
-  approveAllPending,
-}: Props) {
-  const [bulkError, setBulkError] = useState<string | null>(null);
-  const [bulkMessage, setBulkMessage] = useState<string | null>(null);
-  const [bulkPending, startBulkTransition] = useTransition();
+//                 <button
+//                   type="button"
+//                   onClick={() => setRejecting(false)}
+//                   disabled={pending}
+//                   className={`${buttonBase} border-zs-line`}
+//                 >
+//                   Cancel
+//                 </button>
+//               </div>
+//             </div>
+//           )}
 
-  const grouped = useMemo(() => {
-    const teams = new Map<string, PlayerStatReviewLine[]>();
+//           {error && (
+//             <p role="alert" className="text-sm text-red-500">
+//               {error}
+//             </p>
+//           )}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
 
-    for (const line of fixture.lines) {
-      const current = teams.get(line.teamId) ?? [];
-      current.push(line);
-      teams.set(line.teamId, current);
-    }
+// export function StatsReviewWorkspace({
+//   fixture,
+//   approveLine,
+//   rejectLine,
+//   approveAllPending,
+//   lines,
+//   submission,
+// }: Props) {
+//   const [bulkError, setBulkError] = useState<string | null>(null);
+//   const [bulkMessage, setBulkMessage] = useState<string | null>(null);
+//   const [bulkPending, startBulkTransition] = useTransition();
 
-    return Array.from(teams.entries()).map(([teamId, lines]) => ({
-      teamId,
-      teamName: lines[0]?.teamName ?? "Unknown team",
-      lines,
-    }));
-  }, [fixture.lines]);
+//   const grouped = useMemo(() => {
+//     const teams = new Map<string, ReviewWorkspaceLine[]>();
 
-  const pendingCount = fixture.lines.filter(
-    (line) => line.status === "pending",
-  ).length;
+//     for (const line of lines) {
+//       const current = teams.get(line.teamId) ?? [];
+//       current.push(line);
+//       teams.set(line.teamId, current);
+//     }
 
-  const approvedCount = fixture.lines.filter(
-    (line) => line.status === "approved",
-  ).length;
+//     return Array.from(teams.entries()).map(([teamId, teamLines]) => ({
+//       teamId,
+//       teamName: teamLines[0]?.teamName ?? "Unknown team",
+//       lines: teamLines,
+//     }));
+//   }, [lines]);
 
-  const rejectedCount = fixture.lines.filter(
-    (line) => line.status === "rejected",
-  ).length;
+//   const pendingCount = lines.filter((line) => line.status === "pending").length;
+//   const approvedCount = lines.filter(
+//     (line) => line.status === "approved",
+//   ).length;
+//   const rejectedCount = lines.filter(
+//     (line) => line.status === "rejected",
+//   ).length;
 
-  function approveAll() {
-    if (
-      !window.confirm(
-        `Approve all ${pendingCount} pending player lines for this fixture?`,
-      )
-    ) {
-      return;
-    }
+//   function approveAll() {
+//     if (pendingCount === 0) return;
 
-    setBulkError(null);
-    setBulkMessage(null);
+//     if (
+//       !window.confirm(
+//         `Approve all ${pendingCount} pending player lines for this fixture?`,
+//       )
+//     ) {
+//       return;
+//     }
 
-    startBulkTransition(async () => {
-      const result = await approveAllPending(fixture.submissionId);
+//     setBulkError(null);
+//     setBulkMessage(null);
 
-      if (result.ok === false) {
-        setBulkError(
-          result.message ?? "Could not approve all pending player lines.",
-        );
-        return;
-      }
+//     startBulkTransition(async () => {
+//       if (!submission?.id) {
+//         setBulkError("No submission ID available for this fixture.");
+//         return;
+//       }
 
-      setBulkMessage(result.message ?? "Bulk approval request completed.");
-    });
-  }
+//       const result = await approveAllPending(submission.id);
 
-  return (
-    <main className="space-y-6">
-      <Link
-        href="/admin/verifications?tab=stats"
-        className="inline-flex items-center gap-2 text-sm text-zs-muted transition-colors hover:text-zs-ink"
-      >
-        <ArrowLeft className="size-4" />
-        Back to verification queue
-      </Link>
+//       if (result.ok === false) {
+//         setBulkError(
+//           result.message ?? "Could not approve all pending player lines.",
+//         );
+//         return;
+//       }
 
-      <section className={`${panel} p-5 sm:p-6`}>
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-          <div>
-            <p
-              className={`font-data text-xs uppercase tracking-widest ${muted}`}
-            >
-              Player statistics verification
-            </p>
+//       setBulkMessage(result.message ?? "Bulk approval request completed.");
+//     });
+//   }
 
-            <h1 className="mt-2 font-display text-2xl font-bold uppercase sm:text-3xl">
-              {fixture.homeTeamName} vs {fixture.awayTeamName}
-            </h1>
+//   console.log({ grouped });
 
-            <p className={`mt-2 text-sm ${muted}`}>
-              {fixture.tournamentName}
-              {fixture.leagueName ? ` · ${fixture.leagueName}` : ""}
-            </p>
+//   return (
+//     <main className="space-y-6">
+//       <Link
+//         href="/admin/verifications?tab=stats"
+//         className="inline-flex items-center gap-2 text-sm text-zs-muted transition-colors hover:text-zs-ink"
+//       >
+//         <ArrowLeft className="size-4" />
+//         Back to verification queue
+//       </Link>
 
-            <p className={`mt-1 text-xs ${muted}`}>
-              Scheduled: {formatDate(fixture.scheduledAt)}
-            </p>
-          </div>
+//       <section className={`${panel} p-5 sm:p-6`}>
+//         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+//           <div>
+//             <p
+//               className={`font-data text-xs uppercase tracking-widest ${muted}`}
+//             >
+//               Player statistics verification
+//             </p>
 
-          <div className="flex flex-wrap gap-2">
-            <div className="border border-amber-500/40 px-4 py-3">
-              <p className="font-data text-2xl font-bold tabular-nums">
-                {pendingCount}
-              </p>
-              <p className={`text-[10px] uppercase tracking-wider ${muted}`}>
-                Pending
-              </p>
-            </div>
+//             <h1 className="mt-2 font-display text-2xl font-bold uppercase sm:text-3xl">
+//               {fixture.home?.name} vs {fixture.away?.name}
+//             </h1>
 
-            <div className="border border-emerald-500/40 px-4 py-3">
-              <p className="font-data text-2xl font-bold tabular-nums">
-                {approvedCount}
-              </p>
-              <p className={`text-[10px] uppercase tracking-wider ${muted}`}>
-                Approved
-              </p>
-            </div>
+//             <p className={`mt-2 text-sm ${muted}`}>
+//               {fixture.tournament?.name ?? "Unknown tournament"}
+//               {fixture.tournament?.league?.name
+//                 ? ` · ${fixture.tournament.league.name}`
+//                 : ""}
+//             </p>
 
-            <div className="border border-red-500/40 px-4 py-3">
-              <p className="font-data text-2xl font-bold tabular-nums">
-                {rejectedCount}
-              </p>
-              <p className={`text-[10px] uppercase tracking-wider ${muted}`}>
-                Rejected
-              </p>
-            </div>
-          </div>
-        </div>
+//             <p className={`mt-1 text-xs ${muted}`}>
+//               Scheduled: {formatDate(fixture.scheduled_at)}
+//             </p>
+//           </div>
 
-        <div className="mt-6 flex flex-col gap-3 border-t border-zs-line pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-2 text-sm">
-            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-500" />
-            <p className={muted}>
-              Review each player&apos;s complete stat line. Approvals apply to
-              individual lines, not individual metric cells.
-            </p>
-          </div>
+//           <div className="flex flex-wrap gap-2">
+//             <div className="border border-amber-500/40 px-4 py-3">
+//               <p className="font-data text-2xl font-bold tabular-nums">
+//                 {pendingCount}
+//               </p>
+//               <p className={`text-[10px] uppercase tracking-wider ${muted}`}>
+//                 Pending
+//               </p>
+//             </div>
 
-          <button
-            type="button"
-            onClick={approveAll}
-            disabled={bulkPending || pendingCount === 0}
-            className={`${buttonBase} shrink-0 border-zs-lime bg-zs-lime text-zs-ink hover:opacity-90`}
-          >
-            <CheckCheck className="size-4" />
-            {bulkPending
-              ? "Approving..."
-              : `Approve all pending (${pendingCount})`}
-          </button>
-        </div>
+//             <div className="border border-emerald-500/40 px-4 py-3">
+//               <p className="font-data text-2xl font-bold tabular-nums">
+//                 {approvedCount}
+//               </p>
+//               <p className={`text-[10px] uppercase tracking-wider ${muted}`}>
+//                 Approved
+//               </p>
+//             </div>
 
-        {bulkError && (
-          <p role="alert" className="mt-4 text-sm text-red-500">
-            {bulkError}
-          </p>
-        )}
+//             <div className="border border-red-500/40 px-4 py-3">
+//               <p className="font-data text-2xl font-bold tabular-nums">
+//                 {rejectedCount}
+//               </p>
+//               <p className={`text-[10px] uppercase tracking-wider ${muted}`}>
+//                 Rejected
+//               </p>
+//             </div>
+//           </div>
+//         </div>
 
-        {bulkMessage && (
-          <p className="mt-4 text-sm text-emerald-500">{bulkMessage}</p>
-        )}
-      </section>
+//         <div className="mt-6 flex flex-col gap-3 border-t border-zs-line pt-5 sm:flex-row sm:items-center sm:justify-between">
+//           <div className="flex items-start gap-2 text-sm">
+//             <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-500" />
+//             <p className={muted}>
+//               Review each player&apos;s complete stat line. Approvals apply to
+//               individual lines, not individual metric cells.
+//             </p>
+//           </div>
 
-      {grouped.length === 0 ? (
-        <section className={`${panel} p-10 text-center`}>
-          <Clock3 className={`mx-auto size-8 ${muted}`} />
-          <h2 className="mt-3 font-display text-lg font-bold uppercase">
-            No player lines found
-          </h2>
-          <p className={`mt-1 text-sm ${muted}`}>
-            This fixture has no player-stat lines to review.
-          </p>
-        </section>
-      ) : (
-        grouped.map((team) => (
-          <section key={team.teamId} className={panel}>
-            <div className="flex items-center justify-between gap-3 p-4">
-              <div>
-                <h2 className="font-display text-lg font-bold uppercase">
-                  {team.teamName}
-                </h2>
-                <p className={`mt-1 text-xs ${muted}`}>
-                  {team.lines.length} player lines
-                </p>
-              </div>
+//           <button
+//             type="button"
+//             onClick={approveAll}
+//             disabled={bulkPending || pendingCount === 0 || !submission?.id}
+//             className={`${buttonBase} shrink-0 border-zs-lime bg-zs-lime text-zs-ink hover:opacity-90`}
+//           >
+//             <CheckCheck className="size-4" />
+//             {bulkPending
+//               ? "Approving..."
+//               : `Approve all pending (${pendingCount})`}
+//           </button>
+//         </div>
 
-              <div className="font-data text-xs uppercase">
-                {team.lines.filter((line) => line.status === "pending").length}{" "}
-                pending
-              </div>
-            </div>
+//         {bulkError && (
+//           <p role="alert" className="mt-4 text-sm text-red-500">
+//             {bulkError}
+//           </p>
+//         )}
 
-            <div>
-              {team.lines.map((line) => (
-                <StatLine
-                  key={line.revisionId}
-                  line={line}
-                  approveLine={approveLine}
-                  rejectLine={rejectLine}
-                />
-              ))}
-            </div>
-          </section>
-        ))
-      )}
-    </main>
-  );
-}
+//         {bulkMessage && (
+//           <p className="mt-4 text-sm text-emerald-500">{bulkMessage}</p>
+//         )}
+//       </section>
+
+//       {grouped.length === 0 ? (
+//         <section className={`${panel} p-10 text-center`}>
+//           <Clock3 className={`mx-auto size-8 ${muted}`} />
+//           <h2 className="mt-3 font-display text-lg font-bold uppercase">
+//             No player lines found
+//           </h2>
+//           <p className={`mt-1 text-sm ${muted}`}>
+//             This fixture has no player-stat lines to review.
+//           </p>
+//         </section>
+//       ) : (
+//         grouped.map((team) => (
+//           <section key={team.teamId} className={panel}>
+//             <div className="flex items-center justify-between gap-3 p-4">
+//               <div>
+//                 <h2 className="font-display text-lg font-bold uppercase">
+//                   {team.teamName}
+//                 </h2>
+//                 <p className={`mt-1 text-xs ${muted}`}>
+//                   {team.lines.length} player lines
+//                 </p>
+//               </div>
+
+//               <div className="font-data text-xs uppercase">
+//                 {team.lines.filter((line) => line.status === "pending").length}{" "}
+//                 pending
+//               </div>
+//             </div>
+
+//             <div>
+//               {team.lines.map((line) => (
+//                 <StatLine
+//                   key={line.revisionId}
+//                   line={line}
+//                   approveLine={approveLine}
+//                   rejectLine={rejectLine}
+//                 />
+//               ))}
+//             </div>
+//           </section>
+//         ))
+//       )}
+//     </main>
+//   );
+// }

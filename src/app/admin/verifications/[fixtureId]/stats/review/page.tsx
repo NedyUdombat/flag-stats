@@ -1,11 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { StatsReviewWorkspace } from "@/containers/Admin/Verifications/PlayerStatsVerification/components/stats-review-workspace";
+// import { StatsReviewWorkspace } from "@/containers/Admin/Verifications/PlayerStatsVerification/components/stats-review-workspace";
 import { getCurrentUser } from "@/features/users/user.service";
-import {
-  approvePendingPlayerStatLinesAction,
-  approvePlayerStatLineAction,
-  rejectPlayerStatLineAction,
-} from "@/features/verification/actions/stats-verification.actions";
 import { getStatsVerificationReview } from "@/features/verification/services/stats-verification.service";
 // import { StatsReviewWorkspace } from "@/containers/admin/verifications/PlayerStatsVerification/components/stats-review-workspace";
 // import { getCurrentUser } from "@/features/auth/auth.service";
@@ -43,7 +38,6 @@ export default async function StatsReviewPage({ params }: Props) {
   }
 
   const result = await getStatsVerificationReview(fixtureId);
-  console.log({ result });
 
   if (!result?.fixture) {
     notFound();
@@ -51,12 +45,14 @@ export default async function StatsReviewPage({ params }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-[1600px] space-y-6 p-4 sm:p-6">
-      <StatsReviewWorkspace
+      {/* <StatsReviewWorkspace
         fixture={result.fixture}
         approveLine={approvePlayerStatLineAction}
         rejectLine={rejectPlayerStatLineAction}
         approveAllPending={approvePendingPlayerStatLinesAction}
-      />
+        lines={result.lines ?? []}
+        submission={result.submission}
+      /> */}
     </div>
   );
 }

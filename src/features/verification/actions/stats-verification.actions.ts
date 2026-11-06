@@ -1,3 +1,5 @@
+"use server";
+
 import { revalidatePath } from "next/cache";
 import type { StatsActionState } from "@/features/stats/stats.types";
 import { getCurrentUser } from "@/features/users/user.service";

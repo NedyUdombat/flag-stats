@@ -1,11 +1,10 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: Temporary */
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { StatsSubmissionForm } from "@/containers/Admin/Stats/components/stats-submission-form";
 import { getFixtureStatsWorkspace } from "@/features/stats/services/stats-submission.service";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canManageTeam, canManageTournament } from "@/lib/permissions";
-
-// import { StatsSubmissionForm } from "./components/stats-submission-form";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -70,8 +69,6 @@ export default async function FixtureStatsPage({
 
   const lines = workspace.lines;
 
-  console.log({ lines });
-
   const homeTeam = {
     id: String(home.id),
     name: String(home.name),
@@ -111,7 +108,7 @@ export default async function FixtureStatsPage({
             <p className="mb-2 font-data text-[10px] uppercase tracking-widest text-zs-muted">
               Home
             </p>
-            <h1 className="break-words font-display text-lg font-bold uppercase text-zs-ink sm:text-2xl">
+            <h1 className="wrap-break-word font-display text-lg font-bold uppercase text-zs-ink sm:text-2xl">
               {homeTeam.name}
             </h1>
 
@@ -138,7 +135,7 @@ export default async function FixtureStatsPage({
             <p className="mb-2 font-data text-[10px] uppercase tracking-widest text-zs-muted">
               Away
             </p>
-            <h2 className="break-words font-display text-lg font-bold uppercase text-zs-ink sm:text-2xl">
+            <h2 className="wrap-break-word font-display text-lg font-bold uppercase text-zs-ink sm:text-2xl">
               {awayTeam.name}
             </h2>
 
