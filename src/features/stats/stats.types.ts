@@ -145,6 +145,7 @@ export type StatsWorkspaceLine = StatsRosterPlayer & {
   teamId: string;
   teamName: string;
   verificationStatus: string;
+  rejectionReason?: string | null;
 };
 
 export type FixtureStatsWorkspace = {

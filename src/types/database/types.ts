@@ -2070,6 +2070,10 @@ export type Database = {
       _is_any_admin: { Args: never; Returns: boolean };
       _next_pow2: { Args: { n: number }; Returns: number };
       _normalize_game_stat_values: { Args: { p_values: Json }; Returns: Json };
+      _promote_approved_stat_revision: {
+        Args: { p_reviewer_id: string; p_revision_id: string };
+        Returns: undefined;
+      };
       _refresh_approved_fixture_score: {
         Args: { p_fixture_id: string };
         Returns: undefined;

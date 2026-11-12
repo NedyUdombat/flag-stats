@@ -31,3 +31,21 @@ export type StatsReviewRpcResult = {
 export type StatsReviewServiceResult =
   | { ok: true; data: StatsReviewRpcResult }
   | { ok: false; message: string };
+
+export type ReviewWorkspaceLine = {
+  athleteId: string;
+  revisionId: string;
+  statLineId: string;
+  playerName: string;
+  teamId: string;
+  teamName: string;
+  jerseyNumber: number | null;
+  position: string | null;
+  participationStatus: string;
+  status: string;
+  statValues: Record<string, unknown>;
+  submittedAt: string | null;
+  rejectionReason: string | null;
+  revisionNumber: number;
+  isInitial: boolean;
+};
