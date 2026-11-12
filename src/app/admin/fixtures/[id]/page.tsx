@@ -14,6 +14,7 @@ import {
 import { FixtureForm } from "@/containers/Admin/Fixtures/fixture-form";
 import { ReasonButton } from "@/containers/Admin/Fixtures/reason-button";
 import { ResultForm } from "@/containers/Admin/Fixtures/result-form";
+import { FixtureStatsOverview } from "@/containers/Admin/Fixtures/stats-overview";
 import { ActionButton } from "@/containers/Admin/Teams/components/action-button";
 import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
 import { ReviewButtons } from "@/containers/Admin/Tournaments/review-buttons";
@@ -311,6 +312,8 @@ export default async function FixturePage({
           )}
         </div>
       </Panel>
+
+      {canReview && !voided && <FixtureStatsOverview fixtureId={id} />}
 
       <DisputesPanel
         fixtureId={id}

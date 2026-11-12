@@ -466,6 +466,10 @@ export async function getFixtureStatsWorkspace(
         stats: fromDatabaseStatValues(latestRevision?.stat_values),
         verificationStatus: String(statLine.verification_status ?? "pending"),
         revisionStatus: String(latestRevision?.status ?? "draft"),
+        rejectionReason:
+          typeof latestRevision?.rejection_reason === "string"
+            ? latestRevision.rejection_reason
+            : null,
       },
     ];
   });
