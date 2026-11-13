@@ -6,8 +6,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { AthletePassportSummary } from "@/features/athletes/athlete-passport.service";
 import { initials } from "@/lib/display";
+import { getAthleteTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getAthleteTint } from "../athlete-directory-card/tints";
 import { AthletePassportActions } from "../athlete-passport-actions";
 import { AthleteProfileFacts } from "../athlete-profile-facts";
 

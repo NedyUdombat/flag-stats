@@ -14,10 +14,10 @@ export function Message({
     <p
       role={state.status === "error" ? "alert" : "status"}
       className={cn(
-        "border px-4 py-3 text-sm",
+        "border p-3 rounded-sm text-sm",
         state.status === "error"
           ? "border-zs-coral/40 bg-zs-coral/10 text-zs-coral"
-          : "border-zs-lime/40 bg-zs-lime/10 text-zs-lime",
+          : "border-accent-gold/40 bg-accent-gold/10 text-accent-gold",
       )}
     >
       {state.message}

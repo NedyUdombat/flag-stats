@@ -16,7 +16,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const [{ data: profile }, { data: roleRows }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, avatar_url, platform_role, deleted_at")
+      .select("full_name, avatar_url, platform_role, deleted_at, created_at")
       .eq("id", user.id)
       .maybeSingle(),
     supabase
@@ -33,6 +33,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     fullName: profile?.full_name ?? null,
     avatarUrl: profile?.avatar_url ?? null,
     platformRole: profile?.platform_role ?? "user",
+    createdAt: profile?.created_at ?? null,
     roles: (roleRows ?? []).map((r) => ({
       role: r.role,
       organizationId: r.organization_id,

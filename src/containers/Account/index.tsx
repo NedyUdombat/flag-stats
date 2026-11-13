@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { format } from "date-fns";
+import { CircleDashedCheck } from "lucide-react";
 import {
   getMyAffiliations,
   getMyAthleteProfile,
@@ -6,12 +7,12 @@ import {
 } from "@/features/account/account.service";
 import { getMyPendingInvitations } from "@/features/invitations/invitation.service";
 import type { CurrentUser } from "@/types/users/types";
-import { cn } from "@/utils/cn";
 import {
-  SETTINGS_TABS,
   type SettingsMode,
   type SettingsTab,
+  sectionCopy,
 } from "./account-tabs";
+import { AccountsNavTab } from "./accounts-nav-tab";
 import { AthleteTab } from "./athlete";
 import { DeleteAccountForm } from "./delete-account";
 import { ProfileTab } from "./profile";
@@ -37,82 +38,75 @@ export async function AccountView({
   const invitations =
     tab === "teams" || tab === "athlete" ? await getMyPendingInvitations() : [];
 
+  const copy = sectionCopy[tab];
+
   return (
-    <div className="space-y-6">
-      <header className="border-b border-zs-line pb-5">
-        <h1 className="font-display text-3xl leading-none font-bold tracking-wide text-zs-ink uppercase">
-          My Account
-        </h1>
-        <p className="mt-2 text-zs-muted">
-          Your account, your athlete profile, and the teams, leagues and
-          organizations you manage.
-        </p>
+    <div className="space-y-8">
+      <header className="relative border-b border-white/10 pb-7">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <h1 className="font-sans text-3xl font-black uppercase leading-[.98] tracking-[-.06em] text-white sm:text-5xl">
+              {copy.title}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+              {copy.description}
+            </p>
+          </div>
+          {user.createdAt && (
+            <div className="border rounded-sm p-2 flex items-center gap-2 bg-accent-gold/10 text-accent-gold">
+              <CircleDashedCheck size={14} />
+              <p className="text-[8px] uppercase tracking-[.14em] text-white">
+                Member since: {format(new Date(user?.createdAt), "MMM yyyy")}
+              </p>
+            </div>
+          )}
+        </div>
       </header>
 
-      <nav
-        aria-label="Settings sections"
-        className="flex overflow-x-auto border border-zs-line bg-zs-panel"
-      >
-        {SETTINGS_TABS.map((t) => (
-          <Link
-            key={t.id}
-            href={`${basePath}?tab=${t.id}`}
-            aria-current={tab === t.id ? "page" : undefined}
-            className={cn(
-              "flex shrink-0 items-center gap-2 border-r border-b-2 border-r-zs-line px-5 py-3 font-display text-base font-bold tracking-wider uppercase last:border-r-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-zs-lime",
-              tab === t.id
-                ? t.id === "delete"
-                  ? "border-b-zs-coral bg-zs-coral/10 text-zs-coral"
-                  : "border-b-zs-lime bg-zs-raised text-zs-lime"
-                : cn(
-                    "border-b-transparent hover:text-zs-ink",
-                    t.id === "delete" ? "text-zs-coral/80" : "text-zs-muted",
-                  ),
-            )}
-          >
-            <t.icon className="size-4" aria-hidden />
-            {t.label}
-          </Link>
-        ))}
-      </nav>
+      <div className="grid gap-5 lg:grid-cols-[250px_minmax(0,1fr)] lg:items-start">
+        <AccountsNavTab basePath={basePath} tab={tab} />
 
-      {tab === "profile" && (
-        <ProfileTab
-          user={user}
-          mode={mode}
-          basePath={basePath}
-          roleLabel={getRoleLabel(user)}
-        />
-      )}
-      {tab === "athlete" && (
-        <AthleteTab
-          profile={athlete}
-          defaultName={user.fullName}
-          mode={mode}
-          basePath={basePath}
-          invitations={invitations}
-        />
-      )}
-      {tab === "teams" && (
-        <TeamsTab
-          user={user}
-          affiliations={affiliations}
-          invitations={invitations}
-        />
-      )}
-      {tab === "security" && <PasswordForm />}
-      {tab === "delete" &&
-        (user.email ? (
-          <DeleteAccountForm
-            email={user.email}
-            athleteName={athlete?.athlete.full_name ?? null}
-          />
-        ) : (
-          <p className="border border-zs-line bg-zs-panel p-5 text-sm text-zs-muted">
-            Your account has no email address, so it can&apos;t be deleted here.
-            Contact support.
-          </p>
-        ))}
+        <section className="min-w-0 space-y-5">
+          {tab === "profile" && (
+            <ProfileTab
+              user={user}
+              mode={mode}
+              basePath={basePath}
+              roleLabel={getRoleLabel(user)}
+            />
+          )}
+          {tab === "athlete" && (
+            <AthleteTab
+              profile={athlete}
+              defaultName={user.fullName}
+              mode={mode}
+              basePath={basePath}
+              invitations={invitations}
+              user={user}
+            />
+          )}
+          {tab === "teams" && (
+            <TeamsTab
+              user={user}
+              affiliations={affiliations}
+              invitations={invitations}
+            />
+          )}
+          {tab === "security" && <PasswordForm />}
+          {tab === "delete" &&
+            (user.email ? (
+              <DeleteAccountForm
+                email={user.email}
+                athleteName={athlete?.athlete.full_name ?? null}
+              />
+            ) : (
+              <p className="rounded-xl border border-white/10 bg-neutral-covert p-5 text-sm text-slate-400">
+                Your account has no email address, so it can&apos;t be deleted
+                here. Contact support.
+              </p>
+            ))}
+        </section>
+      </div>
     </div>
   );
 }

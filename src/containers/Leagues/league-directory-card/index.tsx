@@ -8,8 +8,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { LeagueDirectoryItem } from "@/features/leagues/actions/league-public.actions";
 import { initials } from "@/lib/display";
+import { getLeagueTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getLeagueTint } from "./tints";
 
 export function LeagueDirectoryCard({
   league,

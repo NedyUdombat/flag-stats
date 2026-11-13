@@ -27,4 +27,5 @@ export interface CurrentUser {
   avatarUrl: string | null;
   platformRole: PlatformRole;
   roles: UserRoleGrant[];
+  createdAt: string | null;
 }

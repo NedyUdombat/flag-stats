@@ -26,7 +26,7 @@ export async function SiteHeader() {
     Boolean(user?.roles?.some((r) => ADMIN_ROLES.has(r.role)));
 
   return (
-    <header className="h-22 px-6 lg:px-18 flex items-center justify-between font-sans fixed inset-x-0 top-0 z-50  bg-black/20 backdrop-blur-md">
+    <header className="h-22 px-6 lg:px-18 flex items-center justify-between font-sans fixed inset-x-0 top-0 z-50 bg-black/20 backdrop-blur-md">
       <div className="flex w-full items-center justify-between">
         <BrandText href="/" />
 
@@ -49,7 +49,8 @@ export async function SiteHeader() {
               fullName={user.fullName}
               email={user.email}
               showAdminLink={showAdminLink}
-              showAccountLink={!showAdminLink}
+              showAccountLink={true}
+              userId={user.id}
             />
           ) : (
             <>

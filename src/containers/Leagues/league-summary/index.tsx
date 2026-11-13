@@ -6,8 +6,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { LeaguePassportSummary } from "@/features/leagues/league-profile.service";
 import { initials } from "@/lib/display";
+import { getLeagueTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getLeagueTint } from "../league-directory-card/tints";
 import { LeaguePassportActions } from "../league-passport-actions";
 import { LeagueProfileFacts } from "../league-profile-facts";
 

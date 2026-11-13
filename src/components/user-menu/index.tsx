@@ -19,6 +19,8 @@ import {
 } from "@/components/primitives/dropdown-menu";
 import { signOutAction } from "@/features/auth/actions";
 import { initials } from "@/lib/display";
+import { getAthleteTint } from "@/lib/tints";
+import { cn } from "@/utils/cn";
 
 interface UserMenuProps {
   fullName: string | null;
@@ -26,6 +28,7 @@ interface UserMenuProps {
   showAdminLink?: boolean;
   showAccountLink?: boolean;
   avatarUrl?: string | null;
+  userId?: string | null;
 }
 
 export function UserMenu({
@@ -34,7 +37,10 @@ export function UserMenu({
   showAdminLink = false,
   showAccountLink = false,
   avatarUrl,
+  userId,
 }: UserMenuProps) {
+  const fallbackTint = getAthleteTint(userId || fullName || "default");
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -47,8 +53,14 @@ export function UserMenu({
             <AvatarImage
               src={avatarUrl ?? ""}
               alt={`${fullName ?? "User"}'s avatar`}
+              className="size-full object-cover"
             />
-            <AvatarFallback className="grid size-9 place-items-center bg-zs-raised font-data text-xs font-bold text-zs-lime">
+            <AvatarFallback
+              className={cn(
+                "grid size-9 place-items-center rounded-xl font-sans text-xs font-bold",
+                fallbackTint,
+              )}
+            >
               {initials(fullName, email)}
             </AvatarFallback>
           </Avatar>

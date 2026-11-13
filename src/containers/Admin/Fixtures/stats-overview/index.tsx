@@ -70,7 +70,7 @@ export async function FixtureStatsOverview({
         </Link>
       </Panel>
     );
-  console.log({ workspace });
+
   const approved = workspace.lines.filter(
     (line) => line.verificationStatus === "approved",
   );

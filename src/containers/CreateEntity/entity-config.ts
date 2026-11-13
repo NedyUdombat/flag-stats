@@ -36,7 +36,7 @@ export const ENTITY_CONFIG: Record<
     intro:
       "You become the league admin. Your league starts unverified. Athletes only become verified through a league FlagStats has approved.",
     submit: "Create league",
-    logo: false,
+    logo: true,
     fields: [
       { name: "name", label: "League name", required: true },
       { name: "region", label: "Region" },

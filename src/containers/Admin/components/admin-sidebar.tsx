@@ -27,27 +27,27 @@ export function AdminSidebar({ items }: AdminSidebarProps) {
   return (
     <>
       {/* Desktop rail */}
-      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-zs-line bg-zs-panel lg:flex">
-        <div className="border-b border-zs-line px-6 py-3 h-16 flex items-center">
+      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col bg-[#080b10cc] lg:flex">
+        <div className="bg-black/20 backdrop-blur-2xl px-6 py-3 h-16 flex items-center">
           <BrandText showProBadge href="/admin" />
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-5">
           <AdminSidebarNav items={items} />
         </div>
-        <div className="border-t border-zs-line  p-2 h-16">
+        <div className="border-t border-zs-line p-2 h-14">
           <SignOutButton />
         </div>
       </aside>
 
       {/* Mobile bar */}
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-zs-line bg-zs-panel px-6 py-3 lg:hidden h-16">
+      <div className="sticky top-0 z-30 flex items-center justify-between bg-[#080b10cc] px-6 py-3 lg:hidden h-16">
         <BrandText showProBadge href="/admin" />
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Open navigation"
           aria-expanded={open}
-          className="p-2 text-zs-ink focus-visible:outline-2 focus-visible:outline-zs-lime cursor-pointer"
+          className="p-2 text-zs-ink focus-visible:outline-2 focus-visible:outline-accent-gold cursor-pointer"
         >
           <MenuIcon className="size-5" />
         </button>
@@ -67,14 +67,14 @@ export function AdminSidebar({ items }: AdminSidebarProps) {
             className="absolute inset-0 bg-black/60"
             onClick={() => setOpen(false)}
           />
-          <div className="relative flex h-full w-72 max-w-[85vw] flex-col bg-zs-panel">
-            <div className="flex items-center justify-between border-b border-zs-line px-6 py-3 h-16">
+          <div className="relative flex h-full w-72 max-w-[85vw] flex-col bg-[#080b10]">
+            <div className="flex items-center justify-between bg-black/20 backdrop-blur-2xl px-6 py-3 h-16">
               <BrandText showProBadge href="/admin" />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close navigation"
-                className="p-2 cursor-pointer text-zs-muted hover:text-zs-ink focus-visible:outline-2 focus-visible:outline-zs-lime"
+                className="p-2 cursor-pointer text-zs-muted hover:text-zs-ink focus-visible:outline-2 focus-visible:outline-accent-gold"
               >
                 <XIcon className="size-5" />
               </button>
@@ -85,7 +85,7 @@ export function AdminSidebar({ items }: AdminSidebarProps) {
                 onNavigate={() => setOpen(false)}
               />
             </div>
-            <div className="border-t border-zs-line p-2 h-16">
+            <div className="border-t border-zs-line p-2 h-14">
               <SignOutButton />
             </div>
           </div>

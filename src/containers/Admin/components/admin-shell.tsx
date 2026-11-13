@@ -13,6 +13,7 @@ interface AdminShellProps {
   user: CurrentUser;
   children: React.ReactNode;
 }
+
 export function AdminShell({ user, children }: AdminShellProps) {
   const items: RenderedNavItem[] = ADMIN_NAV_ITEMS.filter((item) =>
     item.show(user),
@@ -21,6 +22,10 @@ export function AdminShell({ user, children }: AdminShellProps) {
     label,
     icon: <Icon aria-hidden />,
   }));
+
+  const userRole = user.platformRole
+    ? roleLabel(user.platformRole)
+    : "Platform member";
 
   return (
     <div
@@ -32,36 +37,49 @@ export function AdminShell({ user, children }: AdminShellProps) {
     >
       <AdminSidebar items={items} />
 
-      <div className="min-w-0 flex-1">
-        <header className="hidden items-center justify-end gap-6 border-b border-zs-line px-8 py-4 lg:flex h-16">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 font-display text-sm font-semibold tracking-wider text-zs-ink uppercase hover:text-zs-lime focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zs-lime"
-          >
-            Public app
-            <ExternalLinkIcon className="size-3.5" aria-hidden />
-          </Link>
-          <div className="flex items-center gap-3 hover:opacity-90">
-            <div className="text-right leading-tight">
-              <p className="font-data text-xs font-bold text-zs-ink">
-                {user.fullName ?? user.email}
-              </p>
-              {user.platformRole && (
-                <p className="font-data text-[11px] text-zs-muted capitalize">
-                  {roleLabel(user.platformRole)}
+      <div className="relative min-w-0 flex-1">
+        <header className="sticky top-0 z-30 hidden h-16 items-center justify-end bg-black/20 px-6 backdrop-blur-2xl lg:flex xl:px-8">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="group inline-flex h-9 items-center gap-2 rounded-lg border border-white/8 bg-white/2.5 px-3.5 font-data text-[11px] font-nor capitalize tracking-[0.12em] text-zs-muted transition-all hover:border-accent-gold/30 hover:bg-accent-gold/6 hover:text-accent-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold"
+            >
+              View public app
+              <ExternalLinkIcon
+                className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden
+              />
+            </Link>
+
+            <div className="h-8 w-px bg-white/8" />
+
+            <div className="flex items-center gap-3">
+              <div className="hidden text-right sm:block">
+                <p className="max-w-48 truncate font-data text-xs font-bold text-zs-ink">
+                  {user.fullName ?? user.email}
                 </p>
-              )}
+
+                <div className="mt-1 flex items-center justify-end gap-1.5">
+                  <p className="font-data text-[10px] font-medium uppercase tracking-wider text-zs-muted">
+                    {userRole}
+                  </p>
+                </div>
+              </div>
+
+              <UserMenu
+                avatarUrl={user.avatarUrl}
+                fullName={user.fullName}
+                email={user.email}
+                showAccountLink={true}
+                userId={user.id}
+              />
             </div>
-            <UserMenu
-              avatarUrl={user.avatarUrl}
-              fullName={user.fullName}
-              email={user.email}
-              showAccountLink={true}
-            />
           </div>
         </header>
 
-        <main className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
+        <main className="relative min-w-0 px-4 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-9 xl:px-10">
+          <div className="mx-auto w-full max-w-[1600px]">{children}</div>
+        </main>
       </div>
     </div>
   );

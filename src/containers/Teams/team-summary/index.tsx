@@ -6,8 +6,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { TeamPassportSummary } from "@/features/teams/team-passport.service";
 import { initials } from "@/lib/display";
+import { getTeamTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getTeamTint } from "../team-directory-card/tints";
 import { TeamPassportActions } from "../team-passport-actions";
 import { TeamProfileFacts } from "../team-profile-facts";
 

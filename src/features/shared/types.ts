@@ -8,11 +8,24 @@ export type SettingsActionState = {
   message?: string;
 };
 
+export interface CareerTotals {
+  gamesPlayed: number;
+  touchdowns: number;
+  receptions: number;
+  passingTouchdowns: number;
+  interceptions: number;
+  flagsPulled: number;
+  gamesWon: number;
+  winPct: number;
+  tournamentsPlayed: number;
+  teamsPlayedFor: number;
+}
+
 export interface MyAthleteProfile {
   athlete: Tables<"athletes">;
   contactPhone: string | null;
   contactEmail: string | null;
-  careerTotals: { gamesPlayed: number; touchdowns: number } | null;
+  careerTotals: CareerTotals | null;
 }
 export interface Affiliation {
   role: RoleKey;

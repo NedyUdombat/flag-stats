@@ -48,15 +48,21 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     show: isFederationMember,
   },
   {
-    href: "/admin/athletes",
-    label: "Athletes",
-    icon: UserIcon,
-    show: teamOrLeagueOrFederation,
+    href: "/admin/tournaments",
+    label: "Tournaments",
+    icon: MedalIcon,
+    show: isLeagueMember,
   },
   {
     href: "/admin/fixtures",
     label: "Fixtures & Results",
     icon: CalendarDaysIcon,
+    show: teamOrLeagueOrFederation,
+  },
+  {
+    href: "/admin/athletes",
+    label: "Athletes",
+    icon: UserIcon,
     show: teamOrLeagueOrFederation,
   },
   {
@@ -70,11 +76,5 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     label: "Settings",
     icon: SettingsIcon,
     show: () => true,
-  },
-  {
-    href: "/admin/tournaments",
-    label: "Tournaments",
-    icon: MedalIcon,
-    show: isLeagueMember,
   },
 ];

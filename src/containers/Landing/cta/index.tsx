@@ -37,7 +37,7 @@ export function CtaBanner() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="#platform"
+              href="/sign-up"
               className="w-full md:w-fit rounded-[8px] bg-neutral-black p-4 text-base font-medium font-data text-accent uppercase transition hover:bg-accent-gold hover:text-neutral-black border border-neutral-black"
             >
               Register roster now

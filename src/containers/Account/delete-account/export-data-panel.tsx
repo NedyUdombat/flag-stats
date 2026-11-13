@@ -1,6 +1,7 @@
 "use client";
 
 import { DownloadIcon } from "lucide-react";
+import { cn } from "@/utils/cn";
 import { Message } from "../shared/message";
 import { Panel } from "../shared/panel";
 import { buttonSecondary } from "../styles";
@@ -18,7 +19,10 @@ export function ExportDataPanel() {
           type="button"
           onClick={run}
           disabled={pending}
-          className={buttonSecondary}
+          className={cn(
+            buttonSecondary,
+            "cursor-pointer inline-flex justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
+          )}
         >
           <DownloadIcon className="size-4" aria-hidden />
           {pending ? "Preparing…" : "Download my data"}

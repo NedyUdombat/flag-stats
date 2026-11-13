@@ -5,6 +5,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import type { AthleteDetail } from "@/types/athletes/types";
 import type { CurrentUser } from "@/types/users/types";
 import { getAthleteDetail } from "../athletes/athlete.service";
+import { getAthletePassportSummary } from "../athletes/athlete-passport.service";
 import type { Affiliation, MyAthleteProfile, RoleKey } from "../shared/types";
 
 export const ROLE_LABEL: Record<RoleKey, string> = {
@@ -56,25 +57,20 @@ export async function getMyAthleteProfile(
   }
   if (!athlete) return null;
 
-  const [{ data: priv }, detail] = await Promise.all([
+  const [{ data: priv }, passport] = await Promise.all([
     supabase
       .from("athlete_private")
       .select("contact_phone, contact_email")
       .eq("athlete_id", athlete.id)
       .maybeSingle(),
-    getAthleteDetail(athlete.id).catch(() => null),
+    getAthletePassportSummary(athlete.slug).catch(() => null),
   ]);
 
   return {
     athlete,
     contactPhone: priv?.contact_phone ?? null,
     contactEmail: priv?.contact_email ?? null,
-    careerTotals: detail?.careerTotals
-      ? {
-          gamesPlayed: detail.careerTotals.gamesPlayed,
-          touchdowns: detail.careerTotals.touchdowns,
-        }
-      : null,
+    careerTotals: passport?.careerTotals ?? null,
   };
 }
 
