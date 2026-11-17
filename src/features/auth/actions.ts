@@ -6,6 +6,7 @@ import { safeNextPath } from "@/lib/auth/safe-next";
 import { sendEmail } from "@/lib/email";
 import {
   confirmEmailHtml,
+  escapeHtml,
   resetPasswordEmailHtml,
 } from "@/lib/email/templates";
 import { logServerError } from "@/lib/errors";
@@ -152,6 +153,8 @@ async function createAccount(
     },
   });
 
+  console.log({ url: encodeURIComponent(next), next });
+
   if (error) {
     logServerError("auth.signUp.generateLink", error);
     if (error.code === "email_exists") return SIGNUP_SUCCESS;
@@ -161,6 +164,7 @@ async function createAccount(
     };
   }
   const actionLink = link?.properties?.action_link;
+
   if (!actionLink) {
     logServerError(
       "auth.signUp.noLink",
@@ -171,6 +175,7 @@ async function createAccount(
       message: "Could not create your account. Please try again.",
     };
   }
+  console.log({ actionLink, escapeHtml: escapeHtml(actionLink) });
   const sent = await sendEmail({
     to: data.email,
     subject: "Confirm your FlagStats account",

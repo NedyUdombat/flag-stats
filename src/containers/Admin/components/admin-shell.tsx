@@ -32,17 +32,17 @@ export function AdminShell({ user, children }: AdminShellProps) {
       className={cn(
         displayFont.variable,
         dataFont.variable,
-        "min-h-dvh bg-zs-bg text-zs-ink lg:flex",
+        "min-h-dvh bg-[#11151BCC] text-zs-ink lg:flex",
       )}
     >
       <AdminSidebar items={items} />
 
-      <div className="relative min-w-0 flex-1">
-        <header className="sticky top-0 z-30 hidden h-16 items-center justify-end bg-black/20 px-6 backdrop-blur-2xl lg:flex xl:px-8">
+      <div className="relative min-w-0 flex-1 lg:ml-64">
+        <header className="fixed top-0 right-0 z-40 hidden h-16 items-center justify-end bg-black/20 px-6 backdrop-blur-2xl lg:flex lg:left-64 xl:px-8">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="group inline-flex h-9 items-center gap-2 rounded-lg border border-white/8 bg-white/2.5 px-3.5 font-data text-[11px] font-nor capitalize tracking-[0.12em] text-zs-muted transition-all hover:border-accent-gold/30 hover:bg-accent-gold/6 hover:text-accent-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold"
+              className="group inline-flex h-9 items-center gap-2 rounded-lg border border-white/8 bg-white/2.5 px-3.5 font-data text-[11px] font-normal capitalize tracking-[0.12em] text-zs-muted transition-all hover:border-accent-gold/30 hover:bg-accent-gold/6 hover:text-accent-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold"
             >
               View public app
               <ExternalLinkIcon
@@ -77,7 +77,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
           </div>
         </header>
 
-        <main className="relative min-w-0 px-4 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-9 xl:px-10">
+        <main className="relative min-w-0 px-4 pb-6 pt-6 sm:px-6 sm:pb-7 sm:pt-7 lg:h-dvh lg:overflow-y-auto lg:px-8 lg:pb-9 lg:pt-24 xl:px-10">
           <div className="mx-auto w-full max-w-[1600px]">{children}</div>
         </main>
       </div>

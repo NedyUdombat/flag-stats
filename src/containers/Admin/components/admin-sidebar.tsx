@@ -27,7 +27,7 @@ export function AdminSidebar({ items }: AdminSidebarProps) {
   return (
     <>
       {/* Desktop rail */}
-      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col bg-[#080b10cc] lg:flex">
+      <aside className="fixed z-50 top-0 hidden h-dvh w-64 shrink-0 flex-col bg-[#080b10] lg:flex border-r border-zs-line">
         <div className="bg-black/20 backdrop-blur-2xl px-6 py-3 h-16 flex items-center">
           <BrandText showProBadge href="/admin" />
         </div>
