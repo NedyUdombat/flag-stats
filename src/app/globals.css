@@ -63,6 +63,16 @@
   --verified-blue-tint: rgba(0, 229, 255, 0.15);
 }
 
+/* Hide scrollbar while preserving horizontal scrolling */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 .dark {
   color-scheme: dark;
 

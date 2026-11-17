@@ -30,7 +30,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   return {
     id: user.id,
     email: user.email ?? null,
-    fullName: profile?.full_name ?? null,
+    fullName: profile?.full_name ?? user.user_metadata?.full_name ?? null,
     avatarUrl: profile?.avatar_url ?? null,
     platformRole: profile?.platform_role ?? "user",
     createdAt: profile?.created_at ?? null,

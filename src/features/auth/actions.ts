@@ -153,8 +153,6 @@ async function createAccount(
     },
   });
 
-  console.log({ siteUrl });
-
   if (error) {
     logServerError("auth.signUp.generateLink", error);
     if (error.code === "email_exists") return SIGNUP_SUCCESS;
@@ -175,7 +173,7 @@ async function createAccount(
       message: "Could not create your account. Please try again.",
     };
   }
-  console.log({ actionLink, escapeHtml: escapeHtml(actionLink) });
+
   const sent = await sendEmail({
     to: data.email,
     subject: "Confirm your FlagStats account",
