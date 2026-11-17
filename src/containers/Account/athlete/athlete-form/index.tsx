@@ -27,9 +27,10 @@ export function AthleteForm({
 }) {
   const f = useAthleteForm({ mode, initial, viewHref });
   const err = f.state.fieldErrors ?? {};
+
   const pane = (i: number) =>
     f.step === i
-      ? "space-y-6 rounded-xl border border-white/10 p-4 sm:p-6"
+      ? "min-w-0 w-full space-y-6 rounded-xl border border-white/10 p-3 sm:p-5 lg:p-6"
       : "hidden";
 
   return (
@@ -42,100 +43,128 @@ export function AthleteForm({
       <form
         ref={f.formRef}
         onSubmit={f.onSubmit}
-        className="space-y-6"
+        className="w-full min-w-0 space-y-5 sm:space-y-6"
         noValidate
       >
-        <AthleteFormTabs step={f.step} goTo={f.goTo} canGo={f.canGo} />
-
-        <div data-step="0" className={pane(0)}>
-          <BasicsStep
-            initial={initial}
-            err={err}
-            mode={mode}
-            onDobChange={f.setDob}
-          />
-        </div>
-        <div data-step="1" className={pane(1)}>
-          <SportsStep initial={initial} err={err} />
-        </div>
-        <div data-step="2" className={pane(2)}>
-          <AboutStep initial={initial} err={err} />
-        </div>
-        <div data-step="3" className={pane(3)}>
-          <ContactStep initial={initial} err={err} minor={f.minor} />
+        {/* Step navigation */}
+        <div className="w-full min-w-0">
+          <AthleteFormTabs step={f.step} goTo={f.goTo} canGo={f.canGo} />
         </div>
 
+        {/* Form steps */}
+        <div className="w-full min-w-0">
+          <div data-step="0" className={pane(0)}>
+            <BasicsStep
+              initial={initial}
+              err={err}
+              mode={mode}
+              onDobChange={f.setDob}
+            />
+          </div>
+
+          <div data-step="1" className={pane(1)}>
+            <SportsStep initial={initial} err={err} />
+          </div>
+
+          <div data-step="2" className={pane(2)}>
+            <AboutStep initial={initial} err={err} />
+          </div>
+
+          <div data-step="3" className={pane(3)}>
+            <ContactStep initial={initial} err={err} minor={f.minor} />
+          </div>
+        </div>
+
+        {/* Duplicate warning */}
         {f.state.status === "duplicate" && (
           <div
             role="alert"
-            className="space-y-3 rounded-xl border border-amber-400/20 bg-amber-400/6 p-4 sm:p-5"
+            className="min-w-0 space-y-3 rounded-xl border border-amber-400/20 bg-amber-400/6 p-3 sm:p-5"
           >
-            <p className="font-sans text-sm font-bold tracking-[.12em] text-amber-300 uppercase">
+            <p className="font-sans text-sm font-bold uppercase tracking-[.12em] text-amber-300">
               This profile may already exist
             </p>
-            <p className="text-sm text-zs-ink">{f.state.message}</p>
+
+            <p className="break-words text-sm text-zs-ink">{f.state.message}</p>
+
             <button
               type="button"
               onClick={f.submitIgnoringDuplicate}
               disabled={f.pending}
-              className={buttonSecondary}
+              className={cn(
+                buttonSecondary,
+                "w-full justify-center text-center sm:w-auto",
+              )}
             >
-              This isn&apos;t me. Create a new profile
+              This isn't me. Create a new profile
             </button>
           </div>
         )}
+
         <Message state={f.state} />
 
-        <div className="flex flex-col-reverse gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-3">
-            {!f.isFirst && (
-              <button
-                type="button"
-                onClick={f.back}
+        {/* Responsive footer */}
+        <div className="flex min-w-0 flex-col gap-4 border-t border-white/10 pt-5 sm:gap-5">
+          {/* Navigation actions */}
+          <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 flex-wrap items-center gap-3">
+              {!f.isFirst && (
+                <button
+                  type="button"
+                  onClick={f.back}
+                  className={cn(
+                    buttonSecondary,
+                    "flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm px-4 font-sans text-sm font-normal capitalize sm:flex-none",
+                  )}
+                >
+                  <ArrowLeftIcon className="size-4 shrink-0" aria-hidden />
+                  Back
+                </button>
+              )}
+
+              <Link
+                href={viewHref}
                 className={cn(
                   buttonSecondary,
-                  "cursor-pointer flex flex-1 w-full justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
+                  "flex min-h-11 flex-1 items-center justify-center rounded-sm px-4 font-sans text-sm font-normal capitalize sm:flex-none",
                 )}
               >
-                <ArrowLeftIcon className="size-4" aria-hidden /> Back
-              </button>
-            )}
-            <Link
-              href={viewHref}
-              className={cn(
-                buttonSecondary,
-                "cursor-pointer flex flex-1 w-full justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
-              )}
-            >
-              Cancel
-            </Link>
+                Cancel
+              </Link>
+            </div>
+
             <span className="font-data text-[11px] uppercase tracking-[.12em] text-slate-500">
               Step {f.step + 1} of {STEPS.length}
             </span>
           </div>
-          <div className="flex gap-3">
+
+          {/* Primary actions */}
+          <div className="flex min-w-0 flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             {!f.isLast && (
               <button
                 type="button"
                 onClick={f.next}
                 className={cn(
                   mode === "edit" ? buttonSecondary : buttonPrimary,
-                  "cursor-pointer flex flex-1 w-full justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
+                  "flex min-h-11 w-full items-center justify-center gap-2 rounded-sm px-5 font-sans text-sm font-normal capitalize sm:w-auto",
                 )}
               >
-                Next <ArrowRightIcon className="size-4" aria-hidden />
+                Next
+                <ArrowRightIcon className="size-4 shrink-0" aria-hidden />
               </button>
             )}
+
             {(f.isLast || mode === "edit") && (
               <button
                 type="submit"
                 disabled={f.pending}
                 className={cn(
                   buttonPrimary,
-                  "cursor-pointer flex  w-full justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
+                  "flex min-h-11 w-full items-center justify-center gap-2 rounded-sm px-5 font-sans text-sm font-normal capitalize sm:w-auto",
                 )}
               >
-                <Save className="size-4" aria-hidden />
+                <Save className="size-4 shrink-0" aria-hidden />
+
                 {f.pending
                   ? "Saving…"
                   : mode === "create"

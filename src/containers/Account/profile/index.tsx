@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
-import { getAthleteTint } from "@/lib/tints";
 import { initials } from "@/lib/display";
+import { getAthleteTint } from "@/lib/tints";
 import type { CurrentUser } from "@/types/users/types";
 import { cn } from "@/utils/cn";
 import type { SettingsMode } from "../account-tabs";
