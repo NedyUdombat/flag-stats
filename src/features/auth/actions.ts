@@ -153,7 +153,7 @@ async function createAccount(
     },
   });
 
-  console.log({ url: encodeURIComponent(next), next });
+  console.log({ url: encodeURIComponent(next), next, siteUrl });
 
   if (error) {
     logServerError("auth.signUp.generateLink", error);
