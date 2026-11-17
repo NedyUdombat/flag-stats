@@ -12,9 +12,9 @@ function SubmitButton({ className }: { className?: string }) {
       type="submit"
       disabled={pending}
       className={cn(
-        "flex w-full items-center gap-3 px-4 py-2.5 font-display text-[15px] font-semibold tracking-wider text-zs-coral uppercase cursor-pointer",
-        "hover:bg-zs-coral/10 hover:text-zs-coral disabled:opacity-60",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zs-lime font-bold",
+        "flex w-full rounded-sm items-center gap-3 px-4 py-2.5 font-sans text-[15px] tracking-wider text-red-400  cursor-pointer",
+        "hover:bg-red-500/25 hover:text-red-400 disabled:opacity-60",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zs-lime font-normal",
         className,
       )}
     >

@@ -1,5 +1,6 @@
 import { logServerError } from "@/lib/errors";
 import { createServerClient } from "@/lib/supabase/server";
+import type { CareerTotals } from "../shared/types";
 
 export interface AthletePassportSummary {
   id: string;
@@ -26,18 +27,7 @@ export interface AthletePassportSummary {
   seasonsRegistered: number;
   matchesPlayed: number;
 
-  careerTotals: {
-    gamesPlayed: number;
-    touchdowns: number;
-    receptions: number;
-    passingTouchdowns: number;
-    interceptions: number;
-    flagsPulled: number;
-    gamesWon: number;
-    winPct: number;
-    tournamentsPlayed: number;
-    teamsPlayedFor: number;
-  };
+  careerTotals: CareerTotals;
 
   tournamentStats: {
     tournamentId: string;

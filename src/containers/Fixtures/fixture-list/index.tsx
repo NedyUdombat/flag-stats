@@ -97,7 +97,7 @@ export function FixturesList({
                         <Link
                           key={f.id}
                           href={`/fixtures/${f.id}`}
-                          className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-brand-lime hover:underline underline-none"
+                          className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-brand-lime no-underline"
                         >
                           <div
                             key={f.id}
@@ -176,12 +176,6 @@ export function FixturesList({
                                   <span className="truncate">{f.venue}</span>
                                 </div>
                               )}
-                              <Link
-                                href={`/fixtures/${f.id}`}
-                                className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-brand-lime hover:underline"
-                              >
-                                Game centre →
-                              </Link>
                             </div>
                           </div>
                         </Link>

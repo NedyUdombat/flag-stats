@@ -8,8 +8,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { PublicTeamListItem } from "@/features/teams/actions/team-public.actions";
 import { initials } from "@/lib/display";
+import { getTeamTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getTeamTint } from "./tints"; // Or shared tint utility
 
 export function TeamDirectoryCard({ team }: { team: PublicTeamListItem }) {
   const fallbackTint = getTeamTint(team.id || team.name || "default");

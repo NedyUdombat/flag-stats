@@ -39,10 +39,10 @@ export async function AthleteCareerSummary({
               key={s.label}
               className="rounded-lg bg-neutral-covert p-4 text-center"
             >
-              <p className="text-brand-lime text-[30px] font-black tracking-[-4px] text-accent-gold font-mono">
+              <p className="text-2xl font-black tracking-[-4px] text-accent-gold font-data">
                 {s.value || 0}
               </p>
-              <p className="mt-1 font-mono text-[12px] uppercase tracking-[.12em] text-white/80">
+              <p className="font-data text-[10px] uppercase tracking-[.12em] text-slate-500">
                 {s.label}
               </p>
             </div>

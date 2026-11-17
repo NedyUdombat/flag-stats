@@ -67,7 +67,8 @@
   color-scheme: dark;
 
   /* Dark Theme Mapping matching your FlagStats / Athletic Dark Aesthetic */
-  --background: #0b1019;
+  --background: #080b10cc;
+  /* --background: #0b1019;#080b10cc */
   --foreground: #ffffff;
   --card: #1e2230;
   --card-foreground: #ffffff;

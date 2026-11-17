@@ -29,21 +29,21 @@ export function AdminSidebarNav({
 
   return (
     <nav aria-label="Admin">
-      <ul className="space-y-1">
+      <ul className="flex flex-col gap-2">
         {items.map(({ href, label, icon }) => {
           const active = isActive(pathname, href);
           return (
-            <li key={href}>
+            <li key={href} className="cursor-pointer">
               <Link
                 href={href}
                 onClick={onNavigate}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-2.5 font-display text-[15px] font-semibold tracking-wider uppercase",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zs-lime",
-                  "[&_svg]:size-4 [&_svg]:shrink-0",
+                  "flex cursor-pointer items-center gap-3 px-4 py-2.5 font-sans text-[15px] font-normal tracking-wider ",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold",
+                  "[&_svg]:size-4 [&_svg]:shrink-0 rounded-sm",
                   active
-                    ? "bg-zs-lime text-zs-lime-ink"
+                    ? "bg-accent-gold text-zs-lime-ink"
                     : "text-zs-muted hover:bg-zs-raised hover:text-zs-ink",
                 )}
               >

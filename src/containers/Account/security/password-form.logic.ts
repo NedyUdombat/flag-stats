@@ -7,14 +7,6 @@ import type { SettingsActionState } from "@/features/shared/types";
 
 const idle: SettingsActionState = { status: "idle" };
 
-export const STRENGTH_COLOR = [
-  "bg-zs-coral",
-  "bg-zs-coral",
-  "bg-zs-amber",
-  "bg-zs-cyan",
-  "bg-zs-lime",
-];
-
 export function passwordStrength(p: string): { score: number; label: string } {
   if (!p) return { score: 0, label: "" };
   const passed = PASSWORD_REQUIREMENTS.filter((r) => r.test(p)).length;

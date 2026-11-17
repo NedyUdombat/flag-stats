@@ -6,8 +6,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { TeamRecentResult } from "@/features/teams/team-profile.service";
 import { initials } from "@/lib/display";
+import { getTeamTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getTeamTint } from "../team-directory-card/tints";
 
 interface RecentResultsListProps {
   results: TeamRecentResult[];

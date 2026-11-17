@@ -13,8 +13,16 @@ import { cn } from "@/utils/cn";
 import { Message } from "../shared/message";
 import { Panel } from "../shared/panel";
 import { buttonPrimary, fieldInput, fieldLabel } from "../styles";
-import { STRENGTH_COLOR, usePasswordForm } from "./password-form.logic";
+import { usePasswordForm } from "./password-form.logic";
 import { SessionsPanel } from "./sessions-panel";
+
+export const STRENGTH_COLOR = [
+  "bg-zs-coral",
+  "bg-zs-coral",
+  "bg-zs-amber",
+  "bg-zs-cyan",
+  "bg-green-500/75",
+];
 
 function PasswordInput({
   id,
@@ -57,7 +65,7 @@ function PasswordInput({
               ? `Hide ${label.toLowerCase()}`
               : `Show ${label.toLowerCase()}`
           }
-          className="absolute top-1/2 right-2 -translate-y-1/2 p-1.5 text-zs-muted hover:text-zs-ink focus-visible:outline-2 focus-visible:outline-zs-lime"
+          className="absolute top-1/2 right-2 -translate-y-1/2 p-1.5 text-zs-muted hover:text-zs-ink focus-visible:outline-2 focus-visible:outline-accent-orange"
         >
           {visible ? (
             <EyeOffIcon className="size-4" />
@@ -98,7 +106,7 @@ export function PasswordForm() {
             />
             {p.next && (
               <div className="mt-2">
-                <div className="h-1.5 bg-zs-raised" aria-hidden>
+                <div className="h-1 bg-zs-raised" aria-hidden>
                   <div
                     className={cn(
                       "h-full transition-[width]",
@@ -135,7 +143,10 @@ export function PasswordForm() {
           <button
             type="submit"
             disabled={p.pending || p.mismatch || !p.requirementsMet}
-            className={buttonPrimary}
+            className={cn(
+              buttonPrimary,
+              "cursor-pointer flex  w-full justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
+            )}
           >
             <KeyRoundIcon className="size-4" aria-hidden />
             {p.pending ? "Updating…" : "Update password"}
@@ -152,8 +163,8 @@ export function PasswordForm() {
                 <li
                   key={r.id}
                   className={cn(
-                    "flex items-center gap-2 text-sm",
-                    ok ? "text-zs-lime" : "text-zs-muted",
+                    "flex items-center gap-2 text-sm font-sans",
+                    ok ? "text-verified-green/75" : "text-zs-muted",
                   )}
                 >
                   {ok ? (

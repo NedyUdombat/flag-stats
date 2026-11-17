@@ -15,7 +15,7 @@ import { Field } from "./athlete-form-field";
 type Props = { initial: AthleteFormInitial; err: Record<string, string> };
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const chip =
-  "inline-block border border-zs-line px-3 py-1.5 font-display text-sm font-bold tracking-wider text-zs-muted uppercase peer-checked:border-zs-lime peer-checked:bg-zs-lime/10 peer-checked:text-zs-lime peer-focus-visible:outline-2 peer-focus-visible:outline-zs-lime";
+  "inline-block rounded-lg border border-white/10 bg-white/[0.02] px-3 py-1.5 font-sans text-xs font-semibold tracking-[.08em] text-slate-400 uppercase transition-colors peer-checked:border-accent-gold/30 peer-checked:bg-accent-gold/[0.08] peer-checked:text-accent-gold peer-focus-visible:outline-2 peer-focus-visible:outline-accent-gold";
 
 export function BasicsStep({
   initial,
@@ -42,32 +42,21 @@ export function BasicsStep({
             className={fieldInput}
           />
         </Field>
-        {mode === "create" ? (
-          <Field
-            id="a-slug"
-            label="Profile ID (optional)"
-            error={err.slug}
-            hint="flagstats.com/athletes/… Leave blank to use your name. It can't be changed later."
-          >
-            <input
-              id="a-slug"
-              name="slug"
-              maxLength={60}
-              placeholder="chidi-okafor"
-              className={fieldInput}
-            />
-          </Field>
-        ) : (
-          <Field
-            id="a-slug"
-            label="Profile ID"
-            hint="Fixed, so shared links keep working."
-          >
+        <Field
+          id="a-slug"
+          label="Profile ID"
+          error={err.slug}
+          hint="Fixed, so shared links keep working."
+        >
+          {mode === "create" ? (
             <p className="font-data text-sm text-zs-ink">
-              /athletes/{initial.slug}
+              {initial.fullName.toLowerCase().split(" ").join("-")}
             </p>
-          </Field>
-        )}
+          ) : (
+            <p className="font-data text-sm text-zs-ink">{initial.slug}</p>
+          )}
+        </Field>
+
         <Field
           id="a-dob"
           label="Date of birth"
@@ -252,10 +241,12 @@ export function AboutStep({ initial, err }: Props) {
         <textarea
           id="a-bio"
           name="bio"
-          rows={5}
+          rows={10}
           maxLength={1000}
           defaultValue={initial.bio}
-          className={fieldInput}
+          className={
+            "w-full min-w-0 border rounded-md px-3 py-2 text-zs-ink placeholder:text-zs-muted/70 disabled:opacity-60 focus-visible:outline-1 focus-visible:outline-offset-0 focus-visible:outline-accent-gold/25"
+          }
         />
       </Field>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -328,14 +319,14 @@ export function ContactStep({
         ].map(([value, title, body]) => (
           <label
             key={value}
-            className="flex cursor-pointer items-start gap-3 border border-zs-line p-4 has-[:checked]:border-zs-lime has-[:checked]:bg-zs-lime/5"
+            className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/2 p-4 transition-colors hover:border-white/20 has-checked:border-accent-gold/30 has-checked:bg-accent-gold/6"
           >
             <input
               type="radio"
               name="contactVisibility"
               value={value}
               defaultChecked={initial.contactVisibility === value}
-              className="mt-1 size-4 accent-zs-lime"
+              className="mt-1 size-4 accent-accent-gold"
             />
             <span>
               <span className="block font-display text-base font-bold tracking-wide text-zs-ink uppercase">
@@ -370,7 +361,7 @@ export function ContactStep({
       </Field>
 
       {minor && (
-        <div className="border border-zs-amber/40 bg-zs-amber/10 p-4">
+        <div className="rounded-xl border border-amber-400/20 bg-amber-400/6 p-4">
           <p className="text-sm text-zs-ink">
             This athlete is under 18. A parent or guardian must consent to this
             profile being on FlagStats.
@@ -381,7 +372,7 @@ export function ContactStep({
               name="parentalConsent"
               required
               defaultChecked={initial.parentalConsent}
-              className="mt-0.5 size-4 accent-zs-lime"
+              className="mt-0.5 size-4 accent-accent-gold"
             />
             I confirm a parent or guardian has given consent.
           </label>

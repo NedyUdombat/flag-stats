@@ -15,7 +15,7 @@ export function SessionsPanel() {
   return (
     <Panel
       title="Other devices"
-      description="Signed in somewhere you don't recognise, or just changed your password?"
+      description="Signed in somewhere you don't recognize, or just changed your password?"
     >
       <div className="space-y-3">
         <button
@@ -24,7 +24,10 @@ export function SessionsPanel() {
           onClick={() =>
             start(async () => setState(await signOutOtherSessionsAction()))
           }
-          className={cn(buttonSecondary, "w-full")}
+          className={cn(
+            buttonSecondary,
+            "cursor-pointer flex flex-1 w-full justify-center font-sans text-[14px] capitalize font-normal rounded-sm",
+          )}
         >
           <LogOutIcon className="size-4" aria-hidden />
           {pending ? "Signing out…" : "Sign out other devices"}

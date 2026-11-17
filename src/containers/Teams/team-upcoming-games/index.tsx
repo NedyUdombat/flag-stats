@@ -5,8 +5,8 @@ import {
   AvatarImage,
 } from "@/components/primitives/avatar";
 import { initials } from "@/lib/display";
+import { getTeamTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-import { getTeamTint } from "../team-directory-card/tints";
 
 interface UpcomingFixture {
   id: string;

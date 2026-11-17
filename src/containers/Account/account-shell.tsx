@@ -8,11 +8,16 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
         displayFont.variable,
         dataFont.variable,
         dmSansFont.variable,
-        "min-h-dvh",
-        "pt-30 dark relative overflow-hidden bg-neutral-black px-4 py-16 text-foreground sm:px-6",
+        "relative min-h-dvh overflow-hidden bg-[#0a0d13] px-4 pb-20 pt-28 text-white sm:px-6",
       )}
     >
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 h-72 w-full"
+      />
+      <main className="relative mx-auto max-w-7xl px-1 py-6 sm:px-4 lg:py-10">
+        {children}
+      </main>
     </div>
   );
 }

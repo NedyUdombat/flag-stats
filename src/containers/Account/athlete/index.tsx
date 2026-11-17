@@ -1,5 +1,6 @@
 import type { MyInvitation } from "@/features/invitations/invitation.types";
 import type { MyAthleteProfile } from "@/features/shared/types";
+import type { CurrentUser } from "@/types/users/types";
 import type { SettingsMode } from "../account-tabs";
 import { emptyInitial, toFormInitial } from "./athlete-default";
 import { AthleteEmpty } from "./athlete-empty";
@@ -12,12 +13,14 @@ export function AthleteTab({
   mode,
   basePath,
   invitations,
+  user,
 }: {
   profile: MyAthleteProfile | null;
   defaultName: string | null;
   mode: SettingsMode;
   basePath: string;
   invitations: MyInvitation[];
+  user: CurrentUser;
 }) {
   const viewHref = `${basePath}?tab=athlete`;
 
@@ -54,6 +57,7 @@ export function AthleteTab({
       profile={profile}
       editHref={`${viewHref}&mode=edit`}
       viewHref={viewHref}
+      user={user}
     />
   );
 }
