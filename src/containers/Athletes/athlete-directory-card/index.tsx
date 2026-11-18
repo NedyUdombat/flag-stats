@@ -8,8 +8,8 @@ import {
 } from "@/components/primitives/avatar";
 import type { PublicAthleteListItem } from "@/features/athletes/actions/athlete-public.actions";
 import { initials } from "@/lib/display";
-import { cn } from "@/utils/cn";
 import { getAthleteTint } from "@/lib/tints";
+import { cn } from "@/utils/cn";
 
 export function AthleteDirectoryCard({
   athlete,

@@ -66,8 +66,11 @@ export function UserMenu({
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="flex flex-col">
+      <DropdownMenuContent
+        align="end"
+        className="w-56 opacity-100 bg-[#0a0d13]"
+      >
+        <DropdownMenuLabel className="flex flex-col p-2">
           <span className="font-medium">{fullName ?? "Account"}</span>
           {email ? (
             <span className="text-xs font-normal text-muted-foreground">
@@ -77,7 +80,7 @@ export function UserMenu({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {showAccountLink ? (
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="p-3">
             <Link href="/account">
               <UserIcon />
               My account
@@ -86,7 +89,7 @@ export function UserMenu({
         ) : null}
 
         {showAdminLink ? (
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className="p-3">
             <Link href="/admin">
               <LayoutDashboardIcon />
               Admin console
@@ -95,7 +98,7 @@ export function UserMenu({
         ) : null}
         <DropdownMenuSeparator />
         <form action={signOutAction} className="w-full">
-          <DropdownMenuItem asChild variant="destructive">
+          <DropdownMenuItem asChild variant="destructive" className="p-3">
             <button type="submit" className="w-full">
               <LogOutIcon />
               Sign out

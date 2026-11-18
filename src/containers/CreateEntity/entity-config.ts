@@ -20,7 +20,7 @@ export const ENTITY_CONFIG: Record<
   }
 > = {
   team: {
-    title: "Create a team",
+    title: "Create new team",
     intro:
       "You become the team admin. You can add other admins and your roster later.",
     submit: "Create team",
@@ -32,7 +32,7 @@ export const ENTITY_CONFIG: Record<
     ],
   },
   league: {
-    title: "Create a league",
+    title: "Create new league",
     intro:
       "You become the league admin. Your league starts unverified. Athletes only become verified through a league FlagStats has approved.",
     submit: "Create league",
@@ -44,7 +44,7 @@ export const ENTITY_CONFIG: Record<
     ],
   },
   organization: {
-    title: "Create an organisation",
+    title: "Create new organisation",
     intro:
       "You become the organisation admin. It starts unverified until FlagStats approves it.",
     submit: "Create organisation",

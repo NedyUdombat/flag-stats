@@ -36,6 +36,7 @@ export const TEAM_LIST_STATUSES = [
   "active",
   "orphaned",
   "unclaimed",
+  "unverified",
   "deleted",
 ] as const;
 export type TeamListStatus = (typeof TEAM_LIST_STATUSES)[number];
@@ -44,4 +45,5 @@ export const TEAM_STATUS_LABELS: Record<TeamListStatus, string> = {
   orphaned: "No admin",
   unclaimed: "Unclaimed",
   deleted: "Deleted",
+  unverified: "Unverified",
 };

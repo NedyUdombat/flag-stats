@@ -15,23 +15,24 @@ export const CreateTeamSchema = z.object({
   logoUrl: logoUrlField,
 });
 
-export const CreateTeamShellSchema = z.object({
-  name: nameField,
-  homeCity: optionalText(60),
-  adminEmail: z.preprocess(
-    blank,
-    z
-      .string()
-      .trim()
-      .toLowerCase()
-      .max(254)
-      .pipe(z.email("Enter a valid email address."))
-      .optional(),
-  ),
+const optionalAdminEmail = z.preprocess(
+  blank,
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .max(254)
+    .pipe(z.email("Enter a valid email address."))
+    .optional(),
+);
+
+/** Admin creation extends the canonical team fields with an optional invitation. */
+export const CreateAdminTeamSchema = CreateTeamSchema.extend({
+  adminEmail: optionalAdminEmail,
 });
-export const readCreateTeamShellForm = (fd: FormData) => ({
-  name: fd.get("name"),
-  homeCity: fd.get("homeCity"),
+
+export const readCreateAdminTeamForm = (fd: FormData) => ({
+  ...readCreateTeamForm(fd),
   adminEmail: fd.get("adminEmail"),
 });
 export type CreateTeamInput = z.infer<typeof CreateTeamSchema>;

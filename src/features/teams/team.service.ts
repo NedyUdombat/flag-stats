@@ -77,22 +77,6 @@ export const softDeleteTeam = (teamId: string) =>
 export const restoreTeam = (teamId: string) =>
   rpcVoid("restore_team", { p_team_id: teamId });
 
-export async function createTeamShell(input: {
-  name: string;
-  country?: string;
-  homeCity?: string;
-}) {
-  const supabase = await createServerClient();
-  return withUniqueSlug(supabase, "teams", input.name, (slug) =>
-    supabase.rpc("create_team_shell", {
-      p_name: input.name,
-      p_slug: slug,
-      p_country: input.country,
-      p_home_city: input.homeCity,
-    }),
-  );
-}
-
 const fail = (raw: string): ServiceResult => ({
   ok: false,
   message: teamErrorMessage(raw),

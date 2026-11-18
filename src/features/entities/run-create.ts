@@ -16,6 +16,16 @@ export async function runCreate<T>(opts: {
   raw: unknown;
   allowed: (user: CurrentUser) => boolean;
   create: (data: T) => Promise<CreateResult>;
+  /** Optional work performed after creation and before redirecting. */
+  afterCreate?: (context: {
+    id: string;
+    data: T;
+    user: CurrentUser;
+  }) => Promise<void>;
+  /** Override the default daily creation limit for a particular entry point. */
+  rateLimit?: { key?: string; limit: number; windowSeconds?: number };
+  /** Override the default destination without duplicating the creation pipeline. */
+  redirectTo?: (context: { id: string; data: T; user: CurrentUser }) => string;
 }): Promise<EntityActionState> {
   const user = await getCurrentUser();
   if (!user) return { status: "error", message: "Please sign in again." };
@@ -25,7 +35,10 @@ export async function runCreate<T>(opts: {
   const parsed = opts.schema.safeParse(opts.raw);
   if (!parsed.success) return fieldErrorsFrom(parsed.error);
 
-  if (!(await rateLimit(rateKey(`create-${opts.kind}`, user.id), 5, 86400))) {
+  const limit = opts.rateLimit?.limit ?? 5;
+  const windowSeconds = opts.rateLimit?.windowSeconds ?? 86400;
+  const key = opts.rateLimit?.key ?? `create-${opts.kind}`;
+  if (!(await rateLimit(rateKey(key, user.id), limit, windowSeconds))) {
     return {
       status: "error",
       message:
@@ -45,12 +58,18 @@ export async function runCreate<T>(opts: {
     };
   }
 
+  const context = { id: result.data, data: parsed.data, user };
+  if (opts.afterCreate) await opts.afterCreate(context);
+
   revalidatePath("/account", "layout");
+  if (opts.kind === "team") revalidatePath("/admin/teams");
   redirect(
-    opts.kind === "team"
-      ? `/admin/teams/${result.data}?created=1`
-      : opts.kind === "league"
-        ? `/admin/leagues/${result.data}?created=1`
-        : "/account?tab=teams",
+    opts.redirectTo
+      ? opts.redirectTo(context)
+      : opts.kind === "team"
+        ? `/admin/teams/${result.data}?created=1`
+        : opts.kind === "league"
+          ? `/admin/leagues/${result.data}?created=1`
+          : "/account?tab=teams",
   );
 }

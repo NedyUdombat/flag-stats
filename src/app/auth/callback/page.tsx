@@ -24,10 +24,7 @@ export default function AuthCallbackPage() {
       );
 
       async function completeAuthFlow(rawNextParam: string | null) {
-        const destination =
-          rawNextParam?.startsWith("/") && !rawNextParam.startsWith("//")
-            ? rawNextParam
-            : await getPostLoginDestination();
+        const destination = await getPostLoginDestination(rawNextParam);
 
         router.replace(destination);
         router.refresh();

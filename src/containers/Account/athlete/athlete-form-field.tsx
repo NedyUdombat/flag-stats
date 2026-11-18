@@ -16,7 +16,10 @@ export function Field({
 }) {
   return (
     <div>
-      <label htmlFor={id} className={`${fieldLabel} mb-2 block font-sans text-[10px] font-semibold uppercase tracking-[.16em] text-slate-500`}>
+      <label
+        htmlFor={id}
+        className={`${fieldLabel} mb-2 block font-sans text-[10px] font-semibold uppercase tracking-[.16em] text-slate-500`}
+      >
         {label}
       </label>
       {children}

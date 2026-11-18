@@ -32,7 +32,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
       className={cn(
         displayFont.variable,
         dataFont.variable,
-        "min-h-dvh bg-[#11151BCC] text-zs-ink lg:flex",
+        "min-h-dvh bg-[#0a0d13] text-zs-ink lg:flex",
       )}
     >
       <AdminSidebar items={items} />
@@ -77,7 +77,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
           </div>
         </header>
 
-        <main className="relative min-w-0 px-4 pb-6 pt-6 sm:px-6 sm:pb-7 sm:pt-7 lg:h-dvh lg:overflow-y-auto lg:px-8 lg:pb-9 lg:pt-24 xl:px-10">
+        <main className="relative min-w-0 px-4 pb-6 pt-6 sm:px-6 sm:pb-7 sm:pt-7 lg:h-dvh lg:overflow-y-auto lg:px-8 lg:pb-9 lg:pt-24 xl:px-10 bg-[#0a0d13]">
           <div className="mx-auto w-full max-w-[1600px]">{children}</div>
         </main>
       </div>

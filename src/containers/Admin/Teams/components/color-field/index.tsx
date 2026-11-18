@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/utils/cn";
 import { buttonLink, labelClass } from "../../styles";
 import { useColorField } from "./use-color-field";
 
@@ -30,7 +31,11 @@ export function ColorField({
           {value || "Not set"}
         </span>
         {value && (
-          <button type="button" onClick={clear} className={buttonLink}>
+          <button
+            type="button"
+            onClick={clear}
+            className={cn(buttonLink, "text-destructive/80")}
+          >
             Clear
           </button>
         )}
