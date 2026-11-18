@@ -1,4 +1,5 @@
 import type { Database } from "@/types/database/types";
+import type { TeamListStatus } from "./team.constants";
 export type ServiceResult = { ok: true } | { ok: false; message: string };
 
 export type TeamActionState = {
@@ -50,7 +51,14 @@ export type AdminTeamsStats = [
   unverified: number,
   orphaned: number,
   unclaimed: number,
+  deleted: number,
 ];
+
+export type AdminTeamsStatsObject = {
+  s: TeamListStatus;
+  value: number;
+}[];
+
 
 export interface ListAdminTeamsResponse {
   rows: AdminTeamRow[];

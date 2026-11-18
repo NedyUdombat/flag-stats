@@ -80,26 +80,41 @@ export async function loginAction(
   }
 
   revalidatePath("/", "layout");
-  // redirect() throws internally, so keep it outside any try/catch
-  redirect(
-    safeNextPath(formData.get("next")) ?? (await getPostLoginDestination()),
-  );
+  redirect(await getPostLoginDestination(formData.get("next")));
 }
 
 // Until /onboarding exists, users with no memberships go to /account.
 // Switch to "/onboarding" once that page is built.
 const NO_MEMBERSHIP_DESTINATION: string = "/account";
 
-export async function getPostLoginDestination(): Promise<string> {
+export async function getPostLoginDestination(
+  next: FormDataEntryValue | null,
+): Promise<string> {
   const user = await getCurrentUser();
+
   if (!user) return "/login";
 
-  if (user.platformRole === "super_admin") return "/admin";
+  const isSuperAdmin = user.platformRole === "super_admin";
 
   const hasMembership = user.roles.some((r) =>
     (ADMIN_CONSOLE_ROLES as readonly string[]).includes(r.role),
   );
-  return hasMembership ? "/admin" : NO_MEMBERSHIP_DESTINATION;
+
+  const defaultDestination =
+    hasMembership || isSuperAdmin ? "/admin" : NO_MEMBERSHIP_DESTINATION;
+
+  const nextPath = safeNextPath(next);
+
+  if (!nextPath) return defaultDestination;
+
+  // Only allow destinations the user is authorized to access.
+  if (isSuperAdmin) return nextPath;
+
+  if (hasMembership && nextPath.startsWith("/admin")) {
+    return nextPath;
+  }
+
+  return defaultDestination;
 }
 
 export async function signUpAction(
