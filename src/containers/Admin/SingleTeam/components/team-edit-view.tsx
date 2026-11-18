@@ -5,18 +5,34 @@ import { updateTeamAction } from "@/features/teams/actions/team-manage.actions";
 
 import type { TeamDetail } from "./team-detail.types";
 
-export function TeamEditView({ team, teamId }: { team: TeamDetail; teamId: string }) {
+export function TeamEditView({
+  team,
+  teamId,
+}: {
+  team: TeamDetail;
+  teamId: string;
+}) {
   return (
     <div className="space-y-6">
       <header className="border-b border-zs-line pb-5">
         <nav aria-label="Breadcrumb" className="mb-2 text-sm text-zs-muted">
-          <Link href="/admin/teams" className="hover:text-zs-ink">Teams</Link>
-          <span className="mx-2" aria-hidden>/</span>
-          <Link href={`/admin/teams/${teamId}`} className="hover:text-zs-ink">{team.name}</Link>
-          <span className="mx-2" aria-hidden>/</span>
+          <Link href="/admin/teams" className="hover:text-zs-ink">
+            Teams
+          </Link>
+          <span className="mx-2" aria-hidden>
+            /
+          </span>
+          <Link href={`/admin/teams/${teamId}`} className="hover:text-zs-ink">
+            {team.name}
+          </Link>
+          <span className="mx-2" aria-hidden>
+            /
+          </span>
           <span className="text-zs-ink">Edit</span>
         </nav>
-        <h1 className="font-display text-4xl leading-none font-bold tracking-wide text-zs-ink uppercase">Edit team</h1>
+        <h1 className="font-display text-4xl leading-none font-bold tracking-wide text-zs-ink uppercase">
+          Edit team
+        </h1>
       </header>
 
       <TeamEditForm

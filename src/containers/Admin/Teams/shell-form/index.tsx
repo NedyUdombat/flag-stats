@@ -9,10 +9,9 @@ import {
   buttonPrimary,
   buttonSecondary,
   fieldInput,
-  fieldLabel,
 } from "@/containers/Account/styles";
 import { cn } from "@/utils/cn";
-import { fieldClass, labelClass } from "../styles";
+import { labelClass } from "../styles";
 import { useShellForm } from "./use-shell-form";
 
 interface ShellFormProps {

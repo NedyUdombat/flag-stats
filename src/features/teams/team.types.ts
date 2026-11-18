@@ -59,7 +59,6 @@ export type AdminTeamsStatsObject = {
   value: number;
 }[];
 
-
 export interface ListAdminTeamsResponse {
   rows: AdminTeamRow[];
   total: number;

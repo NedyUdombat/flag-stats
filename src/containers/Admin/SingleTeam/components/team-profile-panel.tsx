@@ -1,18 +1,8 @@
-import type { ReactNode } from "react";
 import { Panel } from "@/containers/Account/shared/panel";
 
 import type { TeamDetail } from "./team-detail.types";
 
 const HEX = /^#[0-9a-f]{6}$/i;
-
-function Row2({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="border border-zs-line px-3 py-2.5">
-      <dt className="font-data text-[11px] text-zs-muted uppercase">{label}</dt>
-      <dd className="mt-0.5 text-sm text-zs-ink">{children || "—"}</dd>
-    </div>
-  );
-}
 
 function Row({
   label,
@@ -82,7 +72,7 @@ export function TeamProfilePanel({ team }: { team: TeamDetail }) {
             <div className="flex flex-wrap gap-3">
               {colors.map((color, index) => (
                 <div
-                  key={`${color}-${index}`}
+                  key={`${color}`}
                   className="inline-flex items-center gap-2 rounded-lg bg-white/3 px-3 py-2"
                 >
                   <span

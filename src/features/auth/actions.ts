@@ -6,7 +6,6 @@ import { safeNextPath } from "@/lib/auth/safe-next";
 import { sendEmail } from "@/lib/email";
 import {
   confirmEmailHtml,
-  escapeHtml,
   resetPasswordEmailHtml,
 } from "@/lib/email/templates";
 import { logServerError } from "@/lib/errors";
