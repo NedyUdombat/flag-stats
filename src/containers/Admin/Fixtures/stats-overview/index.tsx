@@ -109,7 +109,7 @@ export async function FixtureStatsOverview({
                   {team?.name}
                 </h3>
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[620px] text-left text-xs">
+                  <table className="w-full min-w-155 text-left text-xs">
                     <thead className="text-zs-muted">
                       <tr>
                         <th className="px-2 py-2">Player</th>

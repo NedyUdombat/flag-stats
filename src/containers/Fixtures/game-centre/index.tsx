@@ -342,7 +342,7 @@ export function FixtureGameCentre({
               </button>
               {open[category.name] && (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[620px] text-left text-xs">
+                  <table className="w-full min-w-155 text-left text-xs">
                     <thead className="bg-white/5 text-white/45">
                       <tr>
                         <th className="px-4 py-3">Player</th>
@@ -394,7 +394,7 @@ export function FixtureGameCentre({
 
       {tab === "teams" && (
         <div className="overflow-x-auto rounded-xl border border-white/10 bg-neutral-950">
-          <table className="w-full min-w-[560px] text-sm">
+          <table className="w-full min-w-140 text-sm">
             <thead>
               <tr className="border-b border-white/10 text-white">
                 <th className="px-4 py-4 text-left">Category / Metric</th>

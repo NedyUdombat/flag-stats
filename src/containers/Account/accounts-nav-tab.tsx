@@ -35,8 +35,8 @@ export function AccountsNavTab({ basePath, tab }: AccountsNavTabProps) {
                   active
                     ? "border-accent-gold/30 bg-accent-gold/10 text-accent-gold"
                     : danger
-                      ? "border-white/5 bg-white/[0.02] text-destructive/70"
-                      : "border-white/5 bg-white/[0.02] text-slate-400 hover:border-white/10 hover:bg-white/5 hover:text-white",
+                      ? "border-white/5 bg-white/2 text-destructive/70"
+                      : "border-white/5 bg-white/2 text-slate-400 hover:border-white/10 hover:bg-white/5 hover:text-white",
                 )}
               >
                 <span
@@ -63,7 +63,7 @@ export function AccountsNavTab({ basePath, tab }: AccountsNavTabProps) {
       {/* Desktop sidebar navigation */}
       <nav
         aria-label="Settings sections"
-        className="hidden lg:flex lg:flex-col lg:gap-2 lg:rounded-xl lg:border lg:border-white/10 lg:bg-white/[0.02] lg:p-2"
+        className="hidden lg:flex lg:flex-col lg:gap-2 lg:rounded-xl lg:border lg:border-white/10 lg:bg-white/2 lg:p-2"
       >
         {SETTINGS_TABS.map((t) => {
           const active = tab === t.id;
@@ -90,7 +90,7 @@ export function AccountsNavTab({ basePath, tab }: AccountsNavTabProps) {
                   "grid size-9 shrink-0 place-items-center rounded-lg transition-colors",
                   active
                     ? "bg-accent-gold/15"
-                    : "bg-white/[0.04] group-hover:bg-white/[0.08]",
+                    : "bg-white/4 group-hover:bg-white/8",
                 )}
               >
                 <t.icon className="size-4" aria-hidden />

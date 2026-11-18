@@ -85,7 +85,9 @@ export function AthleteForm({
               This profile may already exist
             </p>
 
-            <p className="break-words text-sm text-zs-ink">{f.state.message}</p>
+            <p className="wrap-break-word text-sm text-zs-ink">
+              {f.state.message}
+            </p>
 
             <button
               type="button"
