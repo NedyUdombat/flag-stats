@@ -29,6 +29,11 @@ export type AuthActionState = {
   status: "idle" | "error" | "success";
   message?: string;
   code?: "email_not_confirmed";
+  values?: {
+    fullName?: string;
+    email?: string;
+    agreed?: boolean;
+  };
 };
 
 const SIGNUP_SUCCESS: AuthActionState = {
@@ -122,9 +127,12 @@ export async function signUpAction(
   formData: FormData,
 ): Promise<AuthActionState> {
   const next = safeNextPath(formData.get("next"));
+
+  const fullName = formData.get("fullName");
+  const email = formData.get("email");
   const parsed = SignUpSchema.safeParse({
-    fullName: formData.get("fullName"),
-    email: formData.get("email"),
+    fullName,
+    email,
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
     acceptTerms: formData.get("acceptTerms"),
@@ -134,6 +142,11 @@ export async function signUpAction(
     return {
       status: "error",
       message: parsed.error.issues[0]?.message ?? "Invalid input.",
+      values: {
+        fullName: fullName as string,
+        email: email as string,
+        agreed: formData.get("acceptTerms") === "on",
+      },
     };
   }
 
@@ -145,6 +158,11 @@ export async function signUpAction(
     return {
       status: "error",
       message: "Too many requests. Please try again later.",
+      values: {
+        fullName: fullName as string,
+        email: email as string,
+        agreed: formData.get("acceptTerms") === "on",
+      },
     };
   }
 
@@ -174,6 +192,11 @@ async function createAccount(
     return {
       status: "error",
       message: "Could not create your account. Please try again.",
+      values: {
+        fullName: data.fullName,
+        email: data.email,
+        agreed: data.acceptTerms === "on",
+      },
     };
   }
   const actionLink = link?.properties?.action_link;
@@ -186,6 +209,11 @@ async function createAccount(
     return {
       status: "error",
       message: "Could not create your account. Please try again.",
+      values: {
+        fullName: data.fullName,
+        email: data.email,
+        agreed: data.acceptTerms === "on",
+      },
     };
   }
 
@@ -203,6 +231,11 @@ async function createAccount(
       status: "error",
       message:
         "Your account was created but we couldn't send the confirmation email. Try signing in to request a new one.",
+      values: {
+        fullName: data.fullName,
+        email: data.email,
+        agreed: data.acceptTerms === "on",
+      },
     };
   }
 

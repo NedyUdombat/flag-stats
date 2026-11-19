@@ -1,3 +1,4 @@
+-- 20260101000034_rate_limits.sql
 create table public.rate_limits (
   key text primary key,
   window_start timestamptz not null default now(),

@@ -1,3 +1,4 @@
+-- 20261118000001_update_teams_short_name_constraint.sql
 ALTER TABLE public.teams
 DROP CONSTRAINT teams_short_name_check;
 

@@ -7,7 +7,7 @@ import {
   MailIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { FormAlert, FormField, InputWithIcon } from "@/components/form-field";
 import { PasswordStrengthMeter } from "@/components/password-strength-meter";
@@ -20,7 +20,9 @@ import { fieldInputClass } from "@/containers/Auth/styles";
 import { type AuthActionState, signUpAction } from "@/features/auth/actions";
 import { cn } from "@/utils/cn";
 
-const initialState: AuthActionState = { status: "idle" };
+const initialState: AuthActionState = {
+  status: "idle",
+};
 
 interface SignUpFormProps {
   defaultEmail?: string;
@@ -32,8 +34,17 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
     signUpAction,
     initialState,
   );
+
   const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
+
+  // Restore non-sensitive form values after a failed submission.
+  useEffect(() => {
+    if (state.status !== "error") return;
+
+    setPassword("");
+    setAgreed(state.values?.agreed ?? false);
+  }, [state]);
 
   if (state.status === "success") {
     return (
@@ -51,6 +62,7 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
     <div className="space-y-6">
       <form action={formAction} className="flex flex-col gap-8">
         {next ? <input type="hidden" name="next" value={next} /> : null}
+
         <FormField id="fullName" label="Full name" required>
           <Input
             id="fullName"
@@ -58,6 +70,7 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
             required
             autoComplete="name"
             placeholder="e.g. Taiwo Ahmed"
+            defaultValue={state.values?.fullName ?? ""}
             className={fieldInputClass}
           />
         </FormField>
@@ -71,7 +84,7 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
               required
               autoComplete="email"
               placeholder="you@example.com"
-              defaultValue={defaultEmail}
+              defaultValue={state.values?.email ?? defaultEmail ?? ""}
               className={cn(fieldInputClass, "pl-10")}
             />
           </InputWithIcon>
@@ -90,6 +103,7 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
               className={cn(fieldInputClass, "pl-10")}
             />
           </InputWithIcon>
+
           <PasswordStrengthMeter password={password} />
         </FormField>
 
@@ -114,6 +128,7 @@ export function SignUpForm({ defaultEmail, next }: SignUpFormProps) {
             onCheckedChange={(value) => setAgreed(value === true)}
             className="mt-0.5"
           />
+
           <Label
             htmlFor="acceptTerms"
             className="block text-sm leading-relaxed font-normal text-muted-foreground"

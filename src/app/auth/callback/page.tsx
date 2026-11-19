@@ -6,21 +6,21 @@ import { useEffect, useState } from "react";
 import { getPostLoginDestination } from "@/features/auth/actions";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export default function AuthCallbackPage() {
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabaseUrl || !supabasePublishableKey) {
       setErrorMsg("Missing SUPABASE_ANON_KEY or NEXT_PUBLIC_SUPABASE_URL");
       return;
     }
     async function handleAuth() {
       const supabase = createBrowserClient(
         supabaseUrl as string,
-        supabaseAnonKey as string,
+        supabasePublishableKey as string,
       );
 
       async function completeAuthFlow(rawNextParam: string | null) {

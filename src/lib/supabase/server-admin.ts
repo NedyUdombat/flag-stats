@@ -3,18 +3,16 @@ import { logServerError } from "../errors";
 
 export async function createServerAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseSecretKey = process.env.NEXT_SUPABASE_SECRET_KEY;
 
-  if (!supabaseUrl || !supabaseRoleKey) {
+  if (!supabaseUrl || !supabaseSecretKey) {
     logServerError(
       "supabase.client",
-      new Error(
-        "Missing SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL",
-      ),
+      new Error("Missing NEXT_SUPABASE_SECRET_KEY or NEXT_PUBLIC_SUPABASE_URL"),
     );
   }
 
-  return createClient(supabaseUrl as string, supabaseRoleKey as string, {
+  return createClient(supabaseUrl as string, supabaseSecretKey as string, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
