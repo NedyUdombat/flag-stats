@@ -31,8 +31,8 @@ export default async function AdminTeamsPage({
 
   if (!user) return null;
 
-  // const superAdmin = true;
-  const superAdmin = isPlatformAdmin(user);
+  const superAdmin = true;
+  // const superAdmin = isPlatformAdmin(user);
   const canCreate = canCreateTeamShell(user);
 
   const status: TeamListStatus = superAdmin

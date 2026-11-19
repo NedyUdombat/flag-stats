@@ -1,3 +1,4 @@
+import { PlusIcon, UserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { Panel } from "@/containers/Account/shared/panel";
 import {
@@ -9,53 +10,91 @@ import {
 } from "@/features/teams/actions/team-invite.actions";
 import type { TeamInviteRow, TeamMemberRow } from "@/features/teams/team.types";
 import { fmtDate } from "@/utils/date";
-// import { ActionButton } from "../action-button";
 import { AddAthlete } from "../add-athlete";
 import { ActionButton } from "../components/action-button";
 
-// import { fmtDate } from "../format";
-
 interface Props {
   teamId: string;
+  teamName: string;
   members: TeamMemberRow[];
   invites: TeamInviteRow[];
 }
 
-export function MembersPanel({ teamId, members, invites }: Props) {
+export function MembersPanel({ teamId, members, invites, teamName }: Props) {
   const pending = invites.filter((i) => i.invite_type === "team_join");
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-5">
+      {/* Add athletes */}
       <Panel
         title="Add athletes"
-        description="Add athletes to your team's pool. You choose who plays in each tournament later."
+        description="Find athletes to add to your team."
       >
-        <AddAthlete
-          teamId={teamId}
-          search={searchAthleteCandidatesAction.bind(null, teamId)}
-          add={addTeamMemberAction.bind(null, teamId)}
-          invite={inviteTeamAthleteAction.bind(null, teamId)}
-        />
+        <div className="space-y-3">
+          <AddAthlete
+            teamId={teamId}
+            search={searchAthleteCandidatesAction.bind(null, teamId)}
+            add={addTeamMemberAction.bind(null, teamId)}
+            invite={inviteTeamAthleteAction.bind(null, teamId)}
+            pending={pending}
+          />
+
+          {/* Alternative action, separated from athlete search */}
+          <div className="flex items-center gap-2 pt-1">
+            <span className="text-xs text-zs-muted">
+              Can't find the athlete?
+            </span>
+            <Link
+              href={{
+                pathname: "/admin/athletes/new",
+                query: {
+                  teamId,
+                  teamName,
+                },
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-gold transition-colors hover:text-accent-gold/75"
+            >
+              <PlusIcon className="size-3.5" />
+              Create new athlete
+            </Link>
+          </div>
+        </div>
+
+        {/* Pending invitations */}
         {pending.length > 0 && (
-          <div className="mt-5">
-            <h3 className="mb-2 font-data text-[11px] text-zs-muted uppercase">
-              Pending invitations
-            </h3>
-            <ul className="divide-y divide-zs-line border border-zs-line">
-              {pending.map((i) => (
+          <div className="mt-6 space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="font-data text-[10px] font-semibold uppercase tracking-wider text-zs-muted">
+                Pending invitations
+              </h3>
+              <span className="font-data text-[10px] text-zs-muted">
+                {pending.length}
+              </span>
+            </div>
+
+            <ul className="space-y-2">
+              {pending.map((invite) => (
                 <li
-                  key={i.id}
-                  className="flex flex-wrap items-center justify-between gap-3 px-3 py-2.5 text-sm"
+                  key={invite.id}
+                  className="flex min-w-0 items-center justify-between gap-3 rounded-md bg-[#171c27] px-3 py-3 sm:px-4"
                 >
-                  <span>
-                    <span className="text-zs-ink">{i.label}</span>
-                    <span className="ml-2 font-data text-xs text-zs-muted">
-                      {i.expired
-                        ? "Expired. Invite again to resend."
-                        : `Expires ${fmtDate(i.expires_at)}`}
-                    </span>
-                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-zs-ink">
+                      {invite.label}
+                    </p>
+                    <p className="mt-1 text-[11px] text-zs-muted">
+                      {invite.expired
+                        ? "Expired"
+                        : `Expires ${fmtDate(invite.expires_at)}`}
+                    </p>
+                  </div>
+
                   <ActionButton
-                    action={revokeTeamInvitationAction.bind(null, teamId, i.id)}
+                    action={revokeTeamInvitationAction.bind(
+                      null,
+                      teamId,
+                      invite.id,
+                    )}
                     label="Revoke"
                     pendingLabel="Revoking…"
                   />
@@ -66,49 +105,69 @@ export function MembersPanel({ teamId, members, invites }: Props) {
         )}
       </Panel>
 
+      {/* Team members */}
       <Panel
         title={`Members (${members.length})`}
-        description="Your team's athlete pool. Tournament rosters are chosen from these athletes."
+        description="Athletes currently in your team."
       >
         {members.length === 0 ? (
-          <p className="text-sm text-zs-muted">
-            No members yet. Add an athlete above.
-          </p>
+          <div className="flex items-center gap-3 rounded-md bg-[#171c27] px-4 py-4">
+            <UserRoundIcon className="size-5 shrink-0 text-zs-muted" />
+            <p className="text-sm text-zs-muted">No athletes added yet.</p>
+          </div>
         ) : (
-          <ul className="divide-y divide-zs-line border border-zs-line">
-            {members.map((m) => (
+          <ul className="space-y-2">
+            {members.map((member) => (
               <li
-                key={m.athlete_id}
-                className="flex flex-wrap items-center justify-between gap-3 px-3 py-3 text-sm"
+                key={member.athlete_id}
+                className="
+                  flex min-w-0 items-center justify-between gap-3
+                  rounded-md bg-[#171c27]
+                  px-3 py-3 sm:px-4 sm:py-3.5
+                "
               >
-                <div>
-                  <Link
-                    href={`/admin/athletes/${m.athlete_id}`}
-                    className="font-display text-lg font-bold text-zs-ink uppercase hover:text-zs-lime"
-                  >
-                    {m.full_name}
-                  </Link>
-                  <p className="font-data text-xs text-zs-muted">
-                    {[
-                      m.primary_position,
-                      m.claimed ? "Claimed" : "Unclaimed",
-                      `joined ${fmtDate(m.joined_at)}`,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </p>
+                {/* Athlete information */}
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-white/[0.04] text-zs-muted">
+                    <UserRoundIcon size={17} strokeWidth={1.7} />
+                  </div>
+
+                  <div className="min-w-0">
+                    <Link
+                      href={`/admin/athletes/${member.athlete_id}`}
+                      className="block truncate text-sm font-semibold text-zs-ink transition-colors hover:text-accent-gold"
+                    >
+                      {member.full_name}
+                    </Link>
+
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-zs-muted sm:text-xs">
+                      {member.primary_position && (
+                        <span>{member.primary_position}</span>
+                      )}
+
+                      {member.primary_position && (
+                        <span className="text-zs-muted/40">·</span>
+                      )}
+
+                      <span>{member.claimed ? "Claimed" : "Unclaimed"}</span>
+                    </div>
+                  </div>
                 </div>
-                <ActionButton
-                  action={removeTeamMemberAction.bind(
-                    null,
-                    teamId,
-                    m.athlete_id,
-                  )}
-                  label="Remove"
-                  pendingLabel="Removing…"
-                  confirm={`Remove ${m.full_name} from the team? Their record is kept.`}
-                  variant="danger"
-                />
+
+                {/* Remove member */}
+                <div className="shrink-0">
+                  <ActionButton
+                    action={removeTeamMemberAction.bind(
+                      null,
+                      teamId,
+                      member.athlete_id,
+                    )}
+                    label="Remove"
+                    pendingLabel="Removing…"
+                    confirm={`Remove ${member.full_name} from the team? Their record is kept.`}
+                    variant="danger"
+                  />
+                </div>
               </li>
             ))}
           </ul>

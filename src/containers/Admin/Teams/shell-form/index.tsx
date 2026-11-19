@@ -54,15 +54,15 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
   );
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="w-full min-w-0">
       <Panel
         title="Create new team"
         description="Set up a team and invite its first administrator."
       >
         <form onSubmit={onSubmit} noValidate className="space-y-6">
           {/* Team details section */}
-          <section className="space-y-4">
-            <div className="rounded-xl border border-white/6 bg-white/1.5 p-4 sm:p-5">
+          <section className="grid gap-6 lg:grid-cols-[1.5fr_3.5fr] rounded-xl border border-white/6 bg-white/1.5">
+            <div className="p-4 sm:p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="min-w-0 flex-1">
                   <ImageUpload
@@ -80,7 +80,7 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
               </div>
             </div>
 
-            <div className="grid gap-x-5 gap-y-5 rounded-xl border border-white/6 bg-white/1.5 p-4 sm:grid-cols-2 sm:p-5">
+            <div className="grid gap-4 content-start items-start rounded-xl p-4 sm:grid-cols-2 sm:p-5">
               {field("shell-name", "name", "Team name")}
 
               {field("shell-city", "homeCity", "Home city (optional)")}
@@ -103,10 +103,6 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
           {superAdmin && (
             <section className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="flex size-8 items-center justify-center rounded-lg border border-white/[0.07] bg-white/3 text-zs-muted">
-                  <MailIcon className="size-4" />
-                </div>
-
                 <div>
                   <h3 className="font-sans text-sm font-semibold text-zs-ink">
                     Admin invitation
@@ -118,13 +114,7 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
               </div>
 
               <div className="rounded-xl border border-white/6 bg-white/1.5 p-4 sm:p-5">
-                {field(
-                  "shell-email",
-                  "adminEmail",
-                  "Admin's email",
-                  "email",
-                  "If they have no account, the link walks them through creating one, then they claim and set up the team.",
-                )}
+                {field("shell-email", "adminEmail", "Admin's email", "email")}
               </div>
             </section>
           )}
@@ -140,13 +130,13 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
           )}
 
           {/* Actions */}
-          <div className="rounded-xl border border-white/6 bg-white/1.5 p-4 sm:p-5">
+          <div className="">
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Link
                 href="/admin/teams"
                 className={cn(
                   buttonSecondary,
-                  "flex w-full cursor-pointer justify-center rounded-sm font-sans text-[14px] font-normal capitalize",
+                  "flex w-fll cursor-pointer justify-center rounded-sm font-sans text-[14px] font-normal capitalize",
                 )}
               >
                 Cancel
@@ -157,7 +147,7 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
                 disabled={pending}
                 className={cn(
                   buttonPrimary,
-                  "group flex w-full cursor-pointer justify-center gap-2 rounded-sm font-sans text-[14px] font-normal capitalize disabled:cursor-not-allowed disabled:opacity-60",
+                  "group flex w-ful cursor-pointer justify-center gap-2 rounded-sm font-sans text-[14px] font-normal capitalize disabled:cursor-not-allowed disabled:opacity-60",
                 )}
               >
                 {pending ? (

@@ -13,6 +13,7 @@ export default async function NewTeamPage() {
   if (!canCreateTeamShell(user)) redirect("/admin/teams");
 
   const superAdmin = isPlatformAdmin(user);
+
   return (
     <div className="space-y-6">
       <header className="">

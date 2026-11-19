@@ -121,7 +121,7 @@ export function AccountsRolesSection({
               return (
                 <div
                   key={`${a.role}-${a.manageHref}`}
-                  className="group rounded-xl  bg-white/1.5 p-4 transition-all duration-200 hover:border-white/10 hover:bg-white/3"
+                  className="group rounded-lg bg-white/1.5 p-4 transition-all duration-200 hover:border-white/10 hover:bg-white/3"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-white/[0.07] bg-white/3 text-zs-muted transition-colors group-hover:border-accent-gold/20 group-hover:bg-accent-gold/5 group-hover:text-accent-gold">

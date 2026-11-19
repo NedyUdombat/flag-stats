@@ -11,20 +11,20 @@ export const metadata = { title: "Add athlete" };
 export default async function NewAthletePage({
   searchParams,
 }: {
-  searchParams: Promise<{ team?: string }>;
+  searchParams: Promise<{ teamId?: string; teamName?: string }>;
 }) {
-  const { team: teamParam } = await searchParams;
+  const teamParam = await searchParams;
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/admin/athletes/new");
   if (!canCreateAthleteForOthers(user)) redirect("/admin/athletes");
 
   let team: { id: string; name: string } | undefined;
-  if (teamParam) {
-    const id = z.uuid().safeParse(teamParam);
+  if (Object.values(teamParam).length > 0) {
+    const id = z.uuid().safeParse(teamParam.teamId);
     if (!id.success || !canManageTeam(user, id.data))
-      redirect("/admin/athletes/new");
+      redirect("/admin/athletes");
     const t = await getTeam(id.data);
-    if (!t || t.deleted_at || !t.claimed_at) redirect("/admin/athletes/new");
+    if (!t || t.deleted_at || !t.claimed_at) redirect("/admin/athletes");
     team = { id: t.id, name: t.name };
   }
 
@@ -56,11 +56,8 @@ export default async function NewAthletePage({
           <span className="mx-2" aria-hidden>
             /
           </span>
-          <span className="text-zs-ink">Add athlete</span>
+          <span className="text-zs-ink">New Athlete</span>
         </nav>
-        <h1 className="font-display text-4xl leading-none font-bold tracking-wide text-zs-ink uppercase">
-          Add athlete
-        </h1>
       </header>
       <AdminAthleteForm
         mode="create"

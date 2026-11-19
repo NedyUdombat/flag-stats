@@ -4,13 +4,16 @@ import { MenuIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BrandText } from "@/components/brand-text";
 import { SignOutButton } from "@/components/logout-button";
+import { UserMenu } from "@/components/user-menu";
+import type { CurrentUser } from "@/types/users/types";
 import { AdminSidebarNav, type RenderedNavItem } from "./admin-sidebar-nav";
 
 interface AdminSidebarProps {
   items: RenderedNavItem[];
+  user: CurrentUser;
 }
 
-export function AdminSidebar({ items }: AdminSidebarProps) {
+export function AdminSidebar({ items, user }: AdminSidebarProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -42,15 +45,24 @@ export function AdminSidebar({ items }: AdminSidebarProps) {
       {/* Mobile bar */}
       <div className="sticky top-0 z-30 flex items-center justify-between bg-[#080b10cc] px-6 py-3 lg:hidden h-16">
         <BrandText showProBadge href="/admin" />
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open navigation"
-          aria-expanded={open}
-          className="p-2 text-zs-ink focus-visible:outline-2 focus-visible:outline-accent-gold cursor-pointer"
-        >
-          <MenuIcon className="size-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <UserMenu
+            avatarUrl={user.avatarUrl}
+            fullName={user.fullName}
+            email={user.email}
+            showAccountLink={true}
+            userId={user.id}
+          />
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open navigation"
+            aria-expanded={open}
+            className="p-2 text-zs-ink focus-visible:outline-2 focus-visible:outline-accent-gold cursor-pointer"
+          >
+            <MenuIcon className="size-5" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}

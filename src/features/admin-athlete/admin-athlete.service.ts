@@ -8,6 +8,7 @@ import { ADMIN_PAGE_SIZE } from "./admin-athlete.constants";
 import type {
   AdminAthleteFilters,
   AdminAthleteListItem,
+  AdminAthleteStats,
 } from "./admin-athlete.types";
 
 export async function listAdminAthletes(
@@ -27,6 +28,7 @@ export async function listAdminAthletes(
     throw new Error("Could not load athletes.");
   }
   const rows = data ?? [];
+
   const athletes: AdminAthleteListItem[] = rows.map((r) => ({
     id: r.id,
     fullName: r.full_name,
@@ -64,15 +66,6 @@ export async function listAllAdminAthletes(
   }
   return all.slice(0, max);
 }
-
-export type AdminAthleteStats = {
-  total: number;
-  claimed: number;
-  unclaimed: number;
-  invite_pending: number;
-  invite_expired: number;
-  verified: number;
-};
 
 export async function getAdminAthleteStats(): Promise<AdminAthleteStats> {
   const supabase = await createServerClient();

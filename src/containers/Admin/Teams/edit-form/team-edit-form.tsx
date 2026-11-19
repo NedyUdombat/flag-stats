@@ -95,8 +95,8 @@ export function TeamEditForm({ action, initial, cancelHref }: Props) {
       >
         <form onSubmit={onSubmit} noValidate className="space-y-5">
           {/* Team identity */}
-          <section className="space-y-3">
-            <div className="grid gap-6 rounded-xl border border-white/6 bg-white/1.5 p-4 sm:p-5 lg:grid-cols-[1.5fr_3.5fr]">
+          <section className="">
+            <div className="grid gap-6 rounded-xl h-fit border border-white/6 bg-white/1.5 p-4 sm:p-5 lg:grid-cols-[1.5fr_3.5fr]">
               {/* Team logo - 40% */}
               <div className="min-w-0">
                 <ImageUpload
@@ -114,7 +114,7 @@ export function TeamEditForm({ action, initial, cancelHref }: Props) {
               </div>
 
               {/* Team details - 60% */}
-              <div className="grid min-w-0 grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+              <div className="grid min-w-0 h-fit content-start items-start grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
                 {input("edit-team-name", "name", "Team name")}
 
                 {input(

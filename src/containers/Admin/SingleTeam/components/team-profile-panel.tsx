@@ -1,5 +1,5 @@
+import { format } from "date-fns";
 import { Panel } from "@/containers/Account/shared/panel";
-
 import type { TeamDetail } from "./team-detail.types";
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -37,15 +37,22 @@ export function TeamProfilePanel({ team }: { team: TeamDetail }) {
       <div className="flex flex-col gap-5">
         {/* Team information */}
         <div className="flex flex-col">
-          <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <dl className="grid gap-3 grid-cols-2 lg:grid-cols-3">
             <Row label="Team name" value={team.name} />
             <Row label="Short name" value={team.short_name} />
+            <Row label="Slug" value={team.slug} />
             <Row label="Home city" value={team.home_city} />
             <Row label="Country" value={team.country} />
             <Row label="Home ground" value={team.home_ground} />
             <Row label="Founded" value={team.founded_year?.toString()} />
             <Row label="Head coach" value={team.head_coach_name} />
-            <Row label="Slogan" value={team.slogan} />
+            <Row
+              label="Created at"
+              value={format(new Date(team.created_at), "MM dd yyyy")}
+            />
+            <div className="col-span-2">
+              <Row label="Slogan" value={team.slogan} />
+            </div>
           </dl>
         </div>
 

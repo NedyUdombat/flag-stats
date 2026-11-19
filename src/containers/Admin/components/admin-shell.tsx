@@ -35,7 +35,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
         "min-h-dvh bg-[#0a0d13] text-zs-ink lg:flex",
       )}
     >
-      <AdminSidebar items={items} />
+      <AdminSidebar items={items} user={user} />
 
       <div className="relative min-w-0 flex-1 lg:ml-64">
         <header className="fixed top-0 right-0 z-40 hidden h-16 items-center justify-end bg-black/20 px-6 backdrop-blur-2xl lg:flex lg:left-64 xl:px-8">

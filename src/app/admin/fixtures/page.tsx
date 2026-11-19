@@ -20,17 +20,13 @@ import { listAdminFixtures } from "@/features/fixtures/fixture.service";
 import type { listAdminFixturesResponse } from "@/features/fixtures/fixture.types";
 import { getCurrentUser } from "@/features/users/user.service";
 import { canCreateTournament } from "@/lib/permissions";
+import { toQuery } from "@/utils/to-query";
 
 export const metadata = { title: "Fixtures & results" };
 
 const PAGE_SIZE = 20;
 const btn =
   "inline-flex h-10 items-center gap-2 px-4 font-display text-base font-bold tracking-wider uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zs-lime";
-const toQuery = (v: Record<string, string | undefined>) => {
-  const sp = new URLSearchParams();
-  for (const [k, val] of Object.entries(v)) if (val) sp.set(k, val);
-  return sp.toString();
-};
 
 export default async function AdminFixturesPage({
   searchParams,

@@ -14,7 +14,7 @@ export function TeamEditView({
 }) {
   return (
     <div className="space-y-6">
-      <header className="border-b border-zs-line pb-5">
+      <header className="">
         <nav aria-label="Breadcrumb" className="mb-2 text-sm text-zs-muted">
           <Link href="/admin/teams" className="hover:text-zs-ink">
             Teams
@@ -30,9 +30,6 @@ export function TeamEditView({
           </span>
           <span className="text-zs-ink">Edit</span>
         </nav>
-        <h1 className="font-display text-4xl leading-none font-bold tracking-wide text-zs-ink uppercase">
-          Edit team
-        </h1>
       </header>
 
       <TeamEditForm

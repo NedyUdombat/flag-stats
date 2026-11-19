@@ -10,7 +10,7 @@ function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center border px-2 py-0.5 font-data text-[11px] uppercase",
+        "inline-flex items-center border px-2.5 py-0.5 font-data text-[10px] uppercase rounded-md",
         tone === "lime" && "border-zs-lime/40 bg-zs-lime/10 text-zs-lime",
         tone === "amber" && "border-zs-amber/40 bg-zs-amber/10 text-zs-amber",
         tone === "coral" && "border-zs-coral/40 bg-zs-coral/10 text-zs-coral",

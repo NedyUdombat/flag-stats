@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/primitives/avatar";
 import type { AdminAthleteListItem } from "@/features/admin-athlete/admin-athlete.types";
 import { initials } from "@/lib/display";
+import { getAthleteTint } from "@/lib/tints";
 import { cn } from "@/utils/cn";
-
-const cell = "border border-zs-line px-4 py-3 align-middle";
-const head =
-  "border border-zs-line bg-zs-raised px-4 py-3 text-left font-display text-sm font-bold tracking-wider text-zs-ink uppercase";
 
 function ClaimBadge({ a }: { a: AdminAthleteListItem }) {
   if (a.claimed)
@@ -42,107 +44,134 @@ export function AdminAthletesTable({
   athletes: AdminAthleteListItem[];
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[860px] border-collapse border border-zs-line bg-zs-panel">
-        <thead>
-          <tr>
-            <th scope="col" className={head}>
-              Athlete
-            </th>
-            <th scope="col" className={head}>
-              Club &amp; position
-            </th>
-            <th scope="col" className={head}>
-              Claim
-            </th>
-            <th scope="col" className={head}>
-              Verified
-            </th>
-            <th scope="col" className={cn(head, "text-right")}>
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {athletes.map((a) => (
-            <tr key={a.id} className="hover:bg-zs-raised/50">
-              <td className={cell}>
-                <div className="flex items-center gap-3">
-                  {a.photoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
+    <div className="overflow-hidden rounded-xl border border-white/[0.07] bg-transparent">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-212.5 border-collapse text-left">
+          <thead>
+            <tr className="border-b border-white/8">
+              {["Athlete", "Club & position", "Claim", "Verified"].map(
+                (heading) => (
+                  <th
+                    key={heading}
+                    scope="col"
+                    className="whitespace-nowrap px-5 py-4 font-data text-[11px] font-semibold uppercase tracking-[0.16em] text-white first\:pl-6 last\:pr-6"
+                  >
+                    {heading}
+                  </th>
+                ),
+              )}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5.5">
+            {athletes.map((a) => {
+              const fallbackTint = getAthleteTint(
+                a.id || a.fullName || "default",
+              );
 
-                    <Image
-                      src={a.photoUrl}
-                      alt=""
-                      className="size-11 shrink-0 object-cover"
-                    />
-                    //             <img
-                    //   src={a.photoUrl}
-                    //   alt=""
-                    //   className="size-11 shrink-0 object-cover"
-                    // />
-                  ) : (
-                    <span className="grid size-11 shrink-0 place-items-center bg-zs-raised font-data text-xs font-bold text-zs-muted">
-                      {initials(a.fullName, null)}
-                    </span>
-                  )}
-                  <div className="min-w-0">
+              return (
+                <tr
+                  key={a.id}
+                  className="group relative transition-colors duration-200 hover:bg-white/[0.035] focus-within:bg-white/[0.035]"
+                >
+                  {/* Athlete */}
+                  <td className="px-5 py-4 pl-6">
                     <Link
                       href={`/admin/athletes/${a.id}`}
-                      className="font-display text-xl leading-tight font-bold text-zs-ink hover:text-zs-lime focus-visible:outline-2 focus-visible:outline-zs-lime"
-                    >
-                      {a.fullName}
-                    </Link>
-                    <p className="truncate font-data text-xs text-zs-muted">
-                      {a.slug}
-                      {a.homeCity && <span> · {a.homeCity}</span>}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td className={cell}>
-                <p className="font-display text-lg leading-tight font-bold text-zs-ink">
-                  {a.teamName ?? (
-                    <span className="text-zs-muted">Not rostered</span>
-                  )}
-                </p>
-                <p className="text-sm text-zs-muted">
-                  {[
-                    a.jerseyNumber != null
-                      ? `#${String(a.jerseyNumber).padStart(2, "0")}`
-                      : null,
-                    a.primaryPosition ?? "No position set",
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                  {a.secondaryPositions.length > 0 &&
-                    ` (also ${a.secondaryPositions.join(", ")})`}
-                </p>
-              </td>
-              <td className={cell}>
-                <ClaimBadge a={a} />
-              </td>
-              <td className={cell}>
-                {a.verified ? (
-                  <span className="bg-zs-lime/15 px-2 py-1 font-data text-xs font-bold text-zs-lime uppercase">
-                    Verified
-                  </span>
-                ) : (
-                  <span className="text-sm text-zs-muted">Not yet</span>
-                )}
-              </td>
-              <td className={cn(cell, "text-right")}>
-                <Link
-                  href={`/admin/athletes/${a.id}`}
-                  className="inline-block bg-zs-raised px-3 py-1.5 font-display text-sm font-bold tracking-wider text-zs-ink uppercase hover:bg-zs-line focus-visible:outline-2 focus-visible:outline-zs-lime"
-                >
-                  View
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                      aria-label={`View ${a.fullName}`}
+                      className="absolute inset-0 z-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-zs-lime"
+                    />
+
+                    <div className="pointer-events-none relative z-10 flex items-center gap-3">
+                      <Avatar className="size-10 rounded-sm">
+                        <AvatarImage
+                          src={a.photoUrl ?? ""}
+                          alt={`${a.fullName ?? "User"}'s avatar`}
+                          className="size-full object-cover"
+                        />
+                        <AvatarFallback
+                          className={cn(
+                            "grid size-10 place-items-center rounded-sm font-sans text-xs font-bold",
+                            fallbackTint,
+                          )}
+                        >
+                          {initials(a.fullName, a.inviteEmail)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="min-w-0">
+                        <span className="block truncate font-display text-sm font-bold uppercase tracking-wide text-zs-ink transition-colors group-hover:text-accent-gold">
+                          {a.fullName}
+                        </span>
+
+                        <span className="mt-1 block truncate font-data text-xs text-zs-muted/80">
+                          {a.slug}
+                          {a.homeCity && ` · ${a.homeCity}`}
+                        </span>
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Club & position */}
+                  <td className="pointer-events-none relative z-10 px-5 py-4">
+                    <span className="block truncate font-sans text-sm font-medium text-zs-ink">
+                      {a.teamName ?? (
+                        <span className="font-normal text-zs-muted">
+                          Not rostered
+                        </span>
+                      )}
+                    </span>
+
+                    <span className="mt-1 block text-xs text-zs-muted">
+                      {[
+                        a.jerseyNumber != null
+                          ? `#${String(a.jerseyNumber).padStart(2, "0")}`
+                          : null,
+                        a.primaryPosition ?? "No position set",
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                      {a.secondaryPositions.length > 0 &&
+                        ` (also ${a.secondaryPositions.join(", ")})`}
+                    </span>
+                  </td>
+
+                  {/* Claim */}
+                  <td className="pointer-events-none relative z-10 px-5 py-4">
+                    <ClaimBadge a={a} />
+                  </td>
+
+                  {/* Verification */}
+                  <td className="pointer-events-none relative z-10 whitespace-nowrap px-5 py-4 pr-6">
+                    {a.verified ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-sm border border-zs-lime/15 bg-zs-lime/[0.07] px-2 py-1 font-data text-[10px] font-semibold uppercase tracking-wider text-zs-lime">
+                        <span className="size-1.5 rounded-full bg-zs-lime" />
+                        Verified
+                      </span>
+                    ) : (
+                      <span className="font-data text-xs text-zs-muted/70">
+                        Not verified
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+
+            {/* Empty state */}
+            {athletes.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-6 py-16 text-center">
+                  <p className="font-display text-sm font-bold uppercase tracking-wider text-zs-ink">
+                    No athletes found
+                  </p>
+                  <p className="mt-1 text-sm text-zs-muted">
+                    Try adjusting your search or filters.
+                  </p>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

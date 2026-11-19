@@ -1,8 +1,10 @@
 "use client";
 
-import { buttonPrimary } from "@/containers/Account/styles";
+import { Button } from "@/components/primitives/button";
+import { buttonPrimary, fieldInput } from "@/containers/Account/styles";
 import type { TeamActionState } from "@/features/teams/team.types";
-import { fieldClass, labelClass } from "../styles";
+import { cn } from "@/utils/cn";
+import { labelClass } from "../styles";
 import { useInviteAdminForm } from "./use-invite-admin-form";
 
 interface Props {
@@ -30,11 +32,19 @@ export function InviteAdminForm({
           autoComplete="off"
           aria-invalid={emailError ? true : undefined}
           aria-describedby={emailError ? "invite-admin-email-error" : undefined}
-          className={`${fieldClass} min-w-56 flex-1`}
+          className={`${fieldInput} min-w-56 flex-1 max-h-10!`}
         />
-        <button type="submit" disabled={pending} className={buttonPrimary}>
+        <Button
+          type="submit"
+          disabled={pending}
+          variant={"default"}
+          className={cn(
+            buttonPrimary,
+            "rounded-sm font-normal! text-[13px] min-h-10!",
+          )}
+        >
           {pending ? "Sending…" : submitLabel}
-        </button>
+        </Button>
       </div>
       {emailError && (
         <p id="invite-admin-email-error" className="text-xs text-zs-coral">

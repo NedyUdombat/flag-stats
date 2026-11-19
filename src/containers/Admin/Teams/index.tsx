@@ -9,6 +9,7 @@ import type {
   AdminTeamsStatsObject,
   ListAdminTeamsResponse,
 } from "@/features/teams/team.types";
+import { toQuery } from "@/utils/to-query";
 import { TeamListHeader } from "./components/team-list-header";
 import { TeamListPageStats } from "./components/team-list-page-stats";
 
@@ -90,13 +91,3 @@ export async function TeamsAdminContainer({
     </div>
   );
 }
-
-const toQuery = (values: Record<string, string | undefined>) => {
-  const params = new URLSearchParams();
-
-  for (const [key, value] of Object.entries(values)) {
-    if (value) params.set(key, value);
-  }
-
-  return params.toString();
-};

@@ -171,7 +171,12 @@ export async function SingleTeamDetailContainer({
 
       {activeTab === "members" &&
         (membersEnabled ? (
-          <MembersPanel teamId={teamId} members={members} invites={invites} />
+          <MembersPanel
+            teamId={teamId}
+            members={members}
+            invites={invites}
+            teamName={team.name}
+          />
         ) : (
           <UnavailablePanel
             title="Members"

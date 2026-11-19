@@ -2,6 +2,7 @@
 
 import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
 import type { TeamActionState } from "@/features/teams/team.types";
+import { cn } from "@/utils/cn";
 import { buttonDanger, buttonLink } from "../../styles";
 import { useActionButton } from "./use-action-button";
 
@@ -34,7 +35,10 @@ export function ActionButton({
         type="button"
         onClick={run}
         disabled={pending}
-        className={variants[variant]}
+        className={cn(
+          variants[variant],
+          "rounded-sm font-data font-normal! cursor-pointer capitalize",
+        )}
       >
         {pending ? pendingLabel : label}
       </button>

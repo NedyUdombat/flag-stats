@@ -1,4 +1,11 @@
-import { Activity, ShieldAlert, Trash2, UserRoundX, Users } from "lucide-react";
+import {
+  Activity,
+  type LucideIcon,
+  ShieldAlert,
+  Trash2,
+  UserRoundX,
+  Users,
+} from "lucide-react";
 import type { TeamListStatus } from "@/features/teams/team.constants";
 import type { AdminTeamsStatsObject } from "@/features/teams/team.types";
 
@@ -10,42 +17,36 @@ const STAT_CONFIG: Record<
   TeamListStatus,
   {
     label: string;
-    description: string;
-    icon: typeof Activity;
+    icon: LucideIcon;
     iconClass: string;
     attention?: boolean;
   }
 > = {
   active: {
     label: "Active teams",
-    description: "Claimed and publicly visible",
     icon: Activity,
     iconClass: "text-amber-400 bg-amber-400/10",
   },
   unverified: {
     label: "Unverified",
-    description: "Teams awaiting verification",
     icon: ShieldAlert,
     iconClass: "text-orange-400 bg-orange-400/10",
     attention: true,
   },
   orphaned: {
     label: "Orphaned",
-    description: "Teams without an administrator",
     icon: UserRoundX,
     iconClass: "text-orange-400 bg-orange-400/10",
     attention: true,
   },
   unclaimed: {
     label: "Unclaimed",
-    description: "Waiting for an administrator",
     icon: Users,
     iconClass: "text-yellow-400 bg-yellow-400/10",
     attention: true,
   },
   deleted: {
     label: "Deleted",
-    description: "Teams available for restoration",
     icon: Trash2,
     iconClass: "text-zs-muted bg-white/5",
   },
@@ -140,10 +141,6 @@ export function TeamListPageStats({ stats }: TeamListPageStatsProps) {
 
               <p className="mt-5 text-3xl font-semibold leading-none tracking-tight text-zs-ink tabular-nums sm:text-4xl">
                 {stat.value.toLocaleString()}
-              </p>
-
-              <p className="mt-2 min-h-5 text-xs leading-relaxed text-zs-muted">
-                {config.description}
               </p>
             </article>
           );

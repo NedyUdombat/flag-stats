@@ -443,7 +443,7 @@ const ACTIVITY_TIME: Record<MatchState, string> = {
   awaiting_result: "text-zs-muted",
 };
 
-export function RecentActivity({ items }: { items: ActivityItem[] }) {
+export function RecentActivity({ activities }: { activities: ActivityItem[] }) {
   return (
     <Panel title="Recent activity" icon={HistoryIcon}>
       {items.length === 0 ? (
@@ -452,10 +452,10 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
         </p>
       ) : (
         <ol className="space-y-1.5">
-          {items.map((item) => (
+          {activities.map((item) => (
             <li
               key={item.id}
-              className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 bg-zs-bg/60 px-3 py-2.5 font-data text-sm sm:grid-cols-[auto_1fr_auto]"
+              className="grid grid-cols-[auto_1fr] activities-baseline gap-x-4 bg-zs-bg/60 px-3 py-2.5 font-data text-sm sm:grid-cols-[auto_1fr_auto]"
             >
               <time
                 dateTime={item.at}

@@ -29,3 +29,17 @@ export interface AdminAthletesListResponse {
   page: number;
   pageSize: number;
 }
+
+export type AdminAthleteStats = {
+  total: number;
+  claimed: number;
+  unclaimed: number;
+  invite_pending: number;
+  invite_expired: number;
+  verified: number;
+};
+
+export type AdminAthletesStatsObject = {
+  s: AthleteStatus;
+  value: number;
+}[];
