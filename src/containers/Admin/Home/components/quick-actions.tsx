@@ -14,7 +14,6 @@ const cardStyle = "rounded-xl border border-[#272B35] bg-[#11141B] shadow-sm";
 export function QuickActions({
   scope,
   userCanVerify,
-  user,
 }: {
   scope: DashboardScope;
   userCanVerify: boolean;

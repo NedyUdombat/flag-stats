@@ -15,7 +15,6 @@ function roleLabel(role: unknown) {
 
 export function UserAccess({
   user,
-  scope,
 }: {
   user: CurrentUser;
   scope: DashboardScope;
@@ -56,12 +55,6 @@ export function UserAccess({
           ))}
         </ul>
       )}
-      {/* 
-      <p className="mt-4 text-xs leading-5 text-slate-400">
-        {scope === "platform"
-          ? "You're seeing activity across the whole platform."
-          : `Fixtures, results and verification counts are limited to the ${scope} scope covered by your role.`}
-      </p> */}
     </section>
   );
 }

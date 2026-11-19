@@ -1,8 +1,4 @@
-
-import type {
-  DashboardPreviewData,
-  DashboardScope,
-} from "../types";
+import type { DashboardPreviewData, DashboardScope } from "../types";
 
 const statsByScope = {
   platform: {
@@ -108,7 +104,7 @@ export function getDashboardScope(user: {
 }
 
 export function getDashboardPreviewData(
-  scope: DashboardScope
+  scope: DashboardScope,
 ): DashboardPreviewData {
   return {
     stats: statsByScope[scope],

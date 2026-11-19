@@ -40,7 +40,11 @@ export function AdminDashboardContainer({
         </div>
 
         <aside className="space-y-6">
-          <QuickActions user={user} scope={scope} userCanVerify={userCanVerify} />
+          <QuickActions
+            user={user}
+            scope={scope}
+            userCanVerify={userCanVerify}
+          />
 
           <UserAccess user={user} scope={scope} />
 

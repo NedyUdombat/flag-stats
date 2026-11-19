@@ -1,13 +1,10 @@
-import { Panel } from "@/containers/Account/shared/panel";
 import { UnclaimedDangerZone } from "@/containers/Admin/Athletes/danger-zone/danger-zone";
 import { InvitePanel } from "@/containers/Admin/Athletes/invite-panel/invite-panel";
 import type { AthleteInvitation } from "@/features/invitations/invitation.types";
 import type { AthleteRosterRow } from "@/features/rosters/roster.types";
-import { ageFromDob } from "@/lib/age";
 import { canManageUnclaimedAthlete } from "@/lib/permissions";
 import type { AthleteRow, AthleteTeamMembership } from "@/types/athletes/types";
 import type { CurrentUser } from "@/types/users/types";
-import { fmtDate, fmtDay } from "@/utils/date";
 import { isAthleteTab } from "./components/athlete-detail.constants";
 import { AthleteDetailBanners } from "./components/athlete-detail-banners";
 import { AthleteDetailHeader } from "./components/athlete-detail-header";
@@ -16,7 +13,7 @@ import { AthleteProfilePanel } from "./components/athlete-profile-panel";
 import { AthleteTeamPanel } from "./components/athlete-team-panel";
 import { AthleteTournamentRosters } from "./components/athlete-tournament-rosters";
 
-function Row({
+function _Row({
   label,
   value,
 }: {
@@ -67,7 +64,6 @@ export async function SingleAthleteDetailContainer({
     profileUserId: athlete.profile_user_id,
     createdBy: athlete.created_by,
   });
-  console.log({ athlete, claimed });
   const activeTab = isAthleteTab(searchParams.tab)
     ? searchParams.tab
     : "overview";

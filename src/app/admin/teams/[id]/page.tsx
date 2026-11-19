@@ -1,6 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 import { SingleTeamDetailContainer } from "@/containers/Admin/SingleTeam";
-import { isTeamTab } from "@/containers/Admin/SingleTeam/components/team-detail.constants";
 import { TeamEditView } from "@/containers/Admin/SingleTeam/components/team-edit-view";
 import { getTeam } from "@/features/teams/team.service";
 import { getCurrentUser } from "@/features/users/user.service";

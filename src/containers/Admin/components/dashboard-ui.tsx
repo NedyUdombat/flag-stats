@@ -446,7 +446,7 @@ const ACTIVITY_TIME: Record<MatchState, string> = {
 export function RecentActivity({ activities }: { activities: ActivityItem[] }) {
   return (
     <Panel title="Recent activity" icon={HistoryIcon}>
-      {items.length === 0 ? (
+      {activities.length === 0 ? (
         <p className="text-sm text-zs-muted">
           No results have been submitted yet. Submitted results appear here.
         </p>

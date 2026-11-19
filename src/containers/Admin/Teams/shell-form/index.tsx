@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, MailIcon, PlusIcon } from "lucide-react";
+import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { CountrySelect } from "@/components/primitives/country-select";
 import { ImageUpload } from "@/components/primitives/image-upload";

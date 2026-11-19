@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, CheckCheck, Plus } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Message } from "@/containers/Account/shared/message";

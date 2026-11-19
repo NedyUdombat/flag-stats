@@ -1,9 +1,4 @@
-
-export type DashboardScope =
-  | "platform"
-  | "federation"
-  | "league"
-  | "team";
+export type DashboardScope = "platform" | "federation" | "league" | "team";
 
 export type DashboardStats = {
   name: string;

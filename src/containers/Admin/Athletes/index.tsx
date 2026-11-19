@@ -73,7 +73,7 @@ export async function AthleteAdminContainer({
         ) : (
           <div className="space-y-4">
             <AdminAthletesTable athletes={result.athletes} />
-            
+
             <AdminPagination
               page={result.page}
               pageSize={result.pageSize}

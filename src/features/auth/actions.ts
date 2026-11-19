@@ -80,7 +80,6 @@ export async function loginAction(
 
   revalidatePath("/", "layout");
   const nextDestination = await getPostLoginDestination(formData.get("next"));
-  console.log({ nextDestination });
   redirect(nextDestination);
 }
 

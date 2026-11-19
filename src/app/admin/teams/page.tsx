@@ -11,7 +11,7 @@ import type {
   ListAdminTeamsResponse,
 } from "@/features/teams/team.types";
 import { getCurrentUser } from "@/features/users/user.service";
-import { canCreateTeamShell, isPlatformAdmin } from "@/lib/permissions";
+import { canCreateTeamShell } from "@/lib/permissions";
 
 export const metadata = { title: "Teams" };
 
