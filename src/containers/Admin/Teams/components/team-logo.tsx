@@ -4,10 +4,12 @@ export function TeamLogo({
   name,
   logoUrl,
   size = "md",
+  className,
 }: {
   name: string;
   logoUrl: string | null;
   size?: "md" | "lg";
+  className?: string;
 }) {
   const initials = name
     .trim()
@@ -21,7 +23,8 @@ export function TeamLogo({
       aria-hidden
       className={cn(
         "grid shrink-0 place-items-center overflow-hidden border border-zs-line bg-zs-raised bg-cover bg-center font-display font-bold text-zs-muted",
-        size === "lg" ? "size-20 text-2xl" : "size-10 text-sm",
+        size === "lg" ? "size-24 text-2xl" : "size-10 text-sm",
+        className,
       )}
       style={
         logoUrl

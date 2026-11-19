@@ -28,7 +28,7 @@ export function PendingInvitations({
             const copy = INVITATION_COPY[i.type];
             return (
               <li key={i.id} className="space-y-2 px-3 py-3">
-                <p className="font-display text-lg font-bold text-zs-ink">
+                <p className="font-sans text-lg font-bold text-zs-ink">
                   {copy.title(i.label)}
                 </p>
                 <p className="text-sm text-zs-muted">{copy.description}</p>

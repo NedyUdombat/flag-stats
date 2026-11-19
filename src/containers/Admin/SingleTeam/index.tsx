@@ -23,33 +23,30 @@ import type {
   OpenTournamentRow,
   TeamRegistrationRow,
 } from "@/features/tournaments/tournament.types";
-import type { TeamTabId } from "./components/team-detail.constants";
+import type { CurrentUser } from "@/types/users/types";
+import { isTeamTab } from "./components/team-detail.constants";
 import type { TeamDetail } from "./components/team-detail.types";
 import { TeamDetailBanners } from "./components/team-detail-banners";
 import { TeamDetailHeader } from "./components/team-detail-header";
 import { TeamDetailTabs } from "./components/team-detail-tabs";
 import { TeamProfilePanel } from "./components/team-profile-panel";
 
-type Props = {
+interface SingleTeamDetailContainerProps {
   team: TeamDetail;
   teamId: string;
-  user: NonNullable<
-    Awaited<
-      ReturnType<typeof import("@/features/users/user.service").getCurrentUser>
-    >
-  >;
+  user: CurrentUser;
   searchParams: {
     created?: string;
     sent?: string;
     saved?: string;
     claimed?: string;
     added?: string;
+    tab?: string;
   };
-  activeTab: TeamTabId;
   claimed: boolean;
   deleted: boolean;
   orphaned: boolean;
-};
+}
 
 function UnavailablePanel({
   title,
@@ -70,12 +67,12 @@ export async function SingleTeamDetailContainer({
   teamId,
   user,
   searchParams,
-  activeTab,
   claimed,
   deleted,
   orphaned,
-}: Props) {
+}: SingleTeamDetailContainerProps) {
   const membersEnabled = claimed && !deleted;
+  const activeTab = isTeamTab(searchParams.tab) ? searchParams.tab : "overview";
 
   // Tab-specific data
   let invites: TeamInviteRow[] = [];

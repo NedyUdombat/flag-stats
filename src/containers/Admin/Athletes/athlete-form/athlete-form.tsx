@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Check, CheckCheck, Plus } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Message } from "@/containers/Account/shared/message";
@@ -292,7 +292,7 @@ export function AdminAthleteForm({
                 </>
               ) : (
                 <>
-                  <Plus
+                  <CheckCheck
                     className="size-4 transition-transform group-hover:translate-x-0.5"
                     aria-hidden
                   />

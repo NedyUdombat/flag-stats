@@ -98,7 +98,7 @@ export function AdminAthletesTable({
                         </AvatarFallback>
                       </Avatar>
                       <span className="min-w-0">
-                        <span className="block truncate font-display text-sm font-bold uppercase tracking-wide text-zs-ink transition-colors group-hover:text-accent-gold">
+                        <span className="block truncate font-sans text-sm font-bold uppercase tracking-wide text-zs-ink transition-colors group-hover:text-accent-gold">
                           {a.fullName}
                         </span>
 

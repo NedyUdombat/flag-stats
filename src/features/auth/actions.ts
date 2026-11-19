@@ -79,7 +79,9 @@ export async function loginAction(
   }
 
   revalidatePath("/", "layout");
-  redirect(await getPostLoginDestination(formData.get("next")));
+  const nextDestination = await getPostLoginDestination(formData.get("next"));
+  console.log({ nextDestination });
+  redirect(nextDestination);
 }
 
 // Until /onboarding exists, users with no memberships go to /account.

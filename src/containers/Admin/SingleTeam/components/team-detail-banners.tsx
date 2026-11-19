@@ -17,17 +17,17 @@ function Banner({
     <p
       role={tone === "ok" ? "status" : "alert"}
       className={cn(
-        "flex items-start gap-3 border-l-2 px-4 py-3 text-sm",
+        "flex items-start gap-3 px-4 py-3 text-sm rounded-md",
         "font-data leading-relaxed",
         tone === "ok"
-          ? "border-accent-gold/60 bg-accent-gold/6 text-zs-muted"
-          : "border-accent-gold bg-accent-gold/10 text-zs-ink",
+          ? "bg-green-800/90 text-zs-ink"
+          : "bg-accent-gold/10 text-zs-ink",
       )}
     >
       <Icon
         className={cn(
           "mt-0.5 size-4 shrink-0",
-          tone === "ok" ? "text-accent-gold/80" : "text-accent-gold",
+          tone === "ok" ? "text-green-300" : "text-accent-gold",
         )}
         aria-hidden
       />

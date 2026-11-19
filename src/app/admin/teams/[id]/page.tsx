@@ -48,7 +48,6 @@ export default async function SingleTeamDetailPage({
   }
 
   const claimed = team.claimed_at !== null;
-  const tab = isTeamTab(sp.tab) ? sp.tab : "overview";
 
   return (
     <SingleTeamDetailContainer
@@ -56,7 +55,6 @@ export default async function SingleTeamDetailPage({
       teamId={id}
       user={user}
       searchParams={sp}
-      activeTab={tab}
       claimed={claimed}
       deleted={deleted}
       orphaned={false}

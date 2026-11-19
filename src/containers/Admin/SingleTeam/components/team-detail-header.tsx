@@ -38,16 +38,21 @@ export function TeamDetailHeader({
         All teams
       </Link>
 
-      <div className="relative flex min-w-0 items-start gap-3 sm:items-center sm:gap-5">
+      <div className="relative flex min-w-0 items-center gap-3 sm:items-center sm:gap-5">
         {/* Team logo */}
         <div className="shrink-0">
-          <TeamLogo name={team.name} logoUrl={team.logo_url} size="lg" />
+          <TeamLogo
+            className={"rounded-md"}
+            name={team.name}
+            logoUrl={team.logo_url}
+            size="lg"
+          />
         </div>
 
         {/* Team information */}
-        <div className="min-w-0 flex-1 space-y-2.5 sm:space-y-3">
-          <div className="flex min-w-0 items-start justify-between gap-2">
-            <h1 className="min-w-0 wrap-break-word pr-1 font-display text-2xl font-bold uppercase leading-tight tracking-wide text-zs-ink sm:text-3xl lg:text-4xl">
+        <div className="min-w-0 flex-1 space-y-2 sm:space-y-2">
+          <div className="flex min-w-0 items-start justify-between">
+            <h1 className="min-w-0 wrap-break-word font-sans text-2xl font-bold uppercase leading-tight tracking-wide text-zs-ink sm:text-3xl lg:text-4xl">
               {team.name}
             </h1>
 
@@ -64,7 +69,7 @@ export function TeamDetailHeader({
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center">
             <TeamStatusBadges
               claimed={claimed}
               deleted={deleted}
@@ -72,7 +77,7 @@ export function TeamDetailHeader({
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-data text-[11px] text-zs-muted sm:gap-x-4 sm:text-xs">
+          <div className="flex flex-wrap items-center gap-x-3 font-data text-[11px] text-zs-muted sm:gap-x-4 sm:text-xs">
             {location && (
               <span className="inline-flex items-center gap-1.5">
                 <MapPinIcon className="size-3.5 shrink-0 text-accent-gold/70" />

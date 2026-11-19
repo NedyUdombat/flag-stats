@@ -3,12 +3,9 @@
 import { Trash2Icon } from "lucide-react";
 import { Message } from "@/containers/Account/shared/message";
 import { Panel } from "@/containers/Account/shared/panel";
-import {
-  buttonSecondary,
-  fieldInput,
-  fieldLabel,
-} from "@/containers/Account/styles";
+import { fieldInput, fieldLabel } from "@/containers/Account/styles";
 import { cn } from "@/utils/cn";
+import { buttonDanger } from "../../Teams/styles";
 import { useUnclaimedDangerZone } from "./danger-zone.logic";
 
 export function UnclaimedDangerZone({ athleteId }: { athleteId: string }) {
@@ -38,8 +35,8 @@ export function UnclaimedDangerZone({ athleteId }: { athleteId: string }) {
           type="submit"
           disabled={!z.ready || z.pending}
           className={cn(
-            buttonSecondary,
-            "border-zs-coral bg-zs-coral/10 text-zs-coral hover:bg-zs-coral/20",
+            buttonDanger,
+            "rounded-sm font-data font-normal! cursor-pointer capitalize",
           )}
         >
           <Trash2Icon className="size-4" aria-hidden />
