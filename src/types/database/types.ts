@@ -2367,15 +2367,26 @@ export type Database = {
         }
         Returns: string
       }
-      create_league: {
-        Args: {
-          p_country?: string
-          p_name: string
-          p_region?: string
-          p_slug: string
-        }
-        Returns: string
-      }
+      create_league:
+        | {
+            Args: {
+              p_country?: string
+              p_name: string
+              p_region?: string
+              p_slug: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              p_country?: string
+              p_logo_url?: string
+              p_name: string
+              p_region?: string
+              p_slug: string
+            }
+            Returns: string
+          }
       create_league_admin_invitation: {
         Args: {
           p_email: string

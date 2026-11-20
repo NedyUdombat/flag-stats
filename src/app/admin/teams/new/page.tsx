@@ -16,7 +16,7 @@ export default async function NewTeamPage() {
 
   return (
     <div className="space-y-6">
-      <header className="">
+      <header>
         <nav aria-label="Breadcrumb" className="mb-2 text-sm text-zs-muted">
           <Link href="/admin/teams" className="hover:text-zs-ink">
             Teams

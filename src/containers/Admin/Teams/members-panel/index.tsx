@@ -18,6 +18,7 @@ interface Props {
   teamName: string;
   members: TeamMemberRow[];
   invites: TeamInviteRow[];
+  membersEnabled: boolean;
 }
 
 export function MembersPanel({ teamId, members, invites, teamName }: Props) {

@@ -10,9 +10,8 @@ export const canCreateTeam = (user: CurrentUser | null) => !!user;
 export const canManageTeam = (user: CurrentUser | null, teamId: string) =>
   isPlatformAdmin(user) || isTeamAdminOf(user, teamId);
 
-export const canCreateTeamShell = (_user: CurrentUser | null) =>
-  // isPlatformAdmin(user);
-  true;
+export const canCreateTeamShell = (_user: CurrentUser | null) => true;
+// isPlatformAdmin(user);
 
 export const canRestoreTeam = (user: CurrentUser | null) =>
   isPlatformAdmin(user);

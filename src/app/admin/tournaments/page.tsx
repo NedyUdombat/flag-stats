@@ -45,7 +45,7 @@ export default async function AdminTournamentsPage({
 }) {
   const sp = await searchParams;
   const user = await getCurrentUser();
-  if (!user) return null; // the layout already redirects
+  if (!user) return null;
 
   const superAdmin = isPlatformAdmin(user);
   const status: TournamentListStatus =

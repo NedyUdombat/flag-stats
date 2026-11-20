@@ -8,4 +8,5 @@ export type TeamDetailSearchParams = {
   saved?: string;
   claimed?: string;
   added?: string;
+  tab?: string;
 };

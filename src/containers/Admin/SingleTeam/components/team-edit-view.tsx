@@ -1,20 +1,17 @@
 import Link from "next/link";
-
 import { TeamEditForm } from "@/containers/Admin/Teams/edit-form/team-edit-form";
 import { updateTeamAction } from "@/features/teams/actions/team-manage.actions";
-
 import type { TeamDetail } from "./team-detail.types";
 
-export function TeamEditView({
-  team,
-  teamId,
-}: {
+interface LeagueEditViewProps {
   team: TeamDetail;
-  teamId: string;
-}) {
+}
+
+export function TeamEditView({ team }: LeagueEditViewProps) {
+  const teamId = team.id;
   return (
     <div className="space-y-6">
-      <header className="">
+      <header>
         <nav aria-label="Breadcrumb" className="mb-2 text-sm text-zs-muted">
           <Link href="/admin/teams" className="hover:text-zs-ink">
             Teams

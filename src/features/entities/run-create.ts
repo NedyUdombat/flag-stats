@@ -47,6 +47,7 @@ export async function runCreate<T>(opts: {
   }
 
   const result = await opts.create(parsed.data);
+
   if (!result.ok) {
     logServerError(`${opts.kind}.create`, result.error);
     return {

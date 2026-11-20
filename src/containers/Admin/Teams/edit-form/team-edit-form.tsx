@@ -2,7 +2,6 @@
 
 import { ArrowRightIcon, SaveIcon } from "lucide-react";
 import Link from "next/link";
-
 import { CountrySelect } from "@/components/primitives/country-select";
 import { ImageUpload } from "@/components/primitives/image-upload";
 import { Panel } from "@/containers/Account/shared/panel";
@@ -11,11 +10,8 @@ import {
   buttonSecondary,
   fieldInput,
 } from "@/containers/Account/styles";
-
 import { SOCIAL_LABELS, SOCIAL_PLATFORMS } from "@/features/entities/socials";
-
 import type { TeamActionState } from "@/features/teams/team.types";
-
 import { ColorField } from "../components/color-field";
 import { labelClass } from "../styles";
 import { useTeamEditForm } from "./use-team-edit-form";
@@ -305,7 +301,7 @@ export function TeamEditForm({ action, initial, cancelHref }: Props) {
               <button
                 type="submit"
                 disabled={pending}
-                className={`${buttonPrimary} group flex w-full justify-center gap-2 rounded-sm font-sans text-[14px] font-normal capitalize disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto`}
+                className={`${buttonPrimary} cursor-pointer group flex w-full justify-center gap-2 rounded-sm font-sans text-[14px] font-normal capitalize disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto`}
               >
                 {pending ? (
                   <>

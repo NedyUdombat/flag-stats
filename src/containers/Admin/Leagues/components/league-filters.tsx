@@ -1,47 +1,143 @@
+"use client";
+
 import Link from "next/link";
-import { buttonPrimary } from "@/containers/Account/styles";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { buttonSecondary } from "@/containers/Account/styles";
 import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import {
   LEAGUE_LIST_STATUSES,
   LEAGUE_STATUS_LABELS,
   type LeagueListStatus,
 } from "@/features/leagues/league.constants";
+import { cn } from "@/utils/cn";
 
-export function LeagueFilters({
-  values,
-  showStatus,
-}: {
-  values: { q?: string; status: LeagueListStatus };
+interface LeagueFiltersProps {
+  values: {
+    q?: string;
+    status: LeagueListStatus;
+  };
   showStatus: boolean;
-}) {
-  const hasFilters = Boolean(values.q) || values.status !== "active";
+}
+
+export function LeagueFilters({ values, showStatus }: LeagueFiltersProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [query, setQuery] = useState(values.q ?? "");
+  const [selectedStatus, setSelectedStatus] = useState<LeagueListStatus>(
+    values.status,
+  );
+
+  const hasFilters = Boolean(query.trim()) || selectedStatus !== "active";
+
+  // Keep local state in sync with browser navigation.
+  useEffect(() => {
+    setQuery(values.q ?? "");
+    setSelectedStatus(values.status);
+  }, [values.q, values.status]);
+
+  // Debounced search.
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      const nextQuery = query.trim();
+
+      if (nextQuery) {
+        params.set("q", nextQuery);
+      } else {
+        params.delete("q");
+      }
+
+      // Reset pagination when searching.
+      params.delete("page");
+
+      const currentQuery = searchParams.get("q") ?? "";
+
+      if (currentQuery === nextQuery) return;
+
+      const search = params.toString();
+
+      router.replace(search ? `${pathname}?${search}` : pathname, {
+        scroll: false,
+      });
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [query, pathname, router, searchParams]);
+
+  // Apply status immediately.
+  function handleStatusChange(status: LeagueListStatus) {
+    setSelectedStatus(status);
+
+    const params = new URLSearchParams(searchParams.toString());
+    const nextQuery = query.trim();
+
+    if (nextQuery) {
+      params.set("q", nextQuery);
+    } else {
+      params.delete("q");
+    }
+
+    if (status === "active") {
+      params.delete("status");
+    } else {
+      params.set("status", status);
+    }
+
+    // Reset pagination when changing status.
+    params.delete("page");
+
+    const search = params.toString();
+
+    router.replace(search ? `${pathname}?${search}` : pathname, {
+      scroll: false,
+    });
+  }
+
   return (
-    <form
-      method="get"
-      className="flex flex-wrap items-end gap-3 border border-zs-line bg-zs-panel p-4"
+    <div
+      className="
+        flex flex-col gap-4 rounded-md
+        bg-transparent py-4
+        sm:flex-row sm:items-end
+      "
     >
-      <div className="min-w-56 flex-1">
+      {/* Search */}
+      <div className="min-w-0 flex-1">
         <label htmlFor="league-q" className={labelClass}>
-          Search
+          Search leagues
         </label>
+
         <input
           id="league-q"
           name="q"
-          defaultValue={values.q}
-          placeholder="League name, code or slug"
-          className={fieldClass}
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search by league name, code or slug..."
+          className={cn(fieldClass, "rounded-sm")}
+          autoComplete="off"
         />
       </div>
+
+      {/* Status */}
       {showStatus && (
-        <div>
+        <div className="w-full sm:w-52">
           <label htmlFor="league-status" className={labelClass}>
-            Status
+            League status
           </label>
+
           <select
             id="league-status"
             name="status"
-            defaultValue={values.status}
-            className={fieldClass}
+            value={selectedStatus}
+            onChange={(e) =>
+              handleStatusChange(e.target.value as LeagueListStatus)
+            }
+            className={cn(fieldClass, "rounded-sm")}
           >
             {LEAGUE_LIST_STATUSES.map((s) => (
               <option key={s} value={s}>
@@ -51,17 +147,21 @@ export function LeagueFilters({
           </select>
         </div>
       )}
-      <button type="submit" className={buttonPrimary}>
-        Apply
-      </button>
+
+      {/* Clear filters */}
       {hasFilters && (
-        <Link
-          href="/admin/leagues"
-          className="pb-2 text-sm font-semibold text-zs-lime hover:underline"
-        >
-          Clear
-        </Link>
+        <div className="flex items-center">
+          <Link
+            href="/admin/leagues"
+            className={cn(
+              buttonSecondary,
+              "min-h-10! max-h-10! whitespace-nowrap rounded-sm font-sans text-sm font-medium text-zs-muted transition-colors hover:text-zs-ink",
+            )}
+          >
+            Clear filters
+          </Link>
+        </div>
       )}
-    </form>
+    </div>
   );
 }

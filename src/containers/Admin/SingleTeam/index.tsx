@@ -25,7 +25,10 @@ import type {
 } from "@/features/tournaments/tournament.types";
 import type { CurrentUser } from "@/types/users/types";
 import { isTeamTab } from "./components/team-detail.constants";
-import type { TeamDetail } from "./components/team-detail.types";
+import type {
+  TeamDetail,
+  TeamDetailSearchParams,
+} from "./components/team-detail.types";
 import { TeamDetailBanners } from "./components/team-detail-banners";
 import { TeamDetailHeader } from "./components/team-detail-header";
 import { TeamDetailTabs } from "./components/team-detail-tabs";
@@ -35,17 +38,8 @@ interface SingleTeamDetailContainerProps {
   team: TeamDetail;
   teamId: string;
   user: CurrentUser;
-  searchParams: {
-    created?: string;
-    sent?: string;
-    saved?: string;
-    claimed?: string;
-    added?: string;
-    tab?: string;
-  };
-  claimed: boolean;
+  searchParams: TeamDetailSearchParams;
   deleted: boolean;
-  orphaned: boolean;
 }
 
 function UnavailablePanel({
@@ -67,10 +61,9 @@ export async function SingleTeamDetailContainer({
   teamId,
   user,
   searchParams,
-  claimed,
   deleted,
-  orphaned,
 }: SingleTeamDetailContainerProps) {
+  const claimed = team.claimed_at !== null;
   const membersEnabled = claimed && !deleted;
   const activeTab = isTeamTab(searchParams.tab) ? searchParams.tab : "overview";
 
@@ -141,6 +134,7 @@ export async function SingleTeamDetailContainer({
       }
 
       default:
+        admins = await listTeamAdmins(teamId);
         // Overview requires no additional data.
         break;
     }
@@ -149,6 +143,8 @@ export async function SingleTeamDetailContainer({
       <ErrorState description="Couldn't load this team. Refresh the page to try again." />
     );
   }
+
+  const orphaned = claimed && !deleted && admins.length === 0;
 
   return (
     <div className="space-y-8">
@@ -173,6 +169,7 @@ export async function SingleTeamDetailContainer({
             members={members}
             invites={invites}
             teamName={team.name}
+            membersEnabled={membersEnabled}
           />
         ) : (
           <UnavailablePanel

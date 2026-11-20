@@ -63,7 +63,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     href: "/admin/athletes",
     label: "Athletes",
     icon: UserIcon,
-    show: teamOrLeagueOrFederation,
+    show: isTeamMember,
   },
   {
     href: "/admin/verifications",

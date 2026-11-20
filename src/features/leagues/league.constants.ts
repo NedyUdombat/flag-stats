@@ -5,7 +5,9 @@ export const LEAGUE_LIST_STATUSES = [
   "unclaimed",
   "deleted",
 ] as const;
+
 export type LeagueListStatus = (typeof LEAGUE_LIST_STATUSES)[number];
+
 export const LEAGUE_STATUS_LABELS: Record<LeagueListStatus, string> = {
   active: "Active",
   unverified: "Needs verification",
@@ -13,6 +15,7 @@ export const LEAGUE_STATUS_LABELS: Record<LeagueListStatus, string> = {
   unclaimed: "Unclaimed",
   deleted: "Deleted",
 };
+
 export const LEAGUE_FORMATS = ["1v1", "5v5", "7v7"] as const;
 
 export const LEAGUE_ERROR_MESSAGES: Record<string, string> = {
@@ -30,6 +33,7 @@ export const LEAGUE_ERROR_MESSAGES: Record<string, string> = {
   invalid_expiry: "Invalid invitation expiry.",
   too_many_invites: "Too many pending invitations. Revoke some first.",
 };
+
 export function leagueErrorMessage(raw: string): string {
   const code = Object.keys(LEAGUE_ERROR_MESSAGES).find((k) => raw.includes(k));
   return code ? LEAGUE_ERROR_MESSAGES[code] : "Something went wrong.";

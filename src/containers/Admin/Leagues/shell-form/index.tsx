@@ -1,14 +1,27 @@
 "use client";
 
+import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { CountrySelect } from "@/components/primitives/country-select";
+import { ImageUpload } from "@/components/primitives/image-upload";
 import { Panel } from "@/containers/Account/shared/panel";
-import { buttonPrimary, buttonSecondary } from "@/containers/Account/styles";
-import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
+import {
+  buttonPrimary,
+  buttonSecondary,
+  fieldInput,
+} from "@/containers/Account/styles";
+import { labelClass } from "@/containers/Admin/Teams/styles";
+import { cn } from "@/utils/cn";
 import { useLeagueShellForm } from "./use-league-shell-form";
 
-export function LeagueShellForm() {
+interface LeagueShellFormProps {
+  superAdmin: boolean;
+}
+
+export function LeagueShellForm({ superAdmin }: LeagueShellFormProps) {
   const { state, pending, onSubmit } = useLeagueShellForm();
   const err = state.fieldErrors ?? {};
+
   const field = (
     id: string,
     name: string,
@@ -20,57 +33,138 @@ export function LeagueShellForm() {
       <label htmlFor={id} className={labelClass}>
         {label}
       </label>
+
       <input
         id={id}
         name={name}
         type={type}
         autoComplete="off"
         aria-invalid={err[name] ? true : undefined}
-        className={fieldClass}
+        className={fieldInput}
       />
+
       {hint && <p className="mt-1 text-xs text-zs-muted">{hint}</p>}
-      {err[name] && <p className="mt-1 text-xs text-zs-coral">{err[name]}</p>}
-    </div>
-  );
-  return (
-    <form onSubmit={onSubmit} noValidate className="space-y-6">
-      <Panel
-        title="League"
-        description="The league stays hidden from the public until its admin accepts the invitation."
-      >
-        <div className="grid gap-4 sm:grid-cols-2">
-          {field("league-name", "name", "League name")}
-          {field("league-region", "region", "Region (optional)")}
-        </div>
-      </Panel>
-      <Panel
-        title="Admin invitation"
-        description="Optional now. You can also invite from the league's Admins tab."
-      >
-        {field(
-          "league-email",
-          "adminEmail",
-          "Admin's email",
-          "email",
-          "If they have no account, the link walks them through creating one, then they claim and set up the league.",
-        )}
-      </Panel>
-      {state.status === "error" && state.message && (
-        <p
-          role="alert"
-          className="border border-zs-coral/40 bg-zs-coral/10 px-4 py-3 text-sm text-zs-coral"
-        >
-          {state.message}
+
+      {err[name] && (
+        <p className="mt-1 text-xs text-zs-coral" role="alert">
+          {err[name]}
         </p>
       )}
-      <div className="flex gap-3">
-        <button type="submit" disabled={pending} className={buttonPrimary}>
-          {pending ? "Creating…" : "Create league"}
-        </button>
-        <Link href="/admin/leagues" className={buttonSecondary}>
-          Cancel
-        </Link>
-      </div>
-    </form>
+    </div>
+  );
+
+  return (
+    <div className="w-full min-w-0">
+      <Panel
+        title="Create new league"
+        description="Set up a league and create tournaments"
+      >
+        <form onSubmit={onSubmit} noValidate className="space-y-6">
+          <section className="grid gap-6 lg:grid-cols-[1.5fr_3.5fr] rounded-xl border border-white/6 bg-white/1.5">
+            <div className="p-4 sm:p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <div className="min-w-0 flex-1">
+                  <ImageUpload
+                    name="logoUrl"
+                    label="Team logo"
+                    shape="square"
+                  />
+
+                  {err.logoUrl && (
+                    <p className="mt-3 text-xs text-zs-coral" role="alert">
+                      {err.logoUrl}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-4 content-start items-start rounded-xl p-4 sm:grid-cols-2 sm:p-5">
+              {field("league-name", "name", "League name")}
+
+              {field("league-region", "region", "Region (optional)")}
+
+              <div>
+                <label htmlFor={`country`} className={labelClass}>
+                  Country
+                </label>
+                <CountrySelect
+                  id={`country`}
+                  name={"country"}
+                  className={fieldInput}
+                  defaultValue="Nigeria"
+                />
+              </div>
+            </div>
+          </section>
+
+          {superAdmin && (
+            <section className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div>
+                  <h3 className="font-sans text-sm font-semibold text-zs-ink">
+                    Admin invitation
+                  </h3>
+                  <p className="mt-0.5 text-xs text-zs-muted">
+                    Invite someone to claim and manage this team.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/6 bg-white/1.5 p-4 sm:p-5">
+                {field("league-email", "adminEmail", "Admin's email", "email")}
+              </div>
+            </section>
+          )}
+
+          {state.status === "error" && state.message && (
+            <p
+              role="alert"
+              className="rounded-lg border border-zs-coral/25 bg-zs-coral/6 px-4 py-3 text-sm text-zs-coral"
+            >
+              {state.message}
+            </p>
+          )}
+
+          <div className="">
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <Link
+                href="/admin/leagues"
+                className={cn(
+                  buttonSecondary,
+                  "flex w-fll cursor-pointer justify-center rounded-sm font-sans text-[14px] font-normal capitalize",
+                )}
+              >
+                Cancel
+              </Link>
+
+              <button
+                type="submit"
+                disabled={pending}
+                className={cn(
+                  buttonPrimary,
+                  "group flex w-ful cursor-pointer justify-center gap-2 rounded-sm font-sans text-[14px] font-normal capitalize disabled:cursor-not-allowed disabled:opacity-60",
+                )}
+              >
+                {pending ? (
+                  <>
+                    <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <PlusIcon
+                      className="size-4 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden
+                    />
+                    Create League
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </form>
+      </Panel>
+    </div>
   );
 }

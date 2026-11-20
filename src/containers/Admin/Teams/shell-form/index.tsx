@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { CountrySelect } from "@/components/primitives/country-select";
 import { ImageUpload } from "@/components/primitives/image-upload";
@@ -60,7 +60,6 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
         description="Set up a team and invite its first administrator."
       >
         <form onSubmit={onSubmit} noValidate className="space-y-6">
-          {/* Team details section */}
           <section className="grid gap-6 lg:grid-cols-[1.5fr_3.5fr] rounded-xl border border-white/6 bg-white/1.5">
             <div className="p-4 sm:p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -157,12 +156,11 @@ export function ShellForm({ superAdmin }: ShellFormProps) {
                   </>
                 ) : (
                   <>
-                    <PlusIcon className="size-4" aria-hidden />
-                    Create team
-                    <ArrowRightIcon
+                    <PlusIcon
                       className="size-4 transition-transform group-hover:translate-x-0.5"
                       aria-hidden
                     />
+                    Create team
                   </>
                 )}
               </button>

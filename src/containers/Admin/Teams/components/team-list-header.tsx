@@ -32,7 +32,7 @@ export function TeamListHeader({ superAdmin, canCreate }: TeamListHeaderProps) {
           )}
         >
           <PlusIcon className="size-4" aria-hidden="true" />
-          Add new team
+          <p className="hidden sm:flex">Add new team</p>
         </Link>
       )}
     </header>

@@ -34,7 +34,7 @@ export default async function NewAthletePage({
 
   return (
     <div className="space-y-6">
-      <header className="border-b border-zs-line pb-5">
+      <header>
         <nav aria-label="Breadcrumb" className="mb-2 text-sm text-zs-muted">
           {team ? (
             <>

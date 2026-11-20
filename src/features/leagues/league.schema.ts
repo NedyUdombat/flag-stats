@@ -67,26 +67,6 @@ export const readUpdateLeagueForm = (fd: FormData) => ({
   socials: readSocialsFromForm(fd),
 });
 
-export const CreateLeagueShellSchema = z.object({
-  name: nameField,
-  region: optionalText(60),
-  adminEmail: z.preprocess(
-    blank,
-    z
-      .string()
-      .trim()
-      .toLowerCase()
-      .max(254)
-      .pipe(z.email("Enter a valid email address."))
-      .optional(),
-  ),
-});
-export const readCreateLeagueShellForm = (fd: FormData) => ({
-  name: fd.get("name"),
-  region: fd.get("region"),
-  adminEmail: fd.get("adminEmail"),
-});
-
 export const InviteLeagueAdminSchema = z.object({
   email: z
     .string({ error: "Enter an email address." })
@@ -103,11 +83,34 @@ export const CreateLeagueSchema = z.object({
   name: nameField,
   region: optionalText(60),
   country: countryField,
+  logoUrl: logoUrlField,
 });
+
+const optionalAdminEmail = z.preprocess(
+  blank,
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .max(254)
+    .pipe(z.email("Enter a valid email address."))
+    .optional(),
+);
+
+export const CreateAdminLeagueSchema = CreateLeagueSchema.extend({
+  adminEmail: optionalAdminEmail,
+});
+
 export type CreateLeagueInput = z.infer<typeof CreateLeagueSchema>;
 
 export const readCreateLeagueForm = (fd: FormData) => ({
   name: fd.get("name"),
   region: fd.get("region"),
   country: fd.get("country"),
+  logoUrl: fd.get("logoUrl"),
+});
+
+export const readCreateLeagueShellForm = (fd: FormData) => ({
+  ...readCreateLeagueForm(fd),
+  adminEmail: fd.get("adminEmail"),
 });

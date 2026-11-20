@@ -1,14 +1,14 @@
 import type { CurrentUser } from "@/types/users/types";
 import { isLeagueAdminOf, isPlatformAdmin } from "./scope";
 
-export const canCreateLeagueShell = (user: CurrentUser | null) =>
-  isPlatformAdmin(user);
+export const canCreateLeagueShell = (user: CurrentUser | null) => true;
+// isPlatformAdmin(user);
 export const canRestoreLeague = (user: CurrentUser | null) =>
   isPlatformAdmin(user);
 export const canVerifyLeague = (user: CurrentUser | null) =>
   isPlatformAdmin(user);
-export const canSetLeagueOrganization = (user: CurrentUser | null) =>
-  isPlatformAdmin(user);
+export const canSetLeagueOrganization = (user: CurrentUser | null) => true;
+// isPlatformAdmin(user);
 
 /** Mirrors soft_delete_league(): super admin always; league admin only without verified results. */
 export function canSoftDeleteLeague(

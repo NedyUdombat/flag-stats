@@ -1,0 +1,113 @@
+import {
+  ArrowLeftIcon,
+  ExternalLinkIcon,
+  MapPinIcon,
+  PencilIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { TeamStatusBadges } from "@/containers/Admin/Teams/components/team-badges";
+import { TeamLogo } from "@/containers/Admin/Teams/components/team-logo";
+
+import type { LeagueDetail } from "./league-detail.types";
+
+type Props = {
+  league: LeagueDetail;
+  leagueId: string;
+  claimed: boolean;
+  deleted: boolean;
+  orphaned: boolean;
+};
+
+export function LeagueDetailHeader({
+  league,
+  leagueId,
+  claimed,
+  deleted,
+  orphaned,
+}: Props) {
+  const location = [league.region, league.country].filter(Boolean).join(", ");
+
+  return (
+    <header className="space-y-4 sm:space-y-6">
+      <Link
+        href="/admin/leagues"
+        className="group inline-flex items-center gap-2 font-data text-[10px] font-semibold uppercase tracking-[0.14em] text-zs-muted transition-colors hover:text-accent-gold sm:text-[11px]"
+      >
+        <ArrowLeftIcon className="size-3.5 transition-transform group-hover:-translate-x-1" />
+        All Leagues
+      </Link>
+
+      <div className="relative flex min-w-0 items-center gap-3 sm:items-center sm:gap-5">
+        {/* League logo */}
+        <div className="shrink-0">
+          <TeamLogo
+            className={"rounded-md"}
+            name={league.name}
+            logoUrl={league.logo_url}
+            size="lg"
+          />
+        </div>
+
+        {/* League information */}
+        <div className="min-w-0 flex-1 space-y-2 sm:space-y-2">
+          <div className="flex min-w-0 items-start justify-between">
+            <h1 className="min-w-0 wrap-break-word font-sans text-2xl font-bold uppercase leading-tight tracking-wide text-zs-ink sm:text-3xl lg:text-4xl">
+              {league.name}
+            </h1>
+
+            {/* Mobile: Icon-only edit button */}
+            {!deleted && (
+              <Link
+                href={`/admin/leagues/${leagueId}?mode=edit`}
+                aria-label="Edit league"
+                title="Edit league"
+                className="flex size-9 shrink-0 items-center justify-center rounded-sm border border-accent-gold/20 bg-accent-gold/10 text-accent-gold transition-colors hover:bg-accent-gold/20 sm:hidden"
+              >
+                <PencilIcon className="size-4" />
+              </Link>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center">
+            <TeamStatusBadges
+              claimed={claimed}
+              deleted={deleted}
+              orphaned={orphaned}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-3 font-data text-[11px] text-zs-muted sm:gap-x-4 sm:text-xs">
+            {location && (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPinIcon className="size-3.5 shrink-0 text-accent-gold/70" />
+                {location}
+              </span>
+            )}
+
+            {claimed && !deleted && (
+              <Link
+                href={`/leagues/${league.slug}`}
+                target="_blank"
+                className="inline-flex items-center gap-1.5 text-accent-gold/80 transition-colors hover:text-accent-gold"
+              >
+                View public page
+                <ExternalLinkIcon className="size-3" />
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Tablet and desktop: Full edit button */}
+        {!deleted && (
+          <Link
+            href={`/admin/leagues/${leagueId}?mode=edit`}
+            className="hidden shrink-0 items-center justify-center gap-2 rounded-sm bg-accent-gold px-5 py-3 font-data text-xs font-normal capitalize tracking-wider text-[#090B10] transition-colors hover:bg-accent-gold/85 sm:inline-flex"
+          >
+            <PencilIcon className="size-3.5" />
+            Edit league
+          </Link>
+        )}
+      </div>
+    </header>
+  );
+}

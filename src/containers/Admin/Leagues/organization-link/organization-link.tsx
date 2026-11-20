@@ -1,11 +1,12 @@
 "use client";
 
-import { buttonPrimary } from "@/containers/Account/styles";
+import { buttonPrimary, fieldInput } from "@/containers/Account/styles";
 import { fieldClass, labelClass } from "@/containers/Admin/Teams/styles";
 import type {
   LeagueActionState,
   OrganizationOption,
 } from "@/features/leagues/league.types";
+import { cn } from "@/utils/cn";
 import { useOrganizationLink } from "./use-organization-link";
 
 interface Props {
@@ -22,12 +23,12 @@ export function OrganizationLink({ options, current, action }: Props) {
       <label htmlFor="league-org" className={labelClass}>
         Federation
       </label>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-4 sm:gap-2">
         <select
           id="league-org"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className={`${fieldClass} min-w-56 flex-1`}
+          className={`${fieldInput} cursor-pointer min-w-56 flex-1`}
         >
           <option value="">Independent (no federation)</option>
           {options.map((o) => (
@@ -40,7 +41,10 @@ export function OrganizationLink({ options, current, action }: Props) {
           type="button"
           onClick={save}
           disabled={pending || !changed}
-          className={buttonPrimary}
+          className={cn(
+            buttonPrimary,
+            "flex min-h-11 cursor-pointer w-full items-center justify-center gap-2 rounded-sm px-5 font-sans text-sm font-normal capitalize sm:w-auto",
+          )}
         >
           {pending ? "Saving…" : "Save"}
         </button>

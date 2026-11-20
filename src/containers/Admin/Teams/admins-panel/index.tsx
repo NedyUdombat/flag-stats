@@ -31,6 +31,7 @@ export function AdminsPanel({
   canInvite,
 }: Props) {
   const pending = invites.filter((i) => i.invite_type === "team_claim");
+
   return (
     <div className="space-y-6">
       <Panel
@@ -98,7 +99,7 @@ export function AdminsPanel({
                   </div>
 
                   {/* Admin action */}
-                  {admins.length > 1 && (
+                  {a.user_id === currentUserId && (
                     <div className="shrink-0">
                       <ActionButton
                         action={removeTeamAdminAction.bind(

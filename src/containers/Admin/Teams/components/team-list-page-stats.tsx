@@ -55,7 +55,6 @@ const STAT_CONFIG: Record<
 export function TeamListPageStats({ stats }: TeamListPageStatsProps) {
   return (
     <section aria-label="Team overview statistics">
-      {/* Mobile: Compact horizontal overview */}
       <div
         className="
         grid grid-cols-5 divide-x divide-zs-line

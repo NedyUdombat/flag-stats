@@ -43,10 +43,8 @@ export default async function SingleTeamDetailPage({
   const deleted = team.deleted_at !== null;
 
   if (sp.mode === "edit" && !deleted) {
-    return <TeamEditView team={team} teamId={id} />;
+    return <TeamEditView team={team} />;
   }
-
-  const claimed = team.claimed_at !== null;
 
   return (
     <SingleTeamDetailContainer
@@ -54,9 +52,7 @@ export default async function SingleTeamDetailPage({
       teamId={id}
       user={user}
       searchParams={sp}
-      claimed={claimed}
       deleted={deleted}
-      orphaned={false}
     />
   );
 }

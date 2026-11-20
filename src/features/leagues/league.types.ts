@@ -1,4 +1,5 @@
 import type { Database } from "@/types/database/types";
+import type { LeagueListStatus } from "./league.constants";
 
 export type { TeamActionState as LeagueActionState } from "@/features/teams/team.types";
 export {
@@ -13,12 +14,19 @@ export type LeagueAdminRow = Fn["league_admins"]["Returns"][number];
 export type LeagueInviteRow =
   Fn["league_pending_invitations"]["Returns"][number];
 export type OrganizationOption = { id: string; name: string };
+
 export type AdminLeagueStats = [
   active: number,
   unverified: number,
   orphaned: number,
   unclaimed: number,
+  deleted: number,
 ];
+
+export type AdminLeaguesStatsObject = {
+  s: LeagueListStatus;
+  value: number;
+}[];
 
 export interface ListAdminLeaguesResponse {
   rows: AdminLeagueRow[];

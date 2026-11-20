@@ -90,7 +90,7 @@ export async function listLeaguePendingInvitations(leagueId: string) {
     p_league_id: leagueId,
   });
   if (error) throw error;
-  return data ?? [];
+  return data;
 }
 
 export async function leagueHasVerifiedResults(leagueId: string) {
@@ -189,6 +189,7 @@ export async function createLeague(input: CreateLeagueInput) {
       p_slug: slug,
       p_country: input.country,
       p_region: input.region,
+      p_logo_url: input.logoUrl,
     }),
   );
 }
