@@ -7,10 +7,7 @@ import {
   revokeLeagueInvitationAction,
 } from "@/features/leagues/actions/league-invite.actions";
 import { removeLeagueAdminAction } from "@/features/leagues/actions/league-manage.actions";
-import {
-  listLeagueAdmins,
-  listLeaguePendingInvitations,
-} from "@/features/leagues/league.service";
+import { listLeaguePendingInvitations } from "@/features/leagues/league.service";
 import type {
   LeagueAdminRow,
   LeagueInviteRow,

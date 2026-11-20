@@ -76,7 +76,9 @@ export async function LeagueSettingsTab({
           <OrganizationLink
             options={orgOptions}
             current={league.organization_id}
-            action={setLeagueOrganizationAction.bind(leagueId)}
+            action={(organizationId) =>
+              setLeagueOrganizationAction(leagueId, organizationId)
+            }
           />
         </Panel>
       )}
